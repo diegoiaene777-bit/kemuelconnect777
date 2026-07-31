@@ -146,11 +146,11 @@
       const { data, error } = await _supabase
         .from('profiles')
         .select('*')
-        .iliike('nome', `%${nome}%`)
+        .ilike('nome', `%${nome}%`)
         .maybeSingle();
 
       if (error || !data) {
-        alert('Usuário não encontrado!');
+        alert('Usuário não encontrado! Verifique se digitou o nome corretamente.');
         return;
       }
 
