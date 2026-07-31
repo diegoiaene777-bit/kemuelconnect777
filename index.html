@@ -6,44 +6,69 @@
   <title>Kemuel Connect 777 - Gestão JA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
-  <!-- Header -->
-  <header class="bg-blue-800 text-white shadow-lg p-4 sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
-      <h1 class="text-xl font-bold tracking-wide">Kemuel Connect 777</h1>
-      <span id="user-badge" class="bg-blue-600 text-xs px-3 py-1 rounded-full font-semibold">Visitante</span>
+  <!-- MENU LATERAL (SÓ APARECE LOGADO) -->
+  <aside id="sidebar" class="w-full md:w-64 bg-blue-900 text-white flex-shrink-0 hidden">
+    <div class="p-4 border-b border-blue-800 flex justify-between items-center">
+      <h1 class="font-bold text-lg tracking-wide">Kemuel Connect</h1>
+      <span id="user-role-badge" class="text-xs bg-blue-700 text-blue-100 px-2 py-0.5 rounded uppercase font-semibold">Jovem</span>
     </div>
-  </header>
+    
+    <nav class="p-4 space-y-1 text-sm font-medium">
+      <button onclick="navegarPara('dashboard')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3"><i class="fa-solid fa-house w-5"></i> Dashboard</button>
+      <button onclick="navegarPara('comunhao')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3"><i class="fa-solid fa-hands-praying w-5"></i> Minha Comunhão</button>
+      <button onclick="navegarPara('desafios')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3"><i class="fa-solid fa-bullseye w-5"></i> Desafios</button>
+      <button onclick="navegarPara('ranking')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3"><i class="fa-solid fa-trophy w-5"></i> Ranking</button>
+      <button onclick="navegarPara('perfil')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3"><i class="fa-solid fa-user w-5"></i> Meu Perfil</button>
+      
+      <!-- EXCLUSIVO DO DIRETOR -->
+      <div id="diretor-menu" class="pt-4 border-t border-blue-800 mt-4 space-y-1 hidden">
+        <p class="text-xs text-blue-300 font-bold uppercase px-3 mb-2">Painel do Diretor</p>
+        <button onclick="navegarPara('aprovacoes')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3 text-amber-300 font-semibold"><i class="fa-solid fa-user-check w-5"></i> Aprovar Cadastros</button>
+        <button onclick="navegarPara('validar-comprovantes')" class="w-full text-left py-2.5 px-3 rounded hover:bg-blue-800 flex items-center gap-3 text-emerald-300 font-semibold"><i class="fa-solid fa-file-circle-check w-5"></i> Validar Comprovantes</button>
+      </div>
+    </nav>
 
-  <!-- Container Principal -->
-  <main class="max-w-4xl mx-auto p-4 space-y-6 w-full flex-grow">
+    <div class="p-4 border-t border-blue-800 mt-auto">
+      <button onclick="sair()" class="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-bold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </aside>
 
-    <!-- TELA 1: FORMULÁRIO DE CADASTRO E LOGIN -->
-    <section id="auth-section" class="bg-white rounded-xl shadow-md p-6 max-w-md mx-auto border-t-4 border-blue-600">
-      <div class="flex justify-around mb-6 border-b pb-2">
-        <button id="tab-login" onclick="alternarAba('login')" class="font-bold text-blue-700 border-b-2 border-blue-700 pb-1">Entrar</button>
-        <button id="tab-cadastro" onclick="alternarAba('cadastro')" class="font-bold text-gray-400 hover:text-blue-700 pb-1">Cadastrar-se</button>
+  <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+
+    <!-- TELA 1: LOGIN / CADASTRO -->
+    <section id="sec-auth" class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-700 my-10">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-900">Kemuel Connect 777</h2>
+        <p class="text-xs text-gray-500 mt-1">Plataforma de Comunhão e Gamificação JA</p>
       </div>
 
-      <!-- Form Login -->
+      <div class="flex justify-around mb-6 border-b pb-2">
+        <button id="btn-tab-login" onclick="mudarAbaAuth('login')" class="font-bold text-blue-700 border-b-2 border-blue-700 pb-1">Entrar</button>
+        <button id="btn-tab-cad" onclick="mudarAbaAuth('cadastro')" class="font-bold text-gray-400 hover:text-blue-700 pb-1">Cadastrar-se</button>
+      </div>
+
       <form id="form-login" onsubmit="fazerLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Nome Cadastrado</label>
-          <input type="text" id="login-nome" required placeholder="Digite seu nome" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+          <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Nome Cadastrado</label>
+          <input type="text" id="login-nome" required class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
-        <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg transition text-sm">Acessar Painel</button>
+        <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg text-sm transition">Entrar no Painel</button>
       </form>
 
-      <!-- Form Cadastro -->
       <form id="form-cadastro" onsubmit="fazerCadastro(event)" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Nome Completo</label>
-          <input type="text" id="cad-nome" required placeholder="Seu nome" class="w-full p-2.5 border rounded-lg text-sm">
+          <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Nome Completo</label>
+          <input type="text" id="cad-nome" required class="w-full p-2.5 border rounded-lg text-sm">
         </div>
         <div>
-          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Cargo / Função</label>
+          <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Cargo / Função</label>
           <select id="cad-cargo" class="w-full p-2.5 border rounded-lg text-sm">
             <option value="Jovem">Jovem</option>
             <option value="Líder JA">Líder JA</option>
@@ -52,53 +77,134 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">WhatsApp</label>
+          <label class="block text-xs font-bold text-gray-600 uppercase mb-1">WhatsApp</label>
           <input type="tel" id="cad-whatsapp" placeholder="(85) 99999-9999" class="w-full p-2.5 border rounded-lg text-sm">
         </div>
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg transition text-sm">Enviar para Aprovação</button>
-        <p class="text-xs text-gray-500 text-center mt-2">Seu cadastro precisará da aprovação do líder para acessar o painel.</p>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">Solicitar Acesso</button>
+        <p class="text-xs text-gray-500 text-center">Seu cadastro precisará de aprovação do Diretor.</p>
       </form>
     </section>
 
-    <!-- TELA 2: DASHBOARD (Aparece após entrar) -->
-    <div id="dashboard-section" class="space-y-6 hidden">
-      <!-- Card de Resumo -->
-      <section class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-600 flex justify-between items-center">
+    <!-- TELA 2: DASHBOARD -->
+    <div id="sec-dashboard" class="space-y-6 hidden">
+      <div class="bg-white p-6 rounded-xl shadow flex justify-between items-center border-l-4 border-blue-600">
         <div>
-          <h2 id="welcome-name" class="text-2xl font-bold text-gray-800">Olá! 👋</h2>
-          <p class="text-sm text-gray-600 mt-1">Status do Cadastro: <span id="status-tag" class="font-bold text-amber-600 uppercase">Pendente</span></p>
+          <h2 id="dash-welcome" class="text-2xl font-bold text-gray-800">Olá! 👋</h2>
+          <p class="text-xs text-gray-500 mt-1">Status: <span id="dash-status" class="font-bold">PENDENTE</span></p>
         </div>
-        <button onclick="sair()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded transition">Sair</button>
-      </section>
+        <div class="text-center bg-amber-50 p-3 rounded-lg border border-amber-200">
+          <span class="text-xs font-bold text-amber-800 uppercase block">Sequência (Streak)</span>
+          <span id="dash-streak" class="text-xl font-extrabold text-amber-600">🔥 0 dias</span>
+        </div>
+      </div>
 
-      <!-- Ranking -->
-      <section class="bg-white rounded-xl shadow p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-bold text-gray-800">🏆 Ranking Geral</h3>
-          <button onclick="carregarRanking()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600">Atualizar</button>
+      <!-- Card de Nível -->
+      <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-xl shadow">
+        <div class="flex justify-between items-center mb-2">
+          <span id="dash-nivel-nome" class="font-bold text-lg">🌱 Iniciante</span>
+          <span id="dash-pontos" class="font-extrabold text-amber-300 text-xl">0 pts</span>
         </div>
+        <div class="w-full bg-blue-950 rounded-full h-3 overflow-hidden">
+          <div id="dash-nivel-bar" class="bg-amber-400 h-3 rounded-full transition-all duration-500" style="width: 5%"></div>
+        </div>
+        <p id="dash-nivel-txt" class="text-xs text-blue-200 mt-2 text-right">Faltam 500 pts para Discípulo 🌿</p>
+      </div>
+
+      <!-- Atalho Comunhão -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-bold text-lg text-gray-800 mb-4">🙏 Registrar Comunhão do Dia</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="p-4 border rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-sm text-left flex justify-between items-center">
+            <span>📖 Leitura Bíblica</span>
+            <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded">+20 pts</span>
+          </button>
+          <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="p-4 border rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold text-sm text-left flex justify-between items-center">
+            <span>📚 Lição da Escola Sabatina</span>
+            <span class="bg-emerald-200 text-emerald-800 text-xs px-2 py-1 rounded">+30 pts</span>
+          </button>
+          <button onclick="registrarComunhao('Ano Bíblico', 50)" class="p-4 border rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold text-sm text-left flex justify-between items-center">
+            <span>🔥 Ano Bíblico</span>
+            <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded">+50 pts</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELA 3: MINHA COMUNHÃO -->
+    <div id="sec-comunhao" class="space-y-6 hidden">
+      <h2 class="text-2xl font-bold text-gray-800">🙏 Minha Comunhão</h2>
+      <div class="bg-white p-6 rounded-xl shadow space-y-4">
+        <p class="text-sm text-gray-600">Selecione a atividade para registrar seu momento com Deus hoje. O registro é único e inalterável.</p>
+        <div class="flex flex-col md:flex-row gap-4">
+          <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="flex-1 p-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">📖 Leitura Bíblica (+20 pts)</button>
+          <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="flex-1 p-4 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition">📚 Estudo da Lição (+30 pts)</button>
+          <button onclick="registrarComunhao('Ano Bíblico', 50)" class="flex-1 p-4 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition">🔥 Ano Bíblico (+50 pts)</button>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="font-bold text-gray-800 mb-4">📜 Histórico de Comunhão</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
             <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
               <tr>
-                <th class="p-3">Pos.</th>
-                <th class="p-3">Jovem</th>
-                <th class="p-3">Cargo</th>
-                <th class="p-3">Status</th>
+                <th class="p-3">Data/Hora</th>
+                <th class="p-3">Atividade</th>
                 <th class="p-3 text-right">Pontos</th>
               </tr>
             </thead>
-            <tbody id="ranking-body" class="divide-y">
-              <tr><td colspan="5" class="p-4 text-center text-gray-400">Carregando...</td></tr>
+            <tbody id="hist-comunhao-body" class="divide-y">
+              <tr><td colspan="3" class="p-4 text-center text-gray-400">Carregando histórico...</td></tr>
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </div>
+
+    <!-- TELA 4: RANKING -->
+    <div id="sec-ranking" class="space-y-6 hidden">
+      <h2 class="text-2xl font-bold text-gray-800">🏆 Ranking Geral</h2>
+      <div class="bg-white p-6 rounded-xl shadow overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+            <tr>
+              <th class="p-3">Pos.</th>
+              <th class="p-3">Jovem</th>
+              <th class="p-3">Nível</th>
+              <th class="p-3 text-right">Pontuação</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-table-body" class="divide-y">
+            <tr><td colspan="4" class="p-4 text-center text-gray-400">Carregando ranking...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TELA 5: PAINEL DO DIRETOR (APROVAÇÃO DE CADASTROS) -->
+    <div id="sec-aprovacoes" class="space-y-6 hidden">
+      <h2 class="text-2xl font-bold text-gray-800">👥 Aprovação de Cadastros</h2>
+      <div class="bg-white p-6 rounded-xl shadow overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+            <tr>
+              <th class="p-3">Nome</th>
+              <th class="p-3">Cargo</th>
+              <th class="p-3">WhatsApp</th>
+              <th class="p-3">Status</th>
+              <th class="p-3 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="aprovacoes-table-body" class="divide-y">
+            <tr><td colspan="5" class="p-4 text-center text-gray-400">Carregando pendentes...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </main>
 
-  <!-- Script Supabase -->
+  <!-- SCRIPT COMPLETO -->
   <script>
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
@@ -106,109 +212,281 @@
 
     let usuarioAtual = null;
 
-    function alternarAba(aba) {
+    // REGRAS DE NÍVEIS
+    const NIVEIS = [
+      { nome: '🌱 Iniciante', min: 0 },
+      { nome: '🌿 Discípulo', min: 500 },
+      { nome: '🔥 Comprometido', min: 1500 },
+      { nome: '⭐ Servo', min: 3000 },
+      { nome: '💎 Líder Inspirador', min: 6000 },
+      { nome: '👑 Embaixador Kemuel', min: 10000 }
+    ];
+
+    function calcularNivel(pts) {
+      let nivelAtual = NIVEIS[0];
+      let proximoNivel = NIVEIS[1];
+
+      for (let i = 0; i < NIVEIS.length; i++) {
+        if (pts >= NIVEIS[i].min) {
+          nivelAtual = NIVEIS[i];
+          proximoNivel = NIVEIS[i + 1] || null;
+        }
+      }
+
+      if (!proximoNivel) return { nome: nivelAtual.nome, pct: 100, txt: 'Nível Máximo Alcançado! 🎉' };
+
+      const progresso = pts - nivelAtual.min;
+      const necessario = proximoNivel.min - nivelAtual.min;
+      const pct = Math.min((progresso / necessario) * 100, 100);
+
+      return {
+        nome: nivelAtual.nome,
+        pct: pct,
+        txt: `Faltam ${proximoNivel.min - pts} pts para ${proximoNivel.nome}`
+      };
+    }
+
+    function mudarAbaAuth(aba) {
       if (aba === 'login') {
         document.getElementById('form-login').classList.remove('hidden');
         document.getElementById('form-cadastro').classList.add('hidden');
-        document.getElementById('tab-login').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
-        document.getElementById('tab-cadastro').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
+        document.getElementById('btn-tab-login').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
+        document.getElementById('btn-tab-cad').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
       } else {
         document.getElementById('form-login').classList.add('hidden');
         document.getElementById('form-cadastro').classList.remove('hidden');
-        document.getElementById('tab-cadastro').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
-        document.getElementById('tab-login').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
+        document.getElementById('btn-tab-cad').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
+        document.getElementById('btn-tab-login').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
       }
     }
 
     async function fazerCadastro(e) {
       e.preventDefault();
-      const nome = document.getElementById('cad-nome').value;
+      const nome = document.getElementById('cad-nome').value.trim();
       const cargo = document.getElementById('cad-cargo').value;
-      const whatsapp = document.getElementById('cad-whatsapp').value;
+      const whatsapp = document.getElementById('cad-whatsapp').value.trim();
 
-      const { data, error } = await _supabase.from('profiles').insert([
-        { nome, cargo, whatsapp, status: 'pendente', pontos_totais: 0 }
+      const { error } = await _supabase.from('profiles').insert([
+        { nome, cargo, whatsapp, status: 'PENDENTE', role: 'jovem', pontos_totais: 0, streak: 0 }
       ]);
 
       if (error) {
         alert('Erro ao cadastrar: ' + error.message);
       } else {
-        alert('Cadastro enviado com sucesso! Aguarde a aprovação do líder.');
-        alternarAba('login');
+        alert('Cadastro enviado! Aguarde aprovação do Diretor.');
+        mudarAbaAuth('login');
         document.getElementById('login-nome').value = nome;
       }
     }
 
     async function fazerLogin(e) {
       e.preventDefault();
-      const nome = document.getElementById('login-nome').value;
+      const nomeDigitado = document.getElementById('login-nome').value.trim();
 
       const { data, error } = await _supabase
         .from('profiles')
         .select('*')
-        .ilike('nome', `%${nome}%`)
-        .maybeSingle();
+        .ilike('nome', `%${nomeDigitado}%`);
 
-      if (error || !data) {
-        alert('Usuário não encontrado! Verifique se digitou o nome corretamente.');
+      if (error || !data || data.length === 0) {
+        alert('Usuário não encontrado!');
         return;
       }
 
-      usuarioAtual = data;
-      abrirDashboard();
+      usuarioAtual = data[0];
+
+      if (usuarioAtual.status === 'REJEITADO') {
+        alert('Seu cadastro foi recusado pela diretoria.');
+        return;
+      }
+
+      iniciarSessao();
     }
 
-    function abrirDashboard() {
-      document.getElementById('auth-section').classList.add('hidden');
-      document.getElementById('dashboard-section').classList.remove('hidden');
-      document.getElementById('welcome-name').innerText = `Olá, ${usuarioAtual.nome}! 👋`;
-      document.getElementById('user-badge').innerText = usuarioAtual.cargo || 'Membro';
-      
-      const statusTag = document.getElementById('status-tag');
-      statusTag.innerText = usuarioAtual.status || 'Pendente';
-      statusTag.className = usuarioAtual.status === 'aprovado' 
-        ? 'font-bold text-emerald-600 uppercase' 
-        : 'font-bold text-amber-600 uppercase';
+    function iniciarSessao() {
+      document.getElementById('sec-auth').classList.add('hidden');
+      document.getElementById('sidebar').classList.remove('hidden');
 
-      carregarRanking();
+      // Exibir menus do diretor se for administrador/diretor
+      if (usuarioAtual.role === 'diretor') {
+        document.getElementById('diretor-menu').classList.remove('hidden');
+        document.getElementById('user-role-badge').innerText = 'Diretor';
+      } else {
+        document.getElementById('diretor-menu').classList.add('hidden');
+        document.getElementById('user-role-badge').innerText = usuarioAtual.cargo || 'Jovem';
+      }
+
+      navegarPara('dashboard');
     }
 
-    function sair() {
-      usuarioAtual = null;
-      document.getElementById('dashboard-section').classList.add('hidden');
-      document.getElementById('auth-section').classList.remove('hidden');
-      document.getElementById('user-badge').innerText = 'Visitante';
+    function navegarPara(tela) {
+      const telas = ['dashboard', 'comunhao', 'ranking', 'aprovacoes'];
+      telas.forEach(t => {
+        const el = document.getElementById(`sec-${t}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const alvo = document.getElementById(`sec-${tela}`);
+      if (alvo) alvo.classList.remove('hidden');
+
+      if (tela === 'dashboard') recarregarDashboard();
+      if (tela === 'comunhao') recarregarComunhao();
+      if (tela === 'ranking') recarregarRanking();
+      if (tela === 'aprovacoes') recarregarAprovacoes();
     }
 
-    async function carregarRanking() {
-      const tbody = document.getElementById('ranking-body');
+    function recarregarDashboard() {
+      document.getElementById('dash-welcome').innerText = `Olá, ${usuarioAtual.nome}! 👋`;
+      const statusTag = document.getElementById('dash-status');
+      statusTag.innerText = usuarioAtual.status;
+      statusTag.className = usuarioAtual.status === 'ATIVO' ? 'font-bold text-emerald-600' : 'font-bold text-amber-600';
+      document.getElementById('dash-streak').innerText = `🔥 ${usuarioAtual.streak || 0} dias`;
+
+      const pts = usuarioAtual.pontos_totais || 0;
+      const niv = calcularNivel(pts);
+      document.getElementById('dash-nivel-nome').innerText = niv.nome;
+      document.getElementById('dash-pontos').innerText = `${pts} pts`;
+      document.getElementById('dash-nivel-bar').style.width = `${Math.max(niv.pct, 5)}%`;
+      document.getElementById('dash-nivel-txt').innerText = niv.txt;
+    }
+
+    async function registrarComunhao(tipo, pontos) {
+      if (usuarioAtual.status !== 'ATIVO') {
+        alert('Seu cadastro ainda está PENDENTE de aprovação do Diretor.');
+        return;
+      }
+
+      // Inserir registro inalterável
+      const { error: errHist } = await _supabase.from('comunhao_registros').insert([
+        { profile_id: usuarioAtual.id, tipo, pontos }
+      ]);
+
+      if (errHist) {
+        alert('Erro ao salvar comunhão: ' + errHist.message);
+        return;
+      }
+
+      // Atualizar pontos, nível e data da pontuação para desempate
+      const novosPontos = (usuarioAtual.pontos_totais || 0) + pontos;
+      const infoNivel = calcularNivel(novosPontos);
+
+      const { error: errProf } = await _supabase.from('profiles').update({
+        pontos_totais: novosPontos,
+        nivel: infoNivel.nome,
+        streak: (usuarioAtual.streak || 0) + 1,
+        data_pontuacao: new Date().toISOString()
+      }).eq('id', usuarioAtual.id);
+
+      if (!errProf) {
+        usuarioAtual.pontos_totais = novosPontos;
+        usuarioAtual.streak = (usuarioAtual.streak || 0) + 1;
+        alert(`🙏 Comunhão registrada com sucesso! +${pontos} pts`);
+        recarregarDashboard();
+      }
+    }
+
+    async function recarregarComunhao() {
+      const tbody = document.getElementById('hist-comunhao-body');
       const { data, error } = await _supabase
-        .from('profiles')
+        .from('comunhao_registros')
         .select('*')
-        .order('pontos_totais', { ascending: false });
+        .eq('profile_id', usuarioAtual.id)
+        .order('criado_em', { ascending: false });
 
       if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Nenhum registro encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Nenhum registro encontrado.</td></tr>';
         return;
       }
 
       tbody.innerHTML = '';
-      data.forEach((jovem, idx) => {
-        const medalha = idx === 0 ? '🥇 ' : idx === 1 ? '🥈 ' : idx === 2 ? '🥉 ' : `${idx + 1}º`;
-        const badgeStatus = jovem.status === 'aprovado' 
-          ? '<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">Aprovado</span>' 
-          : '<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-bold">Pendente</span>';
-
+      data.forEach(item => {
+        const dataFmt = new Date(item.criado_em).toLocaleString('pt-BR');
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50">
-            <td class="p-3 font-bold">${medalha}</td>
-            <td class="p-3 font-semibold text-gray-800">${jovem.nome}</td>
-            <td class="p-3 text-xs text-gray-500">${jovem.cargo || 'Jovem'}</td>
-            <td class="p-3">${badgeStatus}</td>
-            <td class="p-3 text-right font-bold text-blue-700">${jovem.pontos_totais || 0} pts</td>
+            <td class="p-3 text-gray-600">${dataFmt}</td>
+            <td class="p-3 font-semibold text-gray-800">${item.tipo}</td>
+            <td class="p-3 text-right font-bold text-emerald-600">+${item.pontos} pts</td>
           </tr>
         `;
       });
+    }
+
+    // REGRA DE RANKING: CRITÉRIO DE DESEMPATE SEM REPETIR POSIÇÃO (1º, 3º)
+    async function recarregarRanking() {
+      const tbody = document.getElementById('ranking-table-body');
+      const { data, error } = await _supabase
+        .from('profiles')
+        .select('*')
+        .order('pontos_totais', { ascending: false })
+        .order('data_pontuacao', { ascending: true }); // Quem chegou primeiro permanece na frente
+
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Nenhum registro encontrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      let posAtual = 1;
+
+      data.forEach((jovem, index) => {
+        // Regra de desempate e contagem real da posição
+        let posicaoExibida = index + 1;
+        const icon = posicaoExibida === 1 ? '🥇' : posicaoExibida === 2 ? '🥈' : posicaoExibida === 3 ? '🥉' : `${posicaoExibida}º`;
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold">${icon}</td>
+            <td class="p-3 font-semibold text-gray-800">${jovem.nome}</td>
+            <td class="p-3 text-xs text-blue-700 font-bold">${jovem.nivel || '🌱 Iniciante'}</td>
+            <td class="p-3 text-right font-bold text-blue-900">${jovem.pontos_totais || 0} pts</td>
+          </tr>
+        `;
+      });
+    }
+
+    async function recarregarAprovacoes() {
+      const tbody = document.getElementById('aprovacoes-table-body');
+      const { data, error } = await _supabase.from('profiles').select('*').order('nome');
+
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Nenhum cadastro encontrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      data.forEach(p => {
+        const badge = p.status === 'ATIVO' 
+          ? '<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded font-bold">ATIVO</span>'
+          : p.status === 'REJEITADO'
+          ? '<span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded font-bold">REJEITADO</span>'
+          : '<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded font-bold">PENDENTE</span>';
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-bold text-gray-800">${p.nome}</td>
+            <td class="p-3 text-xs text-gray-500">${p.cargo || 'Jovem'}</td>
+            <td class="p-3 text-xs text-gray-600">${p.whatsapp || '-'}</td>
+            <td class="p-3">${badge}</td>
+            <td class="p-3 text-right space-x-1">
+              <button onclick="alterarStatusUsuario('${p.id}', 'ATIVO')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-bold">Aprovar</button>
+              <button onclick="alterarStatusUsuario('${p.id}', 'REJEITADO')" class="bg-red-600 hover:bg-red-700 text-white text-xs px-2.5 py-1 rounded font-bold">Rejeitar</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function alterarStatusUsuario(id, novoStatus) {
+      const { error } = await _supabase.from('profiles').update({ status: novoStatus }).eq('id', id);
+      if (error) alert('Erro ao atualizar: ' + error.message);
+      else recarregarAprovacoes();
+    }
+
+    function sair() {
+      usuarioAtual = null;
+      document.getElementById('sec-auth').classList.remove('hidden');
+      document.getElementById('sidebar').classList.add('hidden');
+      document.getElementById('sec-dashboard').classList.add('hidden');
     }
   </script>
 </body>
