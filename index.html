@@ -7,105 +7,209 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
 
-  <!-- Header / Navbar -->
+  <!-- Header -->
   <header class="bg-blue-800 text-white shadow-lg p-4 sticky top-0 z-50">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold tracking-wide">Kemuel Connect 777</h1>
-      <span class="bg-blue-600 text-xs px-3 py-1 rounded-full font-semibold">Ministério Jovem</span>
+      <span id="user-badge" class="bg-blue-600 text-xs px-3 py-1 rounded-full font-semibold">Visitante</span>
     </div>
   </header>
 
   <!-- Container Principal -->
-  <main class="max-w-4xl mx-auto p-4 space-y-6">
+  <main class="max-w-4xl mx-auto p-4 space-y-6 w-full flex-grow">
 
-    <!-- Card de Boas-Vindas / Resumo -->
-    <section class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-600">
-      <h2 class="text-2xl font-bold text-gray-800">Bem-vindo ao Painel JA! 👋</h2>
-      <p class="text-sm text-gray-600 mt-1">Acompanhe seus pontos, presença e classificação na igreja.</p>
-      
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-        <div class="bg-blue-50 p-4 rounded-lg text-center">
-          <span class="block text-xs font-medium text-blue-600 uppercase">Seus Pontos</span>
-          <span class="text-3xl font-extrabold text-blue-900 mt-1 block" id="user-points">0</span>
-        </div>
-        <div class="bg-amber-50 p-4 rounded-lg text-center">
-          <span class="block text-xs font-medium text-amber-600 uppercase">Sua Posição</span>
-          <span class="text-3xl font-extrabold text-amber-900 mt-1 block" id="user-rank">#-</span>
-        </div>
-        <div class="bg-emerald-50 p-4 rounded-lg text-center col-span-2 md:col-span-1">
-          <span class="block text-xs font-medium text-emerald-600 uppercase">Status Lição</span>
-          <span class="text-sm font-bold text-emerald-800 mt-2 block">Em Dia 🔥</span>
-        </div>
+    <!-- TELA 1: FORMULÁRIO DE CADASTRO E LOGIN -->
+    <section id="auth-section" class="bg-white rounded-xl shadow-md p-6 max-w-md mx-auto border-t-4 border-blue-600">
+      <div class="flex justify-around mb-6 border-b pb-2">
+        <button id="tab-login" onclick="alternarAba('login')" class="font-bold text-blue-700 border-b-2 border-blue-700 pb-1">Entrar</button>
+        <button id="tab-cadastro" onclick="alternarAba('cadastro')" class="font-bold text-gray-400 hover:text-blue-700 pb-1">Cadastrar-se</button>
       </div>
+
+      <!-- Form Login -->
+      <form id="form-login" onsubmit="fazerLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Nome Cadastrado</label>
+          <input type="text" id="login-nome" required placeholder="Digite seu nome" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+        </div>
+        <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded-lg transition text-sm">Acessar Painel</button>
+      </form>
+
+      <!-- Form Cadastro -->
+      <form id="form-cadastro" onsubmit="fazerCadastro(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Nome Completo</label>
+          <input type="text" id="cad-nome" required placeholder="Seu nome" class="w-full p-2.5 border rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">Cargo / Função</label>
+          <select id="cad-cargo" class="w-full p-2.5 border rounded-lg text-sm">
+            <option value="Jovem">Jovem</option>
+            <option value="Líder JA">Líder JA</option>
+            <option value="Desbravador">Desbravador</option>
+            <option value="Diretoria">Diretoria</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-gray-600 mb-1">WhatsApp</label>
+          <input type="tel" id="cad-whatsapp" placeholder="(85) 99999-9999" class="w-full p-2.5 border rounded-lg text-sm">
+        </div>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg transition text-sm">Enviar para Aprovação</button>
+        <p class="text-xs text-gray-500 text-center mt-2">Seu cadastro precisará da aprovação do líder para acessar o painel.</p>
+      </form>
     </section>
 
-    <!-- Tabela de Ranking em Tempo Real -->
-    <section class="bg-white rounded-xl shadow p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">🏆 Ranking dos Jovens</h3>
-        <button onclick="carregarRanking()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600 transition">Atualizar</button>
-      </div>
+    <!-- TELA 2: DASHBOARD (Aparece após entrar) -->
+    <div id="dashboard-section" class="space-y-6 hidden">
+      <!-- Card de Resumo -->
+      <section class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-600 flex justify-between items-center">
+        <div>
+          <h2 id="welcome-name" class="text-2xl font-bold text-gray-800">Olá! 👋</h2>
+          <p class="text-sm text-gray-600 mt-1">Status do Cadastro: <span id="status-tag" class="font-bold text-amber-600 uppercase">Pendente</span></p>
+        </div>
+        <button onclick="sair()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 font-bold px-3 py-1.5 rounded transition">Sair</button>
+      </section>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
-          <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
-            <tr>
-              <th class="p-3">Pos.</th>
-              <th class="p-3">Jovem</th>
-              <th class="p-3">Cargo</th>
-              <th class="p-3 text-right">Pontos</th>
-            </tr>
-          </thead>
-          <tbody id="ranking-body" class="divide-y">
-            <tr>
-              <td colspan="4" class="p-4 text-center text-gray-400">Carregando classificação...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+      <!-- Ranking -->
+      <section class="bg-white rounded-xl shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-bold text-gray-800">🏆 Ranking Geral</h3>
+          <button onclick="carregarRanking()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600">Atualizar</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+              <tr>
+                <th class="p-3">Pos.</th>
+                <th class="p-3">Jovem</th>
+                <th class="p-3">Cargo</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Pontos</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body" class="divide-y">
+              <tr><td colspan="5" class="p-4 text-center text-gray-400">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
 
   </main>
 
-  <!-- Script Supabase Integrado -->
+  <!-- Script Supabase -->
   <script>
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
-    // Cole sua Publishable Key no campo abaixo entre as aspas
     const SUPABASE_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
-
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function carregarRanking() {
-      const tbody = document.getElementById('ranking-body');
-      tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Carregando classificação...</td></tr>';
+    let usuarioAtual = null;
+
+    function alternarAba(aba) {
+      if (aba === 'login') {
+        document.getElementById('form-login').classList.remove('hidden');
+        document.getElementById('form-cadastro').classList.add('hidden');
+        document.getElementById('tab-login').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
+        document.getElementById('tab-cadastro').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
+      } else {
+        document.getElementById('form-login').classList.add('hidden');
+        document.getElementById('form-cadastro').classList.remove('hidden');
+        document.getElementById('tab-cadastro').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
+        document.getElementById('tab-login').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
+      }
+    }
+
+    async function fazerCadastro(e) {
+      e.preventDefault();
+      const nome = document.getElementById('cad-nome').value;
+      const cargo = document.getElementById('cad-cargo').value;
+      const whatsapp = document.getElementById('cad-whatsapp').value;
+
+      const { data, error } = await _supabase.from('profiles').insert([
+        { nome, cargo, whatsapp, status: 'pendente', pontos_totais: 0 }
+      ]);
+
+      if (error) {
+        alert('Erro ao cadastrar: ' + error.message);
+      } else {
+        alert('Cadastro enviado com sucesso! Aguarde a aprovação do líder.');
+        alternarAba('login');
+        document.getElementById('login-nome').value = nome;
+      }
+    }
+
+    async function fazerLogin(e) {
+      e.preventDefault();
+      const nome = document.getElementById('login-nome').value;
 
       const { data, error } = await _supabase
         .from('profiles')
-        .select('nome, cargo, pontos_totais')
+        .select('*')
+        .iliike('nome', `%${nome}%`)
+        .maybeSingle();
+
+      if (error || !data) {
+        alert('Usuário não encontrado!');
+        return;
+      }
+
+      usuarioAtual = data;
+      abrirDashboard();
+    }
+
+    function abrirDashboard() {
+      document.getElementById('auth-section').classList.add('hidden');
+      document.getElementById('dashboard-section').classList.remove('hidden');
+      document.getElementById('welcome-name').innerText = `Olá, ${usuarioAtual.nome}! 👋`;
+      document.getElementById('user-badge').innerText = usuarioAtual.cargo || 'Membro';
+      
+      const statusTag = document.getElementById('status-tag');
+      statusTag.innerText = usuarioAtual.status || 'Pendente';
+      statusTag.className = usuarioAtual.status === 'aprovado' 
+        ? 'font-bold text-emerald-600 uppercase' 
+        : 'font-bold text-amber-600 uppercase';
+
+      carregarRanking();
+    }
+
+    function sair() {
+      usuarioAtual = null;
+      document.getElementById('dashboard-section').classList.add('hidden');
+      document.getElementById('auth-section').classList.remove('hidden');
+      document.getElementById('user-badge').innerText = 'Visitante';
+    }
+
+    async function carregarRanking() {
+      const tbody = document.getElementById('ranking-body');
+      const { data, error } = await _supabase
+        .from('profiles')
+        .select('*')
         .order('pontos_totais', { ascending: false });
 
       if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Nenhum jovem cadastrado ainda.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">Nenhum registro encontrado.</td></tr>';
         return;
       }
 
       tbody.innerHTML = '';
       data.forEach((jovem, idx) => {
         const medalha = idx === 0 ? '🥇 ' : idx === 1 ? '🥈 ' : idx === 2 ? '🥉 ' : `${idx + 1}º`;
+        const badgeStatus = jovem.status === 'aprovado' 
+          ? '<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-bold">Aprovado</span>' 
+          : '<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-bold">Pendente</span>';
+
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50">
             <td class="p-3 font-bold">${medalha}</td>
             <td class="p-3 font-semibold text-gray-800">${jovem.nome}</td>
-            <td class="p-3 text-xs text-gray-500 capitalize">${jovem.cargo}</td>
-            <td class="p-3 text-right font-bold text-blue-700">${jovem.pontos_totais} pts</td>
+            <td class="p-3 text-xs text-gray-500">${jovem.cargo || 'Jovem'}</td>
+            <td class="p-3">${badgeStatus}</td>
+            <td class="p-3 text-right font-bold text-blue-700">${jovem.pontos_totais || 0} pts</td>
           </tr>
         `;
       });
     }
-
-    document.addEventListener('DOMContentLoaded', carregarRanking);
   </script>
 </body>
 </html>
