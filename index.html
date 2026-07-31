@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
-  <!-- MENU LATERAL (SÓ APARECE LOGADO) -->
+  <!-- MENU LATERAL -->
   <aside id="sidebar" class="w-full md:w-64 bg-blue-900 text-white flex-shrink-0 hidden">
     <div class="p-4 border-b border-blue-800 flex justify-between items-center">
       <h1 class="font-bold text-lg tracking-wide">Kemuel Connect</h1>
@@ -39,7 +39,7 @@
     </div>
   </aside>
 
-  <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+  <!-- ÁREA PRINCIPAL -->
   <main class="flex-1 p-4 md:p-8 overflow-y-auto">
 
     <!-- TELA 1: LOGIN / CADASTRO -->
@@ -81,7 +81,6 @@
           <input type="tel" id="cad-whatsapp" placeholder="(85) 99999-9999" class="w-full p-2.5 border rounded-lg text-sm">
         </div>
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">Solicitar Acesso</button>
-        <p class="text-xs text-gray-500 text-center">Seu cadastro precisará de aprovação do Diretor.</p>
       </form>
     </section>
 
@@ -98,7 +97,6 @@
         </div>
       </div>
 
-      <!-- Card de Nível -->
       <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-xl shadow">
         <div class="flex justify-between items-center mb-2">
           <span id="dash-nivel-nome" class="font-bold text-lg">🌱 Iniciante</span>
@@ -110,19 +108,18 @@
         <p id="dash-nivel-txt" class="text-xs text-blue-200 mt-2 text-right">Faltam 500 pts para Discípulo 🌿</p>
       </div>
 
-      <!-- Atalho Comunhão -->
       <div class="bg-white p-6 rounded-xl shadow">
         <h3 class="font-bold text-lg text-gray-800 mb-4">🙏 Registrar Comunhão do Dia</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="p-4 border rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-sm text-left flex justify-between items-center">
+          <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="p-4 border rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-sm flex justify-between items-center">
             <span>📖 Leitura Bíblica</span>
             <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded">+20 pts</span>
           </button>
-          <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="p-4 border rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold text-sm text-left flex justify-between items-center">
+          <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="p-4 border rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold text-sm flex justify-between items-center">
             <span>📚 Lição da Escola Sabatina</span>
             <span class="bg-emerald-200 text-emerald-800 text-xs px-2 py-1 rounded">+30 pts</span>
           </button>
-          <button onclick="registrarComunhao('Ano Bíblico', 50)" class="p-4 border rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold text-sm text-left flex justify-between items-center">
+          <button onclick="registrarComunhao('Ano Bíblico', 50)" class="p-4 border rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold text-sm flex justify-between items-center">
             <span>🔥 Ano Bíblico</span>
             <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded">+50 pts</span>
           </button>
@@ -134,7 +131,7 @@
     <div id="sec-comunhao" class="space-y-6 hidden">
       <h2 class="text-2xl font-bold text-gray-800">🙏 Minha Comunhão</h2>
       <div class="bg-white p-6 rounded-xl shadow space-y-4">
-        <p class="text-sm text-gray-600">Selecione a atividade para registrar seu momento com Deus hoje. O registro é único e inalterável.</p>
+        <p class="text-sm text-gray-600">Selecione a atividade para registrar seu momento com Deus hoje.</p>
         <div class="flex flex-col md:flex-row gap-4">
           <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="flex-1 p-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">📖 Leitura Bíblica (+20 pts)</button>
           <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="flex-1 p-4 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition">📚 Estudo da Lição (+30 pts)</button>
@@ -161,7 +158,30 @@
       </div>
     </div>
 
-    <!-- TELA 4: RANKING -->
+    <!-- TELA 4: DESAFIOS -->
+    <div id="sec-desafios" class="space-y-6 hidden">
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-gray-800">🎯 Desafios Ativos</h2>
+        <button id="btn-novo-desafio" onclick="abrirModalDesafio()" class="bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg hidden">+ Criar Desafio (Diretor)</button>
+      </div>
+
+      <!-- Form do Diretor para Criar Desafio (Injetado dinamicamente) -->
+      <div id="box-criar-desafio" class="bg-white p-6 rounded-xl shadow hidden space-y-4 border-2 border-blue-500">
+        <h3 class="font-bold text-lg text-blue-900">Novo Desafio JA</h3>
+        <form onsubmit="salvarNovoDesafio(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" id="desafio-nome" placeholder="Nome do Desafio (Ex: 7 Dias de Oração)" required class="p-2.5 border rounded-lg text-sm">
+          <input type="number" id="desafio-pontos" placeholder="Pontos Recompensa" required class="p-2.5 border rounded-lg text-sm">
+          <input type="text" id="desafio-desc" placeholder="Descrição curta" required class="p-2.5 border rounded-lg text-sm md:col-span-2">
+          <button type="submit" class="bg-emerald-600 text-white font-bold py-2 rounded-lg text-sm md:col-span-2">Cadastrar Desafio</button>
+        </form>
+      </div>
+
+      <div id="lista-desafios" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Desafios serão listados aqui -->
+      </div>
+    </div>
+
+    <!-- TELA 5: RANKING -->
     <div id="sec-ranking" class="space-y-6 hidden">
       <h2 class="text-2xl font-bold text-gray-800">🏆 Ranking Geral</h2>
       <div class="bg-white p-6 rounded-xl shadow overflow-x-auto">
@@ -181,7 +201,30 @@
       </div>
     </div>
 
-    <!-- TELA 5: PAINEL DO DIRETOR (APROVAÇÃO DE CADASTROS) -->
+    <!-- TELA 6: MEU PERFIL -->
+    <div id="sec-perfil" class="space-y-6 hidden">
+      <h2 class="text-2xl font-bold text-gray-800">👤 Meu Perfil</h2>
+      <div class="bg-white p-6 rounded-xl shadow space-y-4 max-w-lg">
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase">Nome</label>
+          <p id="perfil-nome" class="font-bold text-lg text-gray-800">-</p>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase">Cargo / Função</label>
+          <p id="perfil-cargo" class="text-sm text-gray-700">-</p>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase">WhatsApp</label>
+          <p id="perfil-whats" class="text-sm text-gray-700">-</p>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-500 uppercase">Status de Acesso</label>
+          <p id="perfil-status" class="text-sm font-bold text-emerald-600">-</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELA 7: PAINEL DO DIRETOR (APROVAÇÃO) -->
     <div id="sec-aprovacoes" class="space-y-6 hidden">
       <h2 class="text-2xl font-bold text-gray-800">👥 Aprovação de Cadastros</h2>
       <div class="bg-white p-6 rounded-xl shadow overflow-x-auto">
@@ -204,7 +247,7 @@
 
   </main>
 
-  <!-- SCRIPT COMPLETO -->
+  <!-- SCRIPT LÓGICO -->
   <script>
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
@@ -212,7 +255,6 @@
 
     let usuarioAtual = null;
 
-    // REGRAS DE NÍVEIS
     const NIVEIS = [
       { nome: '🌱 Iniciante', min: 0 },
       { nome: '🌿 Discípulo', min: 500 },
@@ -250,13 +292,9 @@
       if (aba === 'login') {
         document.getElementById('form-login').classList.remove('hidden');
         document.getElementById('form-cadastro').classList.add('hidden');
-        document.getElementById('btn-tab-login').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
-        document.getElementById('btn-tab-cad').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
       } else {
         document.getElementById('form-login').classList.add('hidden');
         document.getElementById('form-cadastro').classList.remove('hidden');
-        document.getElementById('btn-tab-cad').className = 'font-bold text-blue-700 border-b-2 border-blue-700 pb-1';
-        document.getElementById('btn-tab-login').className = 'font-bold text-gray-400 hover:text-blue-700 pb-1';
       }
     }
 
@@ -270,12 +308,10 @@
         { nome, cargo, whatsapp, status: 'PENDENTE', role: 'jovem', pontos_totais: 0, streak: 0 }
       ]);
 
-      if (error) {
-        alert('Erro ao cadastrar: ' + error.message);
-      } else {
+      if (error) alert('Erro ao cadastrar: ' + error.message);
+      else {
         alert('Cadastro enviado! Aguarde aprovação do Diretor.');
         mudarAbaAuth('login');
-        document.getElementById('login-nome').value = nome;
       }
     }
 
@@ -294,12 +330,6 @@
       }
 
       usuarioAtual = data[0];
-
-      if (usuarioAtual.status === 'REJEITADO') {
-        alert('Seu cadastro foi recusado pela diretoria.');
-        return;
-      }
-
       iniciarSessao();
     }
 
@@ -307,10 +337,10 @@
       document.getElementById('sec-auth').classList.add('hidden');
       document.getElementById('sidebar').classList.remove('hidden');
 
-      // Exibir menus do diretor se for administrador/diretor
       if (usuarioAtual.role === 'diretor') {
         document.getElementById('diretor-menu').classList.remove('hidden');
         document.getElementById('user-role-badge').innerText = 'Diretor';
+        document.getElementById('btn-novo-desafio').classList.remove('hidden');
       } else {
         document.getElementById('diretor-menu').classList.add('hidden');
         document.getElementById('user-role-badge').innerText = usuarioAtual.cargo || 'Jovem';
@@ -320,7 +350,7 @@
     }
 
     function navegarPara(tela) {
-      const telas = ['dashboard', 'comunhao', 'ranking', 'aprovacoes'];
+      const telas = ['dashboard', 'comunhao', 'desafios', 'ranking', 'perfil', 'aprovacoes'];
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if (el) el.classList.add('hidden');
@@ -331,7 +361,9 @@
 
       if (tela === 'dashboard') recarregarDashboard();
       if (tela === 'comunhao') recarregarComunhao();
+      if (tela === 'desafios') recarregarDesafios();
       if (tela === 'ranking') recarregarRanking();
+      if (tela === 'perfil') recarregarPerfil();
       if (tela === 'aprovacoes') recarregarAprovacoes();
     }
 
@@ -356,17 +388,15 @@
         return;
       }
 
-      // Inserir registro inalterável
       const { error: errHist } = await _supabase.from('comunhao_registros').insert([
         { profile_id: usuarioAtual.id, tipo, pontos }
       ]);
 
       if (errHist) {
-        alert('Erro ao salvar comunhão: ' + errHist.message);
+        alert('Erro ao registrar comunhão: ' + errHist.message);
         return;
       }
 
-      // Atualizar pontos, nível e data da pontuação para desempate
       const novosPontos = (usuarioAtual.pontos_totais || 0) + pontos;
       const infoNivel = calcularNivel(novosPontos);
 
@@ -380,8 +410,10 @@
       if (!errProf) {
         usuarioAtual.pontos_totais = novosPontos;
         usuarioAtual.streak = (usuarioAtual.streak || 0) + 1;
-        alert(`🙏 Comunhão registrada com sucesso! +${pontos} pts`);
+        alert(`🙏 Comunhão registrada! +${pontos} pts`);
         recarregarDashboard();
+      } else {
+        alert('Erro ao atualizar perfil: ' + errProf.message);
       }
     }
 
@@ -411,14 +443,58 @@
       });
     }
 
-    // REGRA DE RANKING: CRITÉRIO DE DESEMPATE SEM REPETIR POSIÇÃO (1º, 3º)
+    function abrirModalDesafio() {
+      document.getElementById('box-criar-desafio').classList.toggle('hidden');
+    }
+
+    async function salvarNovoDesafio(e) {
+      e.preventDefault();
+      const nome = document.getElementById('desafio-nome').value.trim();
+      const pontos = parseInt(document.getElementById('desafio-pontos').value);
+      const descricao = document.getElementById('desafio-desc').value.trim();
+
+      const { error } = await _supabase.from('desafios').insert([
+        { nome, pontos, descricao }
+      ]);
+
+      if (error) alert('Erro ao salvar desafio: ' + error.message);
+      else {
+        alert('Desafio publicado com sucesso!');
+        document.getElementById('box-criar-desafio').classList.add('hidden');
+        recarregarDesafios();
+      }
+    }
+
+    async function recarregarDesafios() {
+      const container = document.getElementById('lista-desafios');
+      const { data, error } = await _supabase.from('desafios').select('*').order('criado_em', { ascending: false });
+
+      if (error || !data || data.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-sm">Nenhum desafio ativo no momento.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      data.forEach(d => {
+        container.innerHTML += `
+          <div class="bg-white p-5 rounded-xl shadow space-y-2 border-l-4 border-amber-500">
+            <div class="flex justify-between items-center">
+              <h4 class="font-bold text-gray-800">${d.nome}</h4>
+              <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded">+${d.pontos} pts</span>
+            </div>
+            <p class="text-xs text-gray-600">${d.descricao || 'Sem descrição'}</p>
+          </div>
+        `;
+      });
+    }
+
     async function recarregarRanking() {
       const tbody = document.getElementById('ranking-table-body');
       const { data, error } = await _supabase
         .from('profiles')
         .select('*')
         .order('pontos_totais', { ascending: false })
-        .order('data_pontuacao', { ascending: true }); // Quem chegou primeiro permanece na frente
+        .order('data_pontuacao', { ascending: true });
 
       if (error || !data || data.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Nenhum registro encontrado.</td></tr>';
@@ -426,12 +502,9 @@
       }
 
       tbody.innerHTML = '';
-      let posAtual = 1;
-
       data.forEach((jovem, index) => {
-        // Regra de desempate e contagem real da posição
-        let posicaoExibida = index + 1;
-        const icon = posicaoExibida === 1 ? '🥇' : posicaoExibida === 2 ? '🥈' : posicaoExibida === 3 ? '🥉' : `${posicaoExibida}º`;
+        let pos = index + 1;
+        let icon = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}º`;
 
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50">
@@ -442,6 +515,13 @@
           </tr>
         `;
       });
+    }
+
+    function recarregarPerfil() {
+      document.getElementById('perfil-nome').innerText = usuarioAtual.nome;
+      document.getElementById('perfil-cargo').innerText = usuarioAtual.cargo || 'Jovem';
+      document.getElementById('perfil-whats').innerText = usuarioAtual.whatsapp || 'Não informado';
+      document.getElementById('perfil-status').innerText = usuarioAtual.status;
     }
 
     async function recarregarAprovacoes() {
