@@ -23,7 +23,6 @@
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
     .avatar-container:hover .avatar-overlay { opacity: 1; }
 
-    /* Estilização para o conteúdo HTML injetado pela API da Adventech */
     #licao-conteudo p, #licao-aba-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
     #licao-conteudo h3, #licao-conteudo h4, #licao-aba-conteudo h3, #licao-aba-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
     #licao-conteudo blockquote, #licao-aba-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
@@ -402,7 +401,7 @@
     </div>
   </div>
 
-  <!-- MODAL DA LIÇÃO DA ESCOLA SABATINA (INTEGRADO COM API ADVENTECH) -->
+  <!-- MODAL DA LIÇÃO DA ESCOLA SABATINA -->
   <div id="modal-licao-api" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalLicaoAPI()">
     <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
       <button onclick="fecharModalLicaoAPI()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -415,7 +414,7 @@
       </div>
 
       <div id="licao-conteudo" class="overflow-y-auto flex-1 pr-2 text-sm text-gray-700 leading-relaxed space-y-3">
-        <!-- O conteúdo dinâmico retornado da API será inserido aqui -->
+        <!-- Conteúdo da API -->
       </div>
 
       <div class="pt-3 border-t flex justify-end gap-2">
@@ -477,36 +476,17 @@
 
     const API_ADVENTECH_BASE = "https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq";
 
-    // GERADOR DO CRONOGRAMA COMPLETO DOS 27 LIVROS DO NT
     function gerarCronogramaCompleto() {
       const estruturaLivros = [
-        { livro: "Mateus", caps: 28 },
-        { livro: "Marcos", caps: 16 },
-        { livro: "Lucas", caps: 24 },
-        { livro: "João", caps: 21 },
-        { livro: "Atos dos Apóstolos", caps: 28 },
-        { livro: "Romanos", caps: 16 },
-        { livro: "1 Coríntios", caps: 16 },
-        { livro: "2 Coríntios", caps: 13 },
-        { livro: "Gálatas", caps: 6 },
-        { livro: "Efésios", caps: 6 },
-        { livro: "Filipenses", caps: 4 },
-        { livro: "Colossenses", caps: 4 },
-        { livro: "1 Tessalonicenses", caps: 5 },
-        { livro: "2 Tessalonicenses", caps: 3 },
-        { livro: "1 Timóteo", caps: 6 },
-        { livro: "2 Timóteo", caps: 4 },
-        { livro: "Tito", caps: 3 },
-        { livro: "Filemom", caps: 1 },
-        { livro: "Hebreus", caps: 13 },
-        { livro: "Tiago", caps: 5 },
-        { livro: "1 Pedro", caps: 5 },
-        { livro: "2 Pedro", caps: 3 },
-        { livro: "1 João", caps: 5 },
-        { livro: "2 João", caps: 1 },
-        { livro: "3 João", caps: 1 },
-        { livro: "Judas", caps: 1 },
-        { livro: "Apocalipse", caps: 22 }
+        { livro: "Mateus", caps: 28 }, { livro: "Marcos", caps: 16 }, { livro: "Lucas", caps: 24 },
+        { livro: "João", caps: 21 }, { livro: "Atos dos Apóstolos", caps: 28 }, { livro: "Romanos", caps: 16 },
+        { livro: "1 Coríntios", caps: 16 }, { livro: "2 Coríntios", caps: 13 }, { livro: "Gálatas", caps: 6 },
+        { livro: "Efésios", caps: 6 }, { livro: "Filipenses", caps: 4 }, { livro: "Colossenses", caps: 4 },
+        { livro: "1 Tessalonicenses", caps: 5 }, { livro: "2 Tessalonicenses", caps: 3 }, { livro: "1 Timóteo", caps: 6 },
+        { livro: "2 Timóteo", caps: 4 }, { livro: "Tito", caps: 3 }, { livro: "Filemom", caps: 1 },
+        { livro: "Hebreus", caps: 13 }, { livro: "Tiago", caps: 5 }, { livro: "1 Pedro", caps: 5 },
+        { livro: "2 Pedro", caps: 3 }, { livro: "1 João", caps: 5 }, { livro: "2 João", caps: 1 },
+        { livro: "3 João", caps: 1 }, { livro: "Judas", caps: 1 }, { livro: "Apocalipse", caps: 22 }
       ];
 
       const todosOsCapitulos = [];
@@ -546,7 +526,6 @@
     }
 
     const dadosPlano = gerarCronogramaCompleto();
-
     const historicoComunhao = [
       { data: '2026-07-31', atividade: 'Lição da Escola Sabatina', hora: '08:15' },
       { data: '2026-07-31', atividade: 'Ano Bíblico (Mateus 1)', hora: '21:00' }
@@ -637,7 +616,6 @@
       document.getElementById('reg-data-hora-txt').innerText = `${dataStr} às ${horaStr}`;
       document.getElementById('reg-input-obs').value = '';
 
-      // Seleciona o primeiro capítulo do mês atual por padrão se nenhum estiver selecionado
       if (!capituloSelecionadoAtual) {
         selecionarCapituloNoModal('agosto', 0);
       } else {
@@ -661,7 +639,6 @@
       const obsTexto = document.getElementById('reg-input-obs').value;
       const hoje = new Date();
       const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      const hojeStr = '2026-08-01';
 
       dadosPlano[mes][index].lido = true;
       dadosPlano[mes][index].reflexao = obsTexto;
@@ -680,7 +657,7 @@
       }
       if (horaTxt) horaTxt.innerText = `Registrado com reflexão às ${horaStr}`;
 
-      historicoComunhao.unshift({ data: hojeStr, atividade: acaoNome, hora: horaStr });
+      historicoComunhao.unshift({ data: '2026-08-01', atividade: acaoNome, hora: horaStr });
       renderizarHistoricoComunhao();
 
       if (typeof confetti === 'function') {
@@ -692,7 +669,6 @@
       exhibirToast("Reflexão registrada! +50 pontos no #anobiblico.");
     }
 
-    /* CARREGAMENTO DA LIÇÃO DIRETAMENTE NA ABA */
     async function carregarLicaoNaAba() {
       const tituloEl = document.getElementById('licao-aba-titulo');
       const subtituloEl = document.getElementById('licao-aba-subtitulo');
@@ -708,25 +684,15 @@
       try {
         const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
         if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
-
         const data = await response.json();
-
         tituloEl.innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title || "Lição da Escola Sabatina"}`;
         subtituloEl.innerText = `${data.date || "Estudo Diário"} #licaoescolasabatina`;
         conteudoEl.innerHTML = data.content;
-
       } catch (error) {
-        console.error("Erro ao carregar a lição:", error);
-        conteudoEl.innerHTML = `
-          <div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs">
-            <p class="font-bold">Ocorreu uma falha ao carregar a lição da Escola Sabatina.</p>
-            <p class="mt-1">Verifique sua conexão ou tente novamente mais tarde.</p>
-          </div>
-        `;
+        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Ocorreu uma falha ao carregar a lição da Escola Sabatina.</p></div>`;
       }
     }
 
-    /* INTEGRAÇÃO DA API DA ADVENTECH (MODAL) */
     async function abrirLicaoDoDiaAPI() {
       const modal = document.getElementById('modal-licao-api');
       const tituloEl = document.getElementById('licao-api-titulo');
@@ -735,24 +701,19 @@
 
       modal.classList.remove('hidden');
       tituloEl.innerText = "Carregando Lição...";
-      subtituloEl.innerText = "Buscando dados no servidor da Adventech...";
+      subtituloEl.innerText = "Buscando dados no servidor...";
       conteudoEl.innerHTML = `<div class="p-8 text-center text-gray-400 font-medium"><i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i><p>Carregando o estudo de hoje...</p></div>`;
 
       try {
         const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
-        if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
-
+        if (!response.ok) throw new Error("Erro de resposta da API");
         const data = await response.json();
-
         tituloEl.innerText = data.title || "Lição da Escola Sabatina";
         subtituloEl.innerText = data.date || "Estudo Diário";
         conteudoEl.innerHTML = data.content;
-
       } catch (error) {
-        console.error("Erro ao carregar a lição:", error);
         tituloEl.innerText = "Não foi possível carregar";
-        subtituloEl.innerText = "Aviso de Conexão";
-        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Ocorreu uma falha ao acessar o conteúdo da lição da Escola Sabatina.</p><p class="mt-1">Verifique sua conexão com a internet ou tente novamente mais tarde.</p></div>`;
+        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Falha ao acessar o conteúdo da lição.</p></div>`;
       }
     }
 
@@ -823,7 +784,6 @@
       historicoComunhao.forEach(item => {
         const partesData = item.data.split('-');
         const dataFmt = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
-
         const tr = document.createElement('tr');
         tr.className = "hover:bg-gray-50 transition";
         tr.innerHTML = `
@@ -839,7 +799,6 @@
       renderizarHistoricoComunhao();
     }
 
-    /* FUNÇÕES DE FOTO E PERFIL */
     function toggleAvatarMenu(e) {
       e.stopPropagation();
       document.getElementById('avatar-dropdown').classList.toggle('hidden');
