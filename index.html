@@ -4,482 +4,115 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kemuel Connect 777 - Gestão JA</title>
+  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <style>
-    .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
-    .card-hover { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15); }
-    .btn-quick { transition: all 0.2s ease; }
-    .btn-quick:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(30, 58, 138, 0.2); }
-  </style>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
+<body class="bg-slate-100 text-slate-800 font-sans">
 
-  <!-- MENU LATERAL (SEM EMOJIS NO TEXTO) -->
-  <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
-    <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
-      <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
-      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
-      <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span>
+  <!-- Header / Navbar -->
+  <header class="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold flex items-center gap-2">
+      <i class="fa-solid fa-fire text-amber-500"></i> Kemuel Connect 777
+    </h1>
+    <div class="text-sm font-medium">Olá, Jovem! 👋</div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- CARDS DE INDICADORES (CAPÍTULO 2) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <span class="text-xs font-semibold text-slate-400 uppercase">Pontuação</span>
+        <h2 id="card-pontos" class="text-2xl font-bold text-slate-800">1.320 XP</h2>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <span class="text-xs font-semibold text-slate-400 uppercase">Nível</span>
+        <h2 id="card-nivel" class="text-2xl font-bold text-slate-800">Nível 3</h2>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <span class="text-xs font-semibold text-slate-400 uppercase">Streak</span>
+        <h2 id="card-streak" class="text-2xl font-bold text-amber-600">18 Dias 🔥</h2>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <span class="text-xs font-semibold text-slate-400 uppercase">Ranking</span>
+        <h2 id="card-ranking" class="text-2xl font-bold text-slate-800">#5</h2>
+      </div>
     </div>
 
-    <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
-      <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
-      
-      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
-        <i class="fa-solid fa-house w-5 text-amber-400"></i> Dashboard
-      </button>
-      
-      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-user w-5 text-blue-400"></i> Meu Perfil
-      </button>
-      
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-hands-praying w-5 text-emerald-400"></i> Minha Comunhão
-      </button>
-      
-      <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-book-bible w-5 text-amber-300"></i> Bíblia
-      </button>
-      
-      <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-book-open-reader w-5 text-cyan-400"></i> Lição da Escola Sabatina
-      </button>
-      
-      <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-calendar-days w-5 text-purple-400"></i> Calendário
-      </button>
-      
-      <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-trophy w-5 text-yellow-400"></i> Ranking
-      </button>
-      
-      <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bullseye w-5 text-red-400"></i> Desafios
-      </button>
-      
-      <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-heart w-5 text-rose-500"></i> Evangelismo
-      </button>
-      
-      <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bell w-5 text-yellow-300"></i> Notificações
-      </button>
-      
-      <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-gear w-5 text-gray-400"></i> Configurações
-      </button>
+    <!-- SEÇÃO PRINCIPAL (GRID) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-      <!-- EXCLUSIVO DO DIRETOR -->
-      <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1">
-        <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p>
+      <!-- BLOCO: MINHA COMUNHÃO COM OS BOTÕES DE REGISTRO RÁPIDO -->
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-500"></i> Minha Comunhão
+        </h3>
+        <p class="text-xs text-slate-500">Registre seu estudo diário para somar pontos e manter o streak!</p>
         
-        <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-chart-line w-4 text-blue-300"></i> Dashboard Admin
-        </button>
-        
-        <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-users w-4 text-blue-300"></i> Usuários
-        </button>
-        
-        <button onclick="navegarPara('aprovacoes')" id="nav-aprovacoes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-amber-300">
-          <i class="fa-solid fa-user-check w-4"></i> Aprovação Cadastros
-        </button>
-        
-        <button onclick="navegarPara('admin-comprovantes')" id="nav-admin-comprovantes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-emerald-300">
-          <i class="fa-solid fa-file-circle-check w-4"></i> Validar Comprovantes
-        </button>
-        
-        <button onclick="navegarPara('admin-atividades')" id="nav-admin-atividades" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-list-check w-4 text-blue-300"></i> Gestão de Atividades
-        </button>
-        
-        <button onclick="navegarPara('admin-logs')" id="nav-admin-logs" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-gray-400">
-          <i class="fa-solid fa-receipt w-4"></i> Logs do Sistema
-        </button>
-      </div>
-    </nav>
+        <div class="space-y-2">
+          <!-- Botão Bíblia -->
+          <button id="btn-comunhao-biblia" onclick="registrarComunhaoRapida('biblia')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-amber-500 hover:text-white rounded-lg text-sm font-semibold transition flex items-center justify-between">
+            <span><i class="fa-solid fa-book-bible mr-2"></i> Registrar Bíblia</span>
+            <span class="text-xs bg-white text-slate-800 px-2 py-0.5 rounded shadow-sm">+10 XP</span>
+          </button>
 
-    <div class="p-4 border-t border-blue-900">
-      <button onclick="alert('Saindo...')" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow">
-        <i class="fa-solid fa-right-from-bracket"></i> Sair
-      </button>
-    </div>
-  </aside>
-
-  <!-- ÁREA PRINCIPAL -->
-  <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-8">
-    
-    <!-- DASHBOARD COMPLETO REFORMULADO -->
-    <div id="sec-dashboard" class="space-y-6">
-
-      <!-- CABEÇALHO COMPLETO -->
-      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 id="dash-saudacao" class="text-2xl md:text-3xl font-extrabold tracking-tight">Bom dia, Diego! 👋</h2>
-          <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia.</p>
-          <p id="dash-data" class="text-[11px] text-amber-300 font-semibold pt-1"><i class="fa-regular fa-calendar-check mr-1"></i> Sexta-feira, 31 de julho de 2026</p>
-        </div>
-        <div class="flex items-center gap-4 self-end md:self-center">
-          <span class="text-xs bg-amber-500 text-blue-950 px-3 py-1 rounded-full font-black uppercase shadow-md">ATIVO</span>
-          <img id="user-avatar" src="https://ui-avatars.com/api/?name=Diego&background=f59e0b&color=0f172a&bold=true" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover shadow-md" alt="Foto Jovem">
-        </div>
-      </div>
-
-      <!-- PRIMEIRA LINHA: 4 CARDS PRINCIPAIS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Pontuação -->
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-blue-900 card-hover space-y-2">
-          <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase">
-            <span>Pontuação Total</span>
-            <i class="fa-solid fa-star text-amber-400 text-base"></i>
-          </div>
-          <p id="dash-pts-total" class="text-3xl font-black text-blue-950">1.320 <span class="text-xs font-normal text-gray-500">pts</span></p>
-          <p class="text-xs text-emerald-600 font-bold flex items-center gap-1">
-            <i class="fa-solid fa-arrow-trend-up"></i> +140 pts esta semana
-          </p>
-        </div>
-
-        <!-- Nível -->
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-amber-500 card-hover space-y-2">
-          <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase">
-            <span>Nível Atual</span>
-            <span class="text-amber-500 text-xs">⭐⭐⭐</span>
-          </div>
-          <p id="dash-nivel-nome" class="text-xl font-black text-amber-600">Nível 3 — Discípulo</p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5">
-            <div id="dash-nivel-bar" class="bg-amber-500 h-2.5 rounded-full" style="width: 70%"></div>
-          </div>
-          <p id="dash-nivel-txt" class="text-[11px] text-gray-500 font-medium">Faltam 180 pontos para o Nível 4</p>
-        </div>
-
-        <!-- Ranking -->
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-emerald-500 card-hover space-y-2">
-          <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase">
-            <span>Posição Ranking</span>
-            <i class="fa-solid fa-trophy text-emerald-500 text-base"></i>
-          </div>
-          <p id="dash-ranking-pos" class="text-3xl font-black text-emerald-600">5º <span class="text-xs font-normal text-gray-500">lugar</span></p>
-          <p class="text-xs text-gray-500 font-medium">de <strong class="text-gray-800">38</strong> jovens participantes</p>
-        </div>
-
-        <!-- Sequência -->
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-rose-500 card-hover space-y-2">
-          <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase">
-            <span>Sequência (Streak)</span>
-            <i class="fa-solid fa-fire text-rose-500 text-base"></i>
-          </div>
-          <p id="dash-streak" class="text-2xl font-black text-rose-600">🔥 18 dias</p>
-          <p class="text-[11px] text-gray-500 italic">Mantenha sua constância diária!</p>
-        </div>
-      </div>
-
-      <!-- SEGUNDA LINHA: MINHA COMUNHÃO & PRÓXIMOS EVENTOS -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Minha Comunhão -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-hands-praying text-emerald-600"></i> Minha Comunhão
-            </h3>
-            <span class="text-xs font-bold text-gray-400">Hoje</span>
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span class="text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-500"></i> Bíblia</span>
-              <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-1"></i> Concluído</span>
-            </div>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span class="text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-book-open-reader text-cyan-500"></i> Lição</span>
-              <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800"><i class="fa-regular fa-clock mr-1"></i> Pendente</span>
-            </div>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span class="text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-fire text-rose-500"></i> Ano Bíblico</span>
-              <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-1"></i> Concluído</span>
-            </div>
-          </div>
-
-          <button onclick="navegarPara('comunhao')" class="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
-            <i class="fa-solid fa-plus"></i> Registrar Atividade
+          <!-- Botão Lição -->
+          <button id="btn-comunhao-licao" onclick="registrarComunhaoRapida('licao')" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-amber-500 hover:text-white rounded-lg text-sm font-semibold transition flex items-center justify-between">
+            <span><i class="fa-solid fa-scroll mr-2"></i> Registrar Lição</span>
+            <span class="text-xs bg-white text-slate-800 px-2 py-0.5 rounded shadow-sm">+10 XP</span>
           </button>
         </div>
-
-        <!-- Próximos Eventos -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-calendar-days text-purple-600"></i> Próximos Eventos
-            </h3>
-            <button onclick="navegarPara('calendario')" class="text-xs font-bold text-blue-900 hover:underline">Ver Calendário &rarr;</button>
-          </div>
-
-          <div class="space-y-3">
-            <div class="p-3 bg-purple-50 border-l-4 border-purple-600 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-bold text-purple-800 uppercase">Sábado</p>
-                <h4 class="font-bold text-gray-800 text-sm">Culto Jovem Especial</h4>
-              </div>
-              <span class="text-xs font-bold text-purple-900 bg-purple-200 px-2.5 py-1 rounded-lg">19:30</span>
-            </div>
-
-            <div class="p-3 bg-blue-50 border-l-4 border-blue-600 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-bold text-blue-800 uppercase">Domingo</p>
-                <h4 class="font-bold text-gray-800 text-sm">Pequeno Grupo Kemuel</h4>
-              </div>
-              <span class="text-xs font-bold text-blue-900 bg-blue-200 px-2.5 py-1 rounded-lg">19:00</span>
-            </div>
-
-            <div class="p-3 bg-emerald-50 border-l-4 border-emerald-600 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-bold text-emerald-800 uppercase">Próximo Sábado</p>
-                <h4 class="font-bold text-gray-800 text-sm">Escola Sabatina Unificada</h4>
-              </div>
-              <span class="text-xs font-bold text-emerald-900 bg-emerald-200 px-2.5 py-1 rounded-lg">09:00</span>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <!-- TERCEIRA LINHA: DESAFIO ATUAL & EVANGELISMO -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Desafio Atual -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-bullseye text-red-500"></i> Desafio Atual
-            </h3>
-            <span class="text-xs bg-red-100 text-red-700 font-bold px-2.5 py-0.5 rounded-full">+250 pts</span>
-          </div>
-
-          <div>
-            <h4 class="font-extrabold text-gray-800 text-base">Estudar a Lição 7 Dias Seguidos</h4>
-            <p class="text-xs text-gray-500 mt-1">Mantenha a lição em dia durante toda a semana sem interrupções.</p>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between text-xs font-bold">
-              <span class="text-gray-600">Progresso: 5/7 dias</span>
-              <span class="text-red-500">Faltam 2 dias</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-              <div class="bg-red-500 h-3 rounded-full" style="width: 71%"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Evangelismo -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-heart text-rose-500"></i> Evangelismo
-            </h3>
-            <button onclick="navegarPara('evangelismo')" class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-lg transition">
-              <i class="fa-solid fa-plus mr-1"></i> Nova Atividade
-            </button>
-          </div>
-
-          <div class="p-4 bg-gray-50 rounded-xl space-y-2">
-            <p class="text-xs font-bold text-gray-400 uppercase">Última atividade enviada</p>
-            <h4 class="font-bold text-gray-800">Distribuição de Folhetos e Entrega de Cestas</h4>
-            <div class="flex justify-between items-center pt-2">
-              <span class="text-xs text-gray-500">Enviado em: 29/07/2026</span>
-              <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800 flex items-center gap-1">
-                <i class="fa-solid fa-hourglass-half text-[10px]"></i> Em análise
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- QUARTA LINHA: JORNADA DE PARTICIPAÇÃO (CARD LARGO) -->
-      <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-chart-pie text-indigo-600"></i> Jornada de Participação
-            </h3>
-            <p class="text-xs text-gray-400 mt-0.5">Indicador visual de engajamento no clube (não avalia espiritualidade).</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-xs font-bold">
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>📖 Bíblia</span><span class="text-blue-600">90%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 90%"></div></div>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>📚 Lição</span><span class="text-emerald-600">72%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-emerald-600 h-2.5 rounded-full" style="width: 72%"></div></div>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>🏠 Escola Sabatina</span><span class="text-amber-600">83%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-amber-500 h-2.5 rounded-full" style="width: 83%"></div></div>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>👥 Pequeno Grupo</span><span class="text-purple-600">65%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-purple-600 h-2.5 rounded-full" style="width: 65%"></div></div>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>❤️ Evangelismo</span><span class="text-rose-600">40%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-rose-500 h-2.5 rounded-full" style="width: 40%"></div></div>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between"><span>🎯 Desafios</span><span class="text-cyan-600">78%</span></div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full"><div class="bg-cyan-500 h-2.5 rounded-full" style="width: 78%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- QUINTA LINHA: ÚLTIMA MEDALHA & PRÓXIMO NÍVEL -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Última Medalha -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-award text-amber-500"></i> Última Medalha Conquistada
-            </h3>
-            <button onclick="navegarPara('perfil')" class="text-xs font-bold text-blue-900 hover:underline">Ver Todas &rarr;</button>
-          </div>
-
-          <div class="flex items-center gap-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
-            <div class="w-14 h-14 bg-amber-500 text-blue-950 rounded-full flex items-center justify-center text-2xl font-black shadow-md">
-              🏅
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-800 text-base">Amigo da Palavra</h4>
-              <p class="text-xs text-gray-600">Registrou 10 leituras bíblicas no módulo de comunhão.</p>
-              <p class="text-[10px] text-amber-800 font-bold mt-1">Conquistada em: 25/07/2026</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Próximo Nível -->
-        <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-          <div class="flex justify-between items-center border-b pb-3">
-            <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-              <i class="fa-solid fa-angles-up text-emerald-600"></i> Próximo Nível
-            </h3>
-            <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">Nível 4</span>
-          </div>
-
-          <div class="space-y-3">
-            <p class="text-sm text-gray-700">
-              Faltam <strong class="text-blue-950 font-black text-base">180 pontos</strong> para alcançar o <strong>Nível 4 — Comprometido</strong>!
-            </p>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-              <div class="bg-emerald-500 h-3 rounded-full" style="width: 70%"></div>
-            </div>
-            <p class="text-xs text-gray-400">Continue registrando sua comunhão e participando dos desafios.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEXTA LINHA: NOTIFICAÇÕES RECENTES -->
-      <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
-        <div class="flex justify-between items-center border-b pb-3">
-          <h3 class="font-bold text-lg text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-bell text-yellow-500"></i> Notificações Recentes
+      <!-- BLOCO: JORNADA DE PARTICIPAÇÃO (PROGRESSO E MEDALHA) -->
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 col-span-1 md:col-span-2 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-rocket text-amber-500"></i> Jornada de Participação
           </h3>
-          <button onclick="navegarPara('notificacoes')" class="text-xs font-bold text-blue-900 hover:underline">Ver Todas &rarr;</button>
+          <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">Próximo Nível: 4</span>
         </div>
 
-        <div class="space-y-2 text-xs font-medium">
-          <div class="p-2.5 bg-gray-50 rounded-lg flex items-center gap-3">
-            <i class="fa-solid fa-award text-amber-500"></i>
-            <span>Você ganhou a medalha "Constância".</span>
+        <!-- Barra de Progresso XP -->
+        <div>
+          <div class="flex justify-between text-xs text-slate-500 mb-1 font-medium">
+            <span>Progresso de Experiência</span>
+            <span>1.320 / 1.500 XP (Faltam 180 pts)</span>
           </div>
-          <div class="p-2.5 bg-gray-50 rounded-lg flex items-center gap-3">
-            <i class="fa-solid fa-bullseye text-red-500"></i>
-            <span>Novo desafio semanal disponível!</span>
-          </div>
-          <div class="p-2.5 bg-gray-50 rounded-lg flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-emerald-500"></i>
-            <span>Sua comprovação de evangelismo foi aprovada (+50 pts).</span>
-          </div>
-          <div class="p-2.5 bg-gray-50 rounded-lg flex items-center gap-3">
-            <i class="fa-solid fa-calendar text-purple-500"></i>
-            <span>Evento Culto Jovem no Sábado às 19h30.</span>
-          </div>
-          <div class="p-2.5 bg-gray-50 rounded-lg flex items-center gap-3">
-            <i class="fa-solid fa-angles-up text-blue-500"></i>
-            <span>Parabéns! Você subiu para o Nível 3!</span>
+          <div class="w-full bg-slate-100 rounded-full h-3">
+            <div class="bg-amber-500 h-3 rounded-full transition-all duration-500" style="width: 88%"></div>
           </div>
         </div>
-      </div>
 
-      <!-- ATALHOS RÁPIDOS (FIXOS NO FINAL DO DASHBOARD) -->
-      <div class="space-y-3 pt-4">
-        <h3 class="font-extrabold text-base text-blue-950 uppercase tracking-wider">Atalhos Rápidos</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-          <button onclick="navegarPara('biblia')" class="p-4 bg-white hover:bg-amber-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-book-bible text-2xl text-amber-500"></i> Bíblia
-          </button>
-          
-          <button onclick="navegarPara('licao')" class="p-4 bg-white hover:bg-cyan-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-book-open-reader text-2xl text-cyan-500"></i> Lição
-          </button>
-
-          <button onclick="navegarPara('evangelismo')" class="p-4 bg-white hover:bg-rose-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-heart text-2xl text-rose-500"></i> Evangelismo
-          </button>
-
-          <button onclick="navegarPara('desafios')" class="p-4 bg-white hover:bg-red-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-bullseye text-2xl text-red-500"></i> Desafios
-          </button>
-
-          <button onclick="navegarPara('calendario')" class="p-4 bg-white hover:bg-purple-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-calendar-days text-2xl text-purple-500"></i> Calendário
-          </button>
-
-          <button onclick="navegarPara('ranking')" class="p-4 bg-white hover:bg-yellow-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-trophy text-2xl text-yellow-500"></i> Ranking
-          </button>
-
-          <button onclick="navegarPara('comunhao')" class="p-4 bg-white hover:bg-emerald-50 rounded-xl shadow border border-gray-100 flex flex-col items-center gap-2 btn-quick font-bold text-xs text-gray-700">
-            <i class="fa-solid fa-hands-praying text-2xl text-emerald-500"></i> Comunhão
-          </button>
+        <!-- Card Próxima Conquista -->
+        <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="text-3xl">🎖️</div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-800">Próxima Medalha: Consagrado</h4>
+            <p class="text-xs text-slate-500">Mantenha o streak de comunhão por 20 dias consecutivos (Atual: 18 dias).</p>
+          </div>
         </div>
       </div>
 
     </div>
-
-    <!-- OUTRAS SEÇÕES (ESCONDIDAS INICIALMENTE) -->
-    <div id="sec-perfil" class="hidden"><h2 class="text-2xl font-bold">Meu Perfil</h2></div>
-    <div id="sec-comunhao" class="hidden"><h2 class="text-2xl font-bold">Minha Comunhão</h2></div>
-    <div id="sec-biblia" class="hidden"><h2 class="text-2xl font-bold">Bíblia</h2></div>
-    <div id="sec-licao" class="hidden"><h2 class="text-2xl font-bold">Lição da Escola Sabatina</h2></div>
-    <div id="sec-calendario" class="hidden"><h2 class="text-2xl font-bold">Calendário</h2></div>
-    <div id="sec-ranking" class="hidden"><h2 class="text-2xl font-bold">Ranking</h2></div>
-    <div id="sec-desafios" class="hidden"><h2 class="text-2xl font-bold">Desafios</h2></div>
-    <div id="sec-evangelismo" class="hidden"><h2 class="text-2xl font-bold">Evangelismo</h2></div>
-    <div id="sec-notificacoes" class="hidden"><h2 class="text-2xl font-bold">Notificações</h2></div>
-    <div id="sec-configuracoes" class="hidden"><h2 class="text-2xl font-bold">Configurações</h2></div>
-
   </main>
 
+  <!-- LÓGICA JAVASCRIPT INTEGRADA -->
   <script>
-    function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao', 'calendario', 'ranking', 'desafios', 'evangelismo', 'notificacoes', 'configuracoes'];
-      telas.forEach(t => {
-        const el = document.getElementById(`sec-${t}`);
-        if(el) el.classList.add('hidden');
-        const nav = document.getElementById(`nav-${t}`);
-        if(nav) nav.classList.remove('sidebar-active');
-      });
-      const alvo = document.getElementById(`sec-${tela}`);
-      if(alvo) alvo.classList.remove('hidden');
-      const navAlvo = document.getElementById(`nav-${tela}`);
-      if(navAlvo) navAlvo.classList.add('sidebar-active');
+    // Função de clique rápido para registrar comunhão
+    async function registrarComunhaoRapida(tipo) {
+      const btn = document.getElementById(`btn-comunhao-${tipo}`);
+      if (btn) {
+        btn.classList.remove('bg-slate-100', 'hover:bg-amber-500');
+        btn.classList.add('bg-emerald-600', 'text-white');
+        btn.innerHTML = `<span><i class="fa-solid fa-circle-check mr-2"></i> Concluído!</span> <span class="text-xs bg-emerald-700 px-2 py-0.5 rounded">+10 XP</span>`;
+        btn.disabled = true;
+      }
+      alert(`✨ Excelente! Sua leitura da ${tipo.toUpperCase()} foi registrada (+10 XP).`);
     }
   </script>
 </body>
