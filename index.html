@@ -1,113 +1,77 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Kemuel Connect 777 - Gestão JA</title> <script src="https://cdn.tailwindcss.com"></script> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script> <style>
-    .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
-    .card-hover { transition: transform 0.2s ease, shadow 0.2s ease; }
-    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-  </style> </head> <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row"> <!-- MENU LATERAL (JOVEM E DIRETOR) --> <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 hidden flex-col min-h-screen shadow-xl"> <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center"> <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1> <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p> <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span> </div> <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]"> <!-- MENU JOVEM --> <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div> <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-house w-5 text-amber-400"></i> 🏠 Dashboard</button> <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-user w-5 text-blue-400"></i> 👤 Meu Perfil</button> <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-hands-praying w-5 text-emerald-400"></i> 🙏 Minha Comunhão</button> <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-book-bible w-5 text-amber-300"></i> 📚 Bíblia</button> <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-book-open-reader w-5 text-cyan-400"></i> 📖 Lição da Escola Sabatina</button> <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-calendar-days w-5 text-purple-400"></i> 📅 Calendário</button> <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-trophy w-5 text-yellow-400"></i> 🏆 Ranking</button> <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-bullseye w-5 text-red-400"></i> 🎯 Desafios</button> <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-heart w-5 text-rose-500"></i> ❤️ Evangelismo</button> <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-bell w-5 text-yellow-300"></i> 🔔 Notificações</button> <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover"><i class="fa-solid fa-gear w-5 text-gray-400"></i> ⚙️ Configurações</button> <!-- EXCLUSIVO DO DIRETOR --> <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1 hidden"> <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p> <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-chart-line w-4"></i> 📊 Dashboard Admin</button> <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-users w-4"></i> 👥 Usuários</button> <button onclick="navegarPara('aprovacoes')" id="nav-aprovacoes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-amber-300"><i class="fa-solid fa-user-check w-4"></i> ✅ Aprovação Cadastros</button> <button onclick="navegarPara('admin-comprovantes')" id="nav-admin-comprovantes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-emerald-300"><i class="fa-solid fa-file-circle-check w-4"></i> 📂 Validar Comprovantes</button> <button onclick="navegarPara('admin-atividades')" id="nav-admin-atividades" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-list-check w-4"></i> 📋 Gestão de Atividades</button> <button onclick="navegarPara('admin-logs')" id="nav-admin-logs" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-gray-400"><i class="fa-solid fa-receipt w-4"></i> 📜 Logs do Sistema</button> </div> </nav> <div class="p-4 border-t border-blue-900"> <button onclick="sair()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow"> <i class="fa-solid fa-right-from-bracket"></i> Sair </button> </div> </aside> <!-- ÁREA PRINCIPAL --> <main class="flex-1 p-4 md:p-8 overflow-y-auto"> <!-- AUTH (LOGIN / CADASTRO) --> <section id="sec-auth" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 border-t-8 border-blue-950 my-8"> <div class="text-center mb-6"> <h2 class="text-3xl font-extrabold text-blue-950">Kemuel Connect 777</h2> <p class="text-xs text-gray-500 mt-1 font-medium">Gestão, Comunhão e Gamificação JA</p> </div> <div class="flex justify-around mb-6 border-b pb-2"> <button id="btn-tab-login" onclick="mudarAbaAuth('login')" class="font-bold text-blue-900 border-b-2 border-blue-900 pb-1">Entrar</button> <button id="btn-tab-cad" onclick="mudarAbaAuth('cadastro')" class="font-bold text-gray-400 hover:text-blue-900 pb-1">Cadastrar-se</button> </div> <form id="form-login" onsubmit="fazerLogin(event)" class="space-y-4"> <div> <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Nome Cadastrado</label> <input type="text" id="login-nome" required class="w-full p-3 border rounded-xl text-sm focus:ring-2 focus:ring-blue-900 outline-none"> </div> <button type="submit" class="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg">Entrar no Painel</button> </form> <form id="form-cadastro" onsubmit="fazerCadastro(event)" class="space-y-4 hidden"> <div> <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Nome Completo</label> <input type="text" id="cad-nome" required class="w-full p-3 border rounded-xl text-sm"> </div> <div> <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Cargo / Função</label> <select id="cad-cargo" class="w-full p-3 border rounded-xl text-sm"> <option value="Jovem">Jovem</option> <option value="Líder JA">Líder JA</option> <option value="Desbravador">Desbravador</option> <option value="Diretoria">Diretoria</option> </select> </div> <div> <label class="block text-xs font-bold text-gray-600 uppercase mb-1">WhatsApp</label> <input type="tel" id="cad-whatsapp" placeholder="(85) 99999-9999" class="w-full p-3 border rounded-xl text-sm"> </div> <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-lg">Solicitar Acesso</button> </form> </section> <!-- 1. DASHBOARD DO JOVEM --> <div id="sec-dashboard" class="space-y-6 hidden"> <!-- Saudação --> <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center"> <div> <h2 id="dash-saudacao" class="text-2xl font-bold">Bom dia! 👋</h2> <p class="text-xs text-blue-200 mt-1">Que Deus abençoe grandemente seu dia.</p> </div> <div class="text-right"> <span class="text-xs bg-amber-400 text-blue-950 px-3 py-1 rounded-full font-black uppercase shadow" id="dash-status-tag">ATIVO</span> </div> </div> <!-- Cards Métricas --> <div class="grid grid-cols-1 md:grid-cols-4 gap-4"> <div class="bg-white p-5 rounded-xl shadow border-l-4 border-blue-900 card-hover"> <p class="text-xs font-bold text-gray-500 uppercase">Pontuação Total</p> <p id="dash-pts-total" class="text-2xl font-black text-blue-950 mt-1">0 pts</p> <p class="text-[10px] text-gray-400 mt-1">Semana: <span id="dash-pts-sem" class="font-bold text-blue-900">0</span> | Mês: <span id="dash-pts-mes" class="font-bold text-blue-900">0</span></p> </div> <div class="bg-white p-5 rounded-xl shadow border-l-4 border-amber-500 card-hover"> <p class="text-xs font-bold text-gray-500 uppercase">Nível Atual</p> <p id="dash-nivel-nome" class="text-lg font-extrabold text-amber-600 mt-1">🌱 Iniciante</p> <div class="w-full bg-gray-200 rounded-full h-2 mt-2"> <div id="dash-nivel-bar" class="bg-amber-500 h-2 rounded-full" style="width: 5%"></div> </div> <p id="dash-nivel-txt" class="text-[10px] text-gray-500 mt-1">Faltam 500 pts</p> </div> <div class="bg-white p-5 rounded-xl shadow border-l-4 border-emerald-500 card-hover"> <p class="text-xs font-bold text-gray-500 uppercase">Posição no Ranking</p> <p id="dash-ranking-pos" class="text-2xl font-black text-emerald-600 mt-1">#-</p> <button onclick="navegarPara('ranking')" class="text-xs text-blue-900 font-bold hover:underline mt-1 block">Ver Ranking Completo &rarr;</button> </div> <div class="bg-white p-5 rounded-xl shadow border-l-4 border-rose-500 card-hover"> <p class="text-xs font-bold text-gray-500 uppercase">Sequência (Streak)</p> <p id="dash-streak" class="text-xl font-black text-rose-600 mt-1">🔥 0 dias consecutivos</p> <p class="text-[10px] text-gray-400 mt-1">Mantenha a constância diária!</p> </div> </div> <!-- Atividades Rápidas & Jornada --> <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <div class="bg-white p-6 rounded-2xl shadow"> <h3 class="font-bold text-lg text-blue-950 mb-4 flex items-center gap-2"><i class="fa-solid fa-hands-praying text-emerald-600"></i> Minha Comunhão Hoje</h3> <div class="space-y-3"> <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl"> <span class="text-sm font-semibold">📖 Leitura da Bíblia</span> <span id="st-biblia" class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800">⏳ Pendente</span> </div> <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl"> <span class="text-sm font-semibold">📚 Estudo da Lição</span> <span id="st-licao" class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800">⏳ Pendente</span> </div> <div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl"> <span class="text-sm font-semibold">🔥 Ano Bíblico</span> <span id="st-anobiblico" class="text-xs px-2.5 py-1 rounded-full font-bold bg-amber-100 text-amber-800">⏳ Pendente</span> </div> </div> <button onclick="navegarPara('comunhao')" class="w-full mt-4 bg-blue-950 text-white font-bold py-2.5 rounded-xl text-xs hover:bg-blue-900 transition">Registrar Comunhão Agora</button> </div> <!-- Jornada de Participação --> <div class="bg-white p-6 rounded-2xl shadow"> <h3 class="font-bold text-lg text-blue-950 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-pie text-purple-600"></i> Jornada de Engajamento</h3> <div class="space-y-3 text-xs font-semibold"> <div> <div class="flex justify-between mb-1"><span>📖 Bíblia</span><span id="j-biblia-pct">0%</span></div> <div class="w-full bg-gray-100 h-2 rounded-full"><div id="j-biblia-bar" class="bg-blue-600 h-2 rounded-full" style="width:0%"></div></div> </div> <div> <div class="flex justify-between mb-1"><span>📚 Lição</span><span id="j-licao-pct">0%</span></div> <div class="w-full bg-gray-100 h-2 rounded-full"><div id="j-licao-bar" class="bg-emerald-600 h-2 rounded-full" style="width:0%"></div></div> </div> <div> <div class="flex justify-between mb-1"><span>👥 Pequeno Grupo</span><span id="j-pg-pct">0%</span></div> <div class="w-full bg-gray-100 h-2 rounded-full"><div id="j-pg-bar" class="bg-purple-600 h-2 rounded-full" style="width:0%"></div></div> </div> <div> <div class="flex justify-between mb-1"><span>❤️ Evangelismo</span><span id="j-eva-pct">0%</span></div> <div class="w-full bg-gray-100 h-2 rounded-full"><div id="j-eva-bar" class="bg-rose-600 h-2 rounded-full" style="width:0%"></div></div> </div> </div> </div> </div> </div> <!-- 2. MEU PERFIL --> <div id="sec-perfil" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">👤 Meu Perfil Completo</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-6"> <div class="bg-white p-6 rounded-2xl shadow text-center space-y-4"> <div class="relative w-28 h-28 mx-auto"> <img id="perfil-img" src="https://via.placeholder.com/150" class="w-28 h-28 rounded-full border-4 border-blue-950 object-cover"> </div> <h3 id="perfil-nome" class="font-extrabold text-xl text-gray-800">-</h3> <p id="perfil-cargo" class="text-xs bg-blue-100 text-blue-900 font-bold px-3 py-1 rounded-full inline-block">-</p> <div class="pt-4 border-t text-left text-xs space-y-2"> <p><strong>Data de Cadastro:</strong> <span id="perfil-cad-data">-</span></p> <p><strong>Último Acesso:</strong> <span id="perfil-ult-acesso">Hoje</span></p> </div> </div> <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow space-y-6"> <h3 class="font-bold text-lg text-blue-950">Estatísticas do Jovem</h3> <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center"> <div class="p-3 bg-blue-50 rounded-xl"><p class="text-xs text-gray-500 font-bold">Pontos</p><p id="p-stat-pts" class="text-xl font-black text-blue-900">0</p></div> <div class="p-3 bg-emerald-50 rounded-xl"><p class="text-xs text-gray-500 font-bold">Medalhas</p><p id="p-stat-med" class="text-xl font-black text-emerald-900">0</p></div> <div class="p-3 bg-amber-50 rounded-xl"><p class="text-xs text-gray-500 font-bold">Streak</p><p id="p-stat-str" class="text-xl font-black text-amber-900">0d</p></div> <div class="p-3 bg-purple-50 rounded-xl"><p class="text-xs text-gray-500 font-bold">Ranking</p><p id="p-stat-rnk" class="text-xl font-black text-purple-900">#-</p></div> </div> <!-- Alterar Dados --> <form onsubmit="salvarPerfil(event)" class="pt-4 border-t space-y-4"> <h4 class="font-bold text-sm text-gray-700">Atualizar Dados Permitidos</h4> <div class="grid grid-cols-1 md:grid-cols-2 gap-4"> <div><label class="block text-xs font-bold mb-1">WhatsApp</label><input type="tel" id="edit-whats" class="w-full p-2.5 border rounded-lg text-sm"></div> <div><label class="block text-xs font-bold mb-1">URL Foto Perfil</label><input type="url" id="edit-foto" class="w-full p-2.5 border rounded-lg text-sm"></div> </div> <button type="submit" class="bg-blue-950 text-white font-bold px-4 py-2 rounded-lg text-xs hover:bg-blue-900">Salvar Alterações</button> </form> </div> </div> </div> <!-- 3. MINHA COMUNHÃO --> <div id="sec-comunhao" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">🙏 Registro de Comunhão Diária</h2> <div class="bg-white p-6 rounded-2xl shadow space-y-4"> <p class="text-sm text-gray-600">Selecione suas atividades concluídas hoje. Os pontos e medalhas serão concedidos instantaneamente.</p> <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> <button onclick="registrarComunhao('Leitura Bíblica', 20)" class="p-5 border-2 border-blue-600 rounded-2xl bg-blue-50 hover:bg-blue-100 font-bold text-blue-950 flex flex-col items-center gap-2 transition"><i class="fa-solid fa-book-bible text-2xl"></i>📖 Leitura Bíblica (+20 pts)</button> <button onclick="registrarComunhao('Lição da Escola Sabatina', 30)" class="p-5 border-2 border-emerald-600 rounded-2xl bg-emerald-50 hover:bg-emerald-100 font-bold text-emerald-950 flex flex-col items-center gap-2 transition"><i class="fa-solid fa-book-open text-2xl"></i>📚 Estudo da Lição (+30 pts)</button> <button onclick="registrarComunhao('Ano Bíblico', 50)" class="p-5 border-2 border-purple-600 rounded-2xl bg-purple-50 hover:bg-purple-100 font-bold text-purple-950 flex flex-col items-center gap-2 transition"><i class="fa-solid fa-fire text-2xl"></i>🔥 Ano Bíblico (+50 pts)</button> </div> </div> <div class="bg-white p-6 rounded-2xl shadow"> <h3 class="font-bold text-lg text-blue-950 mb-4">📜 Meu Histórico Imodificável</h3> <div class="overflow-x-auto"> <table class="w-full text-left text-sm"> <thead class="bg-gray-100 text-gray-600 uppercase text-xs"> <tr><th class="p-3">Data/Hora</th><th class="p-3">Atividade</th><th class="p-3 text-right">Pontos</th></tr> </thead> <tbody id="hist-comunhao-body" class="divide-y"><tr><td colspan="3" class="p-4 text-center text-gray-400">Carregando...</td></tr></tbody> </table> </div> </div> </div> <!-- 4. BÍBLIA INTEGRADA --> <div id="sec-biblia" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">📚 Bíblia Sagrada</h2> <div class="bg-white p-6 rounded-2xl shadow space-y-4"> <div class="flex flex-wrap gap-4"> <select id="bib-traduçao" class="p-2 border rounded-lg text-sm"><option>NVI - Nova Versão Internacional</option><option>ACF - Almeida Corrigida Fiel</option></select> <select id="bib-livro" class="p-2 border rounded-lg text-sm"><option>Gênesis</option><option>Salmos</option><option>João</option><option>Apocalipse</option></select> <input type="number" id="bib-capitulo" value="1" min="1" class="w-20 p-2 border rounded-lg text-sm"> <button onclick="carregarBiblia()" class="bg-blue-950 text-white font-bold px-4 py-2 rounded-lg text-sm">Ler Capítulo</button> </div> <div id="bib-texto" class="p-4 bg-amber-50 rounded-xl leading-relaxed text-gray-800 min-h-[200px]"> Selecione o livro e capítulo acima para iniciar sua leitura. </div> </div> </div> <!-- 5. LIÇÃO ESCOLA SABATINA --> <div id="sec-licao" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">📖 Lição da Escola Sabatina</h2> <div class="bg-white p-6 rounded-2xl shadow space-y-4"> <h3 id="licao-titulo" class="font-bold text-xl text-blue-900">Lição da Semana</h3> <div id="licao-conteudo" class="text-sm text-gray-700 leading-relaxed border-l-4 border-blue-900 pl-4 py-2"> Carregando o estudo semanal disponibilizado pelo Diretor... </div> <button onclick="concluirLicaoSemanal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl text-sm transition">Marcar Lição como Concluída (+30 pts)</button> </div> </div> <!-- 6. CALENDÁRIO --> <div id="sec-calendario" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">📅 Calendário e Eventos JA</h2> <div class="bg-white p-6 rounded-2xl shadow"> <div id="lista-eventos" class="grid grid-cols-1 md:grid-cols-2 gap-4"> <div class="p-4 border-l-4 border-purple-600 bg-purple-50 rounded-xl"> <span class="text-xs font-bold text-purple-800">SÁBADO ALCANCE</span> <h4 class="font-bold text-gray-800">Culto Jovem Especial</h4> <p class="text-xs text-gray-600 mt-1">Neste Sábado às 17h no Templo Central.</p> </div> </div> </div> </div> <!-- 7. DESAFIOS --> <div id="sec-desafios" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">🎯 Desafios Ativos</h2> <div id="lista-desafios" class="grid grid-cols-1 md:grid-cols-2 gap-4"> <!-- Desafios Injetados Dinamicamente --> </div> </div> <!-- 8. EVANGELISMO E COMPROVANTES --> <div id="sec-evangelismo" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">❤️ Evangelismo e Comprovantes</h2> <div class="bg-white p-6 rounded-2xl shadow space-y-4"> <h3 class="font-bold text-lg text-blue-900">Enviar Comprovante de Atividade</h3> <form onsubmit="enviarComprovante(event)" class="space-y-4"> <div><label class="block text-xs font-bold mb-1">Título / Descrição da Ação</label><input type="text" id="comp-titulo" required class="w-full p-2.5 border rounded-lg text-sm" placeholder="Ex: Feira de Saúde ou Visita Missionária"></div> <div><label class="block text-xs font-bold mb-1">Link/URL do Arquivo ou Imagem</label><input type="url" id="comp-url" required class="w-full p-2.5 border rounded-lg text-sm" placeholder="https://..."></div> <button type="submit" class="bg-rose-600 text-white font-bold py-2.5 px-6 rounded-xl text-sm hover:bg-rose-700">Enviar para Análise do Diretor</button> </form> </div> </div> <!-- 9. RANKING ESTILO CAMPEONATO --> <div id="sec-ranking" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">🏆 Ranking Geral Kemuel</h2> <div class="bg-white p-6 rounded-2xl shadow overflow-x-auto"> <table class="w-full text-left text-sm"> <thead class="bg-blue-950 text-white uppercase text-xs"> <tr><th class="p-3">Pos.</th><th class="p-3">Jovem</th><th class="p-3">Nível</th><th class="p-3 text-right">Pontos Totais</th></tr> </thead> <tbody id="ranking-table-body" class="divide-y"><tr><td colspan="4" class="p-4 text-center">Carregando...</td></tr></tbody> </table> </div> </div> <!-- 10. NOTIFICAÇÕES --> <div id="sec-notificacoes" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">🔔 Central de Notificações</h2> <div id="lista-notificacoes" class="bg-white p-6 rounded-2xl shadow space-y-3"> <p class="text-xs text-gray-400">Nenhuma notificação nova no momento.</p> </div> </div> <!-- 11. CONFIGURAÇÕES --> <div id="sec-configuracoes" class="space-y-6 hidden"> <h2 class="text-2xl font-bold text-blue-950">⚙️ Configurações</h2> <div class="bg-white p-6 rounded-2xl shadow max-w-lg space-y-4"> <div><label class="block text-xs font-bold mb-1">Idioma da Interface</label><select class="w-full p-2 border rounded-lg text-sm"><option>Português (Brasil)</option><option>Español (Em breve)</option></select></div> </div> </div> </main> <!-- SCRIPT DE INTEGRAÇÃO & GAMIFICAÇÃO --> <script>
-  const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
-  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
+  <!-- ÁREA DO JOVEM -->
+  <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
+  
+  <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-house w-5 text-amber-400"></i> Dashboard
+  </button>
+  
+  <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-user w-5 text-blue-400"></i> Meu Perfil
+  </button>
+  
+  <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-hands-praying w-5 text-emerald-400"></i> Minha Comunhão
+  </button>
+  
+  <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-book-bible w-5 text-amber-300"></i> Bíblia
+  </button>
+  
+  <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-book-open-reader w-5 text-cyan-400"></i> Lição da Escola Sabatina
+  </button>
+  
+  <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-calendar-days w-5 text-purple-400"></i> Calendário
+  </button>
+  
+  <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-trophy w-5 text-yellow-400"></i> Ranking
+  </button>
+  
+  <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-bullseye w-5 text-red-400"></i> Desafios
+  </button>
+  
+  <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-heart w-5 text-rose-500"></i> Evangelismo
+  </button>
+  
+  <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-bell w-5 text-yellow-300"></i> Notificações
+  </button>
+  
+  <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+    <i class="fa-solid fa-gear w-5 text-gray-400"></i> Configurações
+  </button>
 
-  let usuarioAtual = null;
-
-  const NIVEIS = [
-    { nome: '🌱 Iniciante', min: 0 },
-    { nome: '🌿 Discípulo', min: 500 },
-    { nome: '🔥 Comprometido', min: 1500 },
-    { nome: '⭐ Servo', min: 3000 },
-    { nome: '💎 Líder Inspirador', min: 6000 },
-    { nome: '👑 Embaixador Kemuel', min: 10000 }
-  ];
-
-  function calcularNivel(pts) {
-    let niv = NIVEIS[0], prox = NIVEIS[1];
-    for(let i=0; i<NIVEIS.length; i++) {
-      if(pts >= NIVEIS[i].min) { niv = NIVEIS[i]; prox = NIVEIS[i+1] || null; }
-    }
-    if(!prox) return { nome: niv.nome, pct: 100, txt: 'Nível Máximo Alcançado! 🎉' };
-    const pct = Math.min(((pts - niv.min)/(prox.min - niv.min))*100, 100);
-    return { nome: niv.nome, pct, txt: `Faltam ${prox.min - pts} pts para ${prox.nome}` };
-  }
-
-  function saudar() {
-    const hrs = new Date().getHours();
-    if(hrs < 12) return `Bom dia, ${usuarioAtual.nome}! ☀️`;
-    if(hrs < 18) return `Boa tarde, ${usuarioAtual.nome}! ☀️`;
-    return `Boa noite, ${usuarioAtual.nome}! 🌙`;
-  }
-
-  function navegarPara(tela) {
-    const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao', 'calendario', 'ranking', 'desafios', 'evangelismo', 'notificacoes', 'configuracoes'];
-    telas.forEach(t => {
-      const el = document.getElementById(`sec-${t}`);
-      if(el) el.classList.add('hidden');
-      const nav = document.getElementById(`nav-${t}`);
-      if(nav) nav.classList.remove('sidebar-active');
-    });
-    const alvo = document.getElementById(`sec-${tela}`);
-    if(alvo) alvo.classList.remove('hidden');
-    const navAlvo = document.getElementById(`nav-${tela}`);
-    if(navAlvo) navAlvo.classList.add('sidebar-active');
-
-    if(tela==='dashboard') recarregarDashboard();
-    if(tela==='ranking') recarregarRanking();
-    if(tela==='comunhao') recarregarComunhao();
-  }
-
-  async function recarregarDashboard() {
-    document.getElementById('dash-saudacao').innerText = saudar();
-    const pts = usuarioAtual.pontos_totais || 0;
-    document.getElementById('dash-pts-total').innerText = `${pts} pts`;
-    document.getElementById('dash-streak').innerText = `🔥 ${usuarioAtual.streak || 0} dias consecutivos`;
-
-    const niv = calcularNivel(pts);
-    document.getElementById('dash-nivel-nome').innerText = niv.nome;
-    document.getElementById('dash-nivel-bar').style.width = `${Math.max(niv.pct, 5)}%`;
-    document.getElementById('dash-nivel-txt').innerText = niv.txt;
-  }
-
-  async function registrarComunhao(tipo, pontos) {
-    if(usuarioAtual.status !== 'ATIVO') return alert('Usuário pendente de aprovação.');
-    const { error } = await _supabase.from('comunhao_registros').insert([{ profile_id: usuarioAtual.id, tipo, pontos }]);
-    if(!error) {
-      const novosPts = (usuarioAtual.pontos_totais || 0) + pontos;
-      await _supabase.from('profiles').update({ pontos_totais: novosPts, streak: (usuarioAtual.streak||0)+1 }).eq('id', usuarioAtual.id);
-      usuarioAtual.pontos_totais = novosPts;
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      alert(`+${pontos} pts registrados com sucesso!`);
-      recarregarDashboard();
-    }
-  }
-
-  async function recarregarRanking() {
-    const tbody = document.getElementById('ranking-table-body');
-    const { data } = await _supabase.from('profiles').select('*').order('pontos_totais', { ascending: false });
-    if(!data) return;
-    tbody.innerHTML = '';
-    data.forEach((item, index) => {
-      tbody.innerHTML += `
-        <tr class="hover:bg-gray-50 font-semibold ${index < 3 ? 'bg-amber-50/50' : ''}">
-          <td class="p-3 font-black">${index === 0 ? '🥇 1º' : index === 1 ? '🥈 2º' : index === 2 ? '🥉 3º' : `${index+1}º`}</td>
-          <td class="p-3">${item.nome}</td>
-          <td class="p-3 text-xs">${calcularNivel(item.pontos_totais||0).nome}</td>
-          <td class="p-3 text-right font-bold text-blue-950">${item.pontos_totais || 0} pts</td>
-        </tr>
-      `;
-    });
-  }
-
-  function mudarAbaAuth(aba) {
-    document.getElementById('form-login').classList.toggle('hidden', aba !== 'login');
-    document.getElementById('form-cadastro').classList.toggle('hidden', aba !== 'cadastro');
-  }
-
-  async function fazerLogin(e) {
-    e.preventDefault();
-    const nome = document.getElementById('login-nome').value.trim();
-    const { data } = await _supabase.from('profiles').select('*').ilike('nome', `%${nome}%`);
-    if(!data || data.length === 0) return alert('Usuário não encontrado!');
-    usuarioAtual = data[0];
-    document.getElementById('sec-auth').classList.add('hidden');
-    document.getElementById('sidebar').classList.remove('hidden');
-    navegarPara('dashboard');
-  }
-</script> </body> </html>
+  <!-- EXCLUSIVO DO DIRETOR -->
+  <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1 hidden">
+    <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p>
+    
+    <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+      <i class="fa-solid fa-chart-line w-4 text-blue-300"></i> Dashboard Admin
+    </button>
+    
+    <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+      <i class="fa-solid fa-users w-4 text-blue-300"></i> Usuários
+    </button>
+    
+    <button onclick="navegarPara('aprovacoes')" id="nav-aprovacoes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-amber-300">
+      <i class="fa-solid fa-user-check w-4"></i> Aprovação Cadastros
+    </button>
+    
+    <button onclick="navegarPara('admin-comprovantes')" id="nav-admin-comprovantes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-emerald-300">
+      <i class="fa-solid fa-file-circle-check w-4"></i> Validar Comprovantes
+    </button>
+    
+    <button onclick="navegarPara('admin-atividades')" id="nav-admin-atividades" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+      <i class="fa-solid fa-list-check w-4 text-blue-300"></i> Gestão de Atividades
+    </button>
+    
+    <button onclick="navegarPara('admin-logs')" id="nav-admin-logs" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-gray-400">
+      <i class="fa-solid fa-receipt w-4"></i> Logs do Sistema
+    </button>
+  </div>
+</nav>
