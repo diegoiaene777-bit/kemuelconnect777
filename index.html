@@ -24,7 +24,7 @@
     .avatar-container:hover .avatar-overlay { opacity: 1; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
+<body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
   <!-- MENU LATERAL -->
   <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
@@ -41,11 +41,11 @@
         <i class="fa-solid fa-house w-5 text-amber-400 shrink-0"></i> Dashboard
       </button>
       
-      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
+      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
         <i class="fa-solid fa-user w-5 text-blue-400 shrink-0"></i> Meu Perfil
       </button>
 
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
         <i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
       </button>
       
@@ -90,7 +90,7 @@
   </aside>
 
   <!-- ÁREA PRINCIPAL -->
-  <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-8">
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-6">
     
     <!-- DASHBOARD -->
     <div id="sec-dashboard" class="hidden space-y-6">
@@ -103,12 +103,10 @@
     </div>
 
     <!-- MEU PERFIL -->
-    <div id="sec-perfil" class="space-y-6">
-      
+    <div id="sec-perfil" class="hidden space-y-6">
       <!-- CABEÇALHO DO PERFIL -->
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          
           <div class="relative shrink-0">
             <div onclick="toggleAvatarMenu(event)" class="avatar-container relative w-20 h-20 rounded-full cursor-pointer overflow-hidden border-4 border-amber-400 shadow-lg">
               <img id="perfil-avatar" src="" class="user-avatar-target w-full h-full object-cover" alt="Foto do Usuário">
@@ -145,87 +143,163 @@
         </div>
       </div>
 
-      <!-- 1. INFORMAÇÕES PESSOAIS -->
+      <!-- INFORMAÇÕES PESSOAIS -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <h3 class="font-bold text-base text-blue-950 border-b pb-2 flex items-center gap-2">
           <i class="fa-solid fa-address-card text-blue-600"></i> Informações Pessoais
         </h3>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span class="text-gray-500 font-bold block">E-mail</span>
             <p class="text-gray-800 font-semibold text-sm mt-1" id="info-email">diego@kemuel.com</p>
           </div>
-
           <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span class="text-gray-500 font-bold block">Data de Nascimento</span>
             <p class="text-gray-800 font-semibold text-sm mt-1" id="info-nascimento">20/05/2000</p>
           </div>
-
           <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-1">
             <label for="input-telefone" class="text-gray-500 font-bold block">Telefone / WhatsApp</label>
             <input type="text" id="input-telefone" value="(85) 99999-8888" class="w-full bg-white border border-gray-300 rounded-lg px-2.5 py-1 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
           </div>
         </div>
-
-        <div class="pt-3 border-t border-gray-100">
-          <p class="text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-lock text-amber-500"></i> Alterar Senha</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
-            <input type="password" id="input-senha-nova" placeholder="Nova senha" class="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600">
-            <input type="password" id="input-senha-confirma" placeholder="Confirmar nova senha" class="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600">
-          </div>
-        </div>
-
-        <div class="flex justify-end pt-2">
-          <button onclick="salvarAlteracoesPessoais()" class="px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-            <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
-          </button>
-        </div>
       </section>
 
-      <!-- 2. ESTATÍSTICAS (SISTEMA DE 4 COLUNAS SEM MEDALHAS) -->
+      <!-- ESTATÍSTICAS -->
       <section class="space-y-3">
         <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-chart-simple text-amber-500"></i> Estatísticas
         </h3>
-
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏆 Pontuação Total</span>
             <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.320 pts</p>
           </div>
-
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">⭐ Nível Atual</span>
             <p class="text-xl font-black text-amber-500 mt-1" id="stat-nivel">Nível 3</p>
           </div>
-
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🥇 Ranking</span>
             <p class="text-xl font-black text-emerald-600 mt-1" id="stat-ranking">5º Lugar</p>
           </div>
-
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🔥 Sequência</span>
             <p class="text-xl font-black text-rose-600 mt-1" id="stat-streak">18 Dias</p>
           </div>
         </div>
       </section>
+    </div>
 
-      <!-- 3. HISTÓRICO DE ATIVIDADES -->
+    <!-- TELA: MINHA COMUNHÃO -->
+    <div id="sec-comunhao" class="space-y-6">
+
+      <!-- 6. LEMBRETE DISCRETO -->
+      <div id="aviso-lembrete" class="bg-amber-500/10 border border-amber-500/30 text-amber-900 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm transition">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-bell text-amber-600 text-lg animate-bounce"></i>
+          <p class="text-xs sm:text-sm font-semibold">Você ainda não registrou toda a sua comunhão de hoje.</p>
+        </div>
+        <button onclick="focarAtividades()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-blue-950 font-black text-xs rounded-xl transition shrink-0 shadow">
+          Registrar Agora
+        </button>
+      </div>
+
+      <!-- 1. CABEÇALHO -->
+      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="space-y-1">
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
+          </h2>
+          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus."</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold border border-white/20 shrink-0">
+          <i class="fa-regular fa-calendar text-amber-400 mr-1.5"></i> <span id="data-atual-txt">01 de Agosto de 2026</span>
+        </div>
+      </div>
+
+      <!-- 2. ATIVIDADES DO DIA + 4. SEQUÊNCIA (RESPONSIVIDADE: 3 COLS DESKTOP, 2 TABLET, 1 MOBILE) -->
+      <section id="secao-atividades" class="space-y-4">
+        <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+          <i class="fa-solid fa-calendar-check text-blue-600"></i> Atividades de Hoje
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          <!-- Card: Leitura da Bíblia -->
+          <div id="card-biblia" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
+            <div class="space-y-2">
+              <div class="flex justify-between items-start">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">📖</div>
+                <span id="badge-biblia" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
+              </div>
+              <h4 class="font-extrabold text-gray-800 text-base">Leitura da Bíblia</h4>
+              <p class="text-xs text-gray-500" id="hora-biblia">Nenhum registro hoje</p>
+            </div>
+            <button id="btn-biblia" onclick="abrirModalRegistro('biblia', 'Leitura da Bíblia')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check"></i> Registrar Leitura
+            </button>
+          </div>
+
+          <!-- Card: Lição da Escola Sabatina -->
+          <div id="card-licao" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
+            <div class="space-y-2">
+              <div class="flex justify-between items-start">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl font-bold">📚</div>
+                <span id="badge-licao" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
+              </div>
+              <h4 class="font-extrabold text-gray-800 text-base">Lição da Escola Sabatina</h4>
+              <p class="text-xs text-gray-500" id="hora-licao">Nenhum registro hoje</p>
+            </div>
+            <button id="btn-licao" onclick="abrirModalRegistro('licao', 'Lição da Escola Sabatina')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check"></i> Registrar Estudo
+            </button>
+          </div>
+
+          <!-- Card: Ano Bíblico -->
+          <div id="card-ano" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
+            <div class="space-y-2">
+              <div class="flex justify-between items-start">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">📖</div>
+                <span id="badge-ano" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
+              </div>
+              <h4 class="font-extrabold text-gray-800 text-base">Ano Bíblico</h4>
+              <p class="text-xs text-gray-500" id="hora-ano">Nenhum registro hoje</p>
+            </div>
+            <button id="btn-ano" onclick="abrirModalRegistro('ano', 'Ano Bíblico')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-check"></i> Registrar Leitura
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. SEQUÊNCIA (STREAK) -->
+      <section class="bg-gradient-to-br from-amber-500 to-orange-600 p-6 rounded-2xl text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4 text-center sm:text-left">
+          <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 backdrop-blur-sm">
+            🔥
+          </div>
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-100">Sequência Atual</h4>
+            <p class="text-2xl sm:text-3xl font-black" id="comunhao-streak">18 Dias Consecutivos</p>
+            <p class="text-xs text-amber-100 mt-0.5">"Continue firme! A constância gera crescimento."</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. HISTÓRICO DA COMUNHÃO -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico de Atividades
+            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico da Comunhão
           </h3>
 
           <div class="flex items-center gap-2 text-xs">
-            <label for="filtro-periodo" class="font-bold text-gray-500">Período:</label>
-            <select id="filtro-periodo" onchange="filtrarHistorico()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              <option value="todos">Todo o período</option>
-              <option value="7">Últimos 7 dias</option>
-              <option value="30">Últimos 30 dias</option>
-              <option value="90">Últimos 90 dias</option>
+            <label for="filtro-historico-comunhao" class="font-bold text-gray-500">Filtrar por:</label>
+            <select id="filtro-historico-comunhao" onchange="filtrarHistoricoComunhao()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="semana">Esta Semana</option>
+              <option value="mes" selected>Este Mês</option>
+              <option value="ano">Este Ano</option>
             </select>
           </div>
         </div>
@@ -236,11 +310,11 @@
               <tr class="border-b border-gray-200 text-gray-400 uppercase tracking-wider font-bold">
                 <th class="pb-2">Data</th>
                 <th class="pb-2">Atividade</th>
-                <th class="pb-2 text-right">Pontos</th>
+                <th class="pb-2 text-right">Horário</th>
               </tr>
             </thead>
-            <tbody id="tabela-historico-corpo" class="divide-y divide-gray-100 font-medium text-gray-700">
-              <!-- Linhas do histórico via JS -->
+            <tbody id="tabela-historico-comunhao" class="divide-y divide-gray-100 font-medium text-gray-700">
+              <!-- Histórico via JS -->
             </tbody>
           </table>
         </div>
@@ -249,6 +323,42 @@
     </div>
 
   </main>
+
+  <!-- 3. MODAL DE REGISTRO DA ATIVIDADE -->
+  <div id="modal-registro-comunhao" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalRegistro()">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative" onclick="event.stopPropagation()">
+      <button onclick="fecharModalRegistro()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      
+      <div class="border-b pb-2">
+        <h4 id="modal-reg-titulo" class="text-base font-extrabold text-blue-950">Registrar Atividade</h4>
+        <p class="text-xs text-gray-500">Confirme a conclusão da sua devoção diária.</p>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-gray-500 block mb-1">Data</label>
+          <input type="text" id="reg-input-data" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 font-bold text-gray-700 cursor-not-allowed">
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-500 block mb-1">Horário do Registro</label>
+          <input type="text" id="reg-input-hora" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 font-bold text-gray-700 cursor-not-allowed">
+        </div>
+
+        <div>
+          <label for="reg-input-obs" class="font-bold text-gray-500 block mb-1">Observações (opcional)</label>
+          <textarea id="reg-input-obs" rows="3" placeholder="Ex: Lição muito abençoada sobre oração..." class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs font-medium"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button onclick="fecharModalRegistro()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancelar</button>
+        <button onclick="salvarRegistroComunhao()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+          <i class="fa-solid fa-check"></i> Concluir Atividade
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL DE CORTE DE IMAGEM -->
   <div id="modal-crop-foto" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -291,22 +401,32 @@
       fotoUrl: null
     };
 
-    const historicoAtividades = [
-      { data: '2026-07-31', atividade: 'Estudo da Lição da Escola Sabatina', pontos: 50 },
-      { data: '2026-07-30', atividade: 'Presença no Culto JA', pontos: 100 },
-      { data: '2026-07-28', atividade: 'Participação na Ação Social', pontos: 150 },
-      { data: '2026-07-20', atividade: 'Conclusão de Desafio de Leitura', pontos: 80 },
-      { data: '2026-07-10', atividade: 'Presença na Reunião de Pequeno Grupo', pontos: 60 },
-      { data: '2026-06-25', atividade: 'Estudo Diário da Bíblia', pontos: 40 }
+    let atividadeSelecionadaChave = null;
+
+    // Estado diário das atividades de comunhão
+    const registrosHoje = {
+      biblia: { concluido: false, hora: null },
+      licao: { concluido: false, hora: null },
+      ano: { concluido: false, hora: null }
+    };
+
+    // Histórico inicial de comunhão
+    const historicoComunhao = [
+      { data: '2026-08-01', atividade: 'Leitura da Bíblia', hora: '07:30' },
+      { data: '2026-07-31', atividade: 'Lição da Escola Sabatina', hora: '08:15' },
+      { data: '2026-07-31', atividade: 'Ano Bíblico', hora: '21:00' },
+      { data: '2026-07-30', atividade: 'Leitura da Bíblia', hora: '07:10' }
     ];
 
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
-      filtrarHistorico();
+      atualizarDataAtual();
+      renderizarHistoricoComunhao();
+      verificarLembreteComunhao();
     });
 
     function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil'];
+      const telas = ['dashboard', 'perfil', 'comunhao'];
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if(el) el.classList.add('hidden');
@@ -319,6 +439,121 @@
       if(activeBtn) activeBtn.classList.add('sidebar-active');
     }
 
+    function atualizarDataAtual() {
+      const hoje = new Date();
+      const opcoes = { day: '2-digit', month: 'long', year: 'numeric' };
+      document.getElementById('data-atual-txt').innerText = hoje.toLocaleDateString('pt-BR', opcoes);
+    }
+
+    function focarAtividades() {
+      document.getElementById('secao-atividades').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function abrirModalRegistro(chave, nomeAtividade) {
+      if (registrosHoje[chave].concluido) {
+        alert("Esta atividade já foi registrada hoje!");
+        return;
+      }
+
+      atividadeSelecionadaChave = chave;
+      const hoje = new Date();
+      const dataStr = hoje.toLocaleDateString('pt-BR');
+      const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+      document.getElementById('modal-reg-titulo').innerText = `Registrar ${nomeAtividade}`;
+      document.getElementById('reg-input-data').value = dataStr;
+      document.getElementById('reg-input-hora').value = horaStr;
+      document.getElementById('reg-input-obs').value = '';
+
+      document.getElementById('modal-registro-comunhao').classList.remove('hidden');
+    }
+
+    function fecharModalRegistro() {
+      document.getElementById('modal-registro-comunhao').classList.add('hidden');
+      atividadeSelecionadaChave = null;
+    }
+
+    function salvarRegistroComunhao() {
+      if (!atividadeSelecionadaChave) return;
+
+      const chave = atividadeSelecionadaChave;
+      const horaStr = document.getElementById('reg-input-hora').value;
+      const hojeStr = '2026-08-01'; // Data de hoje padronizada
+
+      // 1. Marca atividade como concluída
+      registrosHoje[chave].concluido = true;
+      registrosHoje[chave].hora = horaStr;
+
+      // 2. Atualiza Card e Botão
+      const badge = document.getElementById(`badge-${chave}`);
+      const horaTxt = document.getElementById(`hora-${chave}`);
+      const btn = document.getElementById(`btn-${chave}`);
+
+      badge.innerText = "Concluído";
+      badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
+      horaTxt.innerText = `Registrado às ${horaStr}`;
+      
+      btn.disabled = true;
+      btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
+      btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
+
+      // 3. Adiciona ao histórico da comunhão
+      let acaoNome = "Leitura da Bíblia";
+      if (chave === 'licao') acaoNome = "Lição da Escola Sabatina";
+      if (chave === 'ano') acaoNome = "Ano Bíblico";
+
+      historicoComunhao.unshift({ data: hojeStr, atividade: acaoNome, hora: horaStr });
+      renderizarHistoricoComunhao();
+
+      // 4. Dispara Confetti & Animação de Sucesso
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+      }
+
+      fecharModalRegistro();
+      verificarLembreteComunhao();
+      exhibirToast("Comunhão registrada com sucesso! Pontuação atualizada.");
+    }
+
+    function verificarLembreteComunhao() {
+      const todasConcluidas = registrosHoje.biblia.concluido && registrosHoje.licao.concluido && registrosHoje.ano.concluido;
+      const aviso = document.getElementById('aviso-lembrete');
+      if (todasConcluidas) {
+        aviso.classList.add('hidden');
+      } else {
+        aviso.classList.remove('hidden');
+      }
+    }
+
+    function renderizarHistoricoComunhao() {
+      const corpo = document.getElementById('tabela-historico-comunhao');
+      corpo.innerHTML = '';
+
+      if (historicoComunhao.length === 0) {
+        corpo.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Nenhum registro no histórico.</td></tr>`;
+        return;
+      }
+
+      historicoComunhao.forEach(item => {
+        const partesData = item.data.split('-');
+        const dataFmt = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-gray-50 transition";
+        tr.innerHTML = `
+          <td class="py-2.5 text-gray-500 font-semibold">${dataFmt}</td>
+          <td class="py-2.5 font-bold text-gray-800">${item.atividade}</td>
+          <td class="py-2.5 text-right font-black text-blue-900">${item.hora}</td>
+        `;
+        corpo.appendChild(tr);
+      });
+    }
+
+    function filtrarHistoricoComunhao() {
+      renderizarHistoricoComunhao();
+    }
+
+    /* --- FUNÇÕES AUXILIARES DE FOTO E PERFIL --- */
     function toggleAvatarMenu(e) {
       e.stopPropagation();
       document.getElementById('avatar-dropdown').classList.toggle('hidden');
@@ -334,15 +569,12 @@
       canvas.width = 200;
       canvas.height = 200;
       const ctx = canvas.getContext('2d');
-
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, 200, 200);
 
       const partes = nome.trim().split(' ');
       let iniciais = partes[0].charAt(0).toUpperCase();
-      if (partes.length > 1) {
-        iniciais += partes[partes.length - 1].charAt(0).toUpperCase();
-      }
+      if (partes.length > 1) iniciais += partes[partes.length - 1].charAt(0).toUpperCase();
 
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 80px sans-serif';
@@ -355,9 +587,7 @@
 
     function atualizarFotosInterface() {
       const fotoUrlFinal = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
-      document.querySelectorAll('.user-avatar-target').forEach(img => {
-        img.src = fotoUrlFinal;
-      });
+      document.querySelectorAll('.user-avatar-target').forEach(img => img.src = fotoUrlFinal);
     }
 
     function abrirSeletorFoto() {
@@ -370,13 +600,6 @@
 
       if (file.size > 5 * 1024 * 1024) {
         alert("O tamanho da imagem não pode exceder 5 MB.");
-        input.value = "";
-        return;
-      }
-
-      const tipos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-      if (!tipos.includes(file.type)) {
-        alert("Formato não suportado. Use JPG, PNG ou WEBP.");
         input.value = "";
         return;
       }
@@ -418,60 +641,6 @@
     function visualizarFoto() {
       document.getElementById('foto-ampliada').src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
       document.getElementById('modal-view-foto').classList.remove('hidden');
-    }
-
-    function salvarAlteracoesPessoais() {
-      const s1 = document.getElementById('input-senha-nova').value;
-      const s2 = document.getElementById('input-senha-confirma').value;
-
-      if (s1 || s2) {
-        if (s1 !== s2) {
-          alert("As senhas digitadas não coincidem.");
-          return;
-        }
-        if (s1.length < 6) {
-          alert("A senha deve conter no mínimo 6 caracteres.");
-          return;
-        }
-      }
-
-      document.getElementById('input-senha-nova').value = "";
-      document.getElementById('input-senha-confirma').value = "";
-      exhibirToast("Informações salvas com sucesso!");
-    }
-
-    function filtrarHistorico() {
-      const periodo = document.getElementById('filtro-periodo').value;
-      const corpo = document.getElementById('tabela-historico-corpo');
-      corpo.innerHTML = '';
-
-      const hoje = new Date('2026-08-01');
-
-      const listaFiltrada = historicoAtividades.filter(item => {
-        if (periodo === 'todos') return true;
-        const dataItem = new Date(item.data);
-        const diffDias = Math.floor((hoje - dataItem) / (1000 * 60 * 60 * 24));
-        return diffDias <= parseInt(periodo);
-      });
-
-      if (listaFiltrada.length === 0) {
-        corpo.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Nenhuma atividade encontrada neste período.</td></tr>`;
-        return;
-      }
-
-      listaFiltrada.forEach(item => {
-        const partesData = item.data.split('-');
-        const dataFmt = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
-        
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-gray-50 transition";
-        tr.innerHTML = `
-          <td class="py-2.5 text-gray-500 font-semibold">${dataFmt}</td>
-          <td class="py-2.5 font-bold text-gray-800">${item.atividade}</td>
-          <td class="py-2.5 text-right font-black text-emerald-600">+${item.pontos} pts</td>
-        `;
-        corpo.appendChild(tr);
-      });
     }
 
     function exhibirToast(msg) {
