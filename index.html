@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
-  <!-- CROPPER.JS PARA RECORTAR FOTO (1:1) -->
+  <!-- CROPPER.JS PARA RECORTAR FOTO -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -30,7 +30,7 @@
   <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
     <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
       <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
-      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
+      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes." #kemuelconnect</p>
       <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span>
     </div>
 
@@ -92,7 +92,7 @@
   <!-- ÁREA PRINCIPAL -->
   <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-6">
     
-    <!-- DASHBOARD -->
+    <!-- DASHBOARD (INTACTO) -->
     <div id="sec-dashboard" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
@@ -102,9 +102,8 @@
       </div>
     </div>
 
-    <!-- MEU PERFIL -->
+    <!-- MEU PERFIL (INTACTO) -->
     <div id="sec-perfil" class="hidden space-y-6">
-      <!-- CABEÇALHO DO PERFIL -->
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
           <div class="relative shrink-0">
@@ -143,7 +142,6 @@
         </div>
       </div>
 
-      <!-- INFORMAÇÕES PESSOAIS -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <h3 class="font-bold text-base text-blue-950 border-b pb-2 flex items-center gap-2">
           <i class="fa-solid fa-address-card text-blue-600"></i> Informações Pessoais
@@ -164,7 +162,6 @@
         </div>
       </section>
 
-      <!-- ESTATÍSTICAS -->
       <section class="space-y-3">
         <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-chart-simple text-amber-500"></i> Estatísticas
@@ -172,7 +169,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏆 Pontuação Total</span>
-            <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.320 pts</p>
+            <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.370 pts</p>
           </div>
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">⭐ Nível Atual</span>
@@ -193,49 +190,50 @@
     <!-- TELA: MINHA COMUNHÃO -->
     <div id="sec-comunhao" class="space-y-6">
 
-      <!-- 6. LEMBRETE DISCRETO -->
+      <!-- LEMBRETE DISCRETO -->
       <div id="aviso-lembrete" class="bg-amber-500/10 border border-amber-500/30 text-amber-900 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm transition">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-bell text-amber-600 text-lg animate-bounce"></i>
-          <p class="text-xs sm:text-sm font-semibold">Você ainda não registrou toda a sua comunhão de hoje.</p>
+          <p class="text-xs sm:text-sm font-semibold">Você ainda não registrou sua comunhão diária de hoje. #comunhao</p>
         </div>
         <button onclick="focarAtividades()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-blue-950 font-black text-xs rounded-xl transition shrink-0 shadow">
           Registrar Agora
         </button>
       </div>
 
-      <!-- 1. CABEÇALHO -->
+      <!-- CABEÇALHO -->
       <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
             <i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
           </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus."</p>
+          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus." #comunhao</p>
         </div>
         <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold border border-white/20 shrink-0">
           <i class="fa-regular fa-calendar text-amber-400 mr-1.5"></i> <span id="data-atual-txt">01 de Agosto de 2026</span>
         </div>
       </div>
 
-      <!-- 2. ATIVIDADES DO DIA + 4. SEQUÊNCIA (RESPONSIVIDADE: 3 COLS DESKTOP, 2 TABLET, 1 MOBILE) -->
+      <!-- ATIVIDADES DE HOJE (UNIFICADO: ANO BÍBLICO / LEITURA DIÁRIA + LIÇÃO) -->
       <section id="secao-atividades" class="space-y-4">
         <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-calendar-check text-blue-600"></i> Atividades de Hoje
         </h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <!-- Card: Leitura da Bíblia -->
-          <div id="card-biblia" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
+          <!-- Card Unificado: Ano Bíblico / Leitura Diária -->
+          <div id="card-ano" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
             <div class="space-y-2">
               <div class="flex justify-between items-start">
                 <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">📖</div>
-                <span id="badge-biblia" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
+                <span id="badge-ano" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
               </div>
-              <h4 class="font-extrabold text-gray-800 text-base">Leitura da Bíblia</h4>
-              <p class="text-xs text-gray-500" id="hora-biblia">Nenhum registro hoje</p>
+              <h4 class="font-extrabold text-gray-800 text-base">Ano Bíblico / Leitura Diária</h4>
+              <p class="text-xs text-blue-600 font-bold" id="capitulo-sugerido-hoje">Capítulo de Hoje: Mateus 1</p>
+              <p class="text-xs text-gray-500" id="hora-ano">Nenhum registro hoje</p>
             </div>
-            <button id="btn-biblia" onclick="abrirModalRegistro('biblia', 'Leitura da Bíblia')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+            <button id="btn-ano" onclick="abrirModalRegistro('ano', 'Ano Bíblico (Mateus 1)')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
               <i class="fa-solid fa-check"></i> Registrar Leitura
             </button>
           </div>
@@ -255,25 +253,10 @@
             </button>
           </div>
 
-          <!-- Card: Ano Bíblico -->
-          <div id="card-ano" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
-            <div class="space-y-2">
-              <div class="flex justify-between items-start">
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">📖</div>
-                <span id="badge-ano" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
-              </div>
-              <h4 class="font-extrabold text-gray-800 text-base">Ano Bíblico</h4>
-              <p class="text-xs text-gray-500" id="hora-ano">Nenhum registro hoje</p>
-            </div>
-            <button id="btn-ano" onclick="abrirModalRegistro('ano', 'Ano Bíblico')" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-check"></i> Registrar Leitura
-            </button>
-          </div>
-
         </div>
       </section>
 
-      <!-- 4. SEQUÊNCIA (STREAK) -->
+      <!-- SEQUÊNCIA (STREAK) -->
       <section class="bg-gradient-to-br from-amber-500 to-orange-600 p-6 rounded-2xl text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-4 text-center sm:text-left">
           <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 backdrop-blur-sm">
@@ -282,12 +265,39 @@
           <div>
             <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-100">Sequência Atual</h4>
             <p class="text-2xl sm:text-3xl font-black" id="comunhao-streak">18 Dias Consecutivos</p>
-            <p class="text-xs text-amber-100 mt-0.5">"Continue firme! A constância gera crescimento."</p>
+            <p class="text-xs text-amber-100 mt-0.5">"Continue firme! A constância gera crescimento." #anobiblico</p>
           </div>
         </div>
       </section>
 
-      <!-- 5. HISTÓRICO DA COMUNHÃO -->
+      <!-- PLANO DO ANO BÍBLICO (MATEUS 1 ATÉ APOCALIPSE 22) -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
+          <div>
+            <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-amber-500"></i> Plano Ano Bíblico — Novo Testamento
+            </h3>
+            <p class="text-xs text-gray-500">Marque o quadradinho do capítulo lido a cada dia para contabilizar pontos e gerar a atividade. #anobiblico</p>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <label for="filtro-mes-plano" class="font-bold text-gray-500">Mês:</label>
+            <select id="filtro-mes-plano" onchange="renderizarPlanoAnoBiblico()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="agosto" selected>Agosto (Mateus 1-28 + Marcos 1-3)</option>
+              <option value="setembro">Setembro (Marcos 4-16 + Lucas 1-17)</option>
+              <option value="outubro">Outubro (Lucas 18-24 + João + Atos)</option>
+              <option value="novembro">Novembro (Romanos a Hebreus)</option>
+              <option value="dezembro">Dezembro (Tiago a Apocalipse 22)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="grid-plano-capitulos">
+          <!-- Capítulos injetados via JS -->
+        </div>
+      </section>
+
+      <!-- HISTÓRICO DA COMUNHÃO -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
@@ -324,37 +334,57 @@
 
   </main>
 
-  <!-- 3. MODAL DE REGISTRO DA ATIVIDADE -->
+  <!-- MODAL DE REGISTRO DA ATIVIDADE DA COMUNHÃO -->
   <div id="modal-registro-comunhao" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalRegistro()">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
       <button onclick="fecharModalRegistro()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       
       <div class="border-b pb-2">
         <h4 id="modal-reg-titulo" class="text-base font-extrabold text-blue-950">Registrar Atividade</h4>
-        <p class="text-xs text-gray-500">Confirme a conclusão da sua devoção diária.</p>
+        <p class="text-xs text-gray-500">Confirme a conclusão da sua devoção diária no #anobiblico.</p>
       </div>
 
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="font-bold text-gray-500 block mb-1">Data</label>
-          <input type="text" id="reg-input-data" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 font-bold text-gray-700 cursor-not-allowed">
+      <!-- SEÇÃO DE SELEÇÃO DE CAPÍTULOS DENTRO DA MODAL -->
+      <div id="secao-selecao-capitulo" class="space-y-3 overflow-y-auto pr-1">
+        <div class="flex items-center justify-between gap-2">
+          <label for="filtro-mes-modal" class="text-xs font-bold text-gray-600">Selecione o Capítulo lido:</label>
+          <select id="filtro-mes-modal" onchange="renderizarCapitulosModal()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
+            <option value="agosto" selected>Agosto (Mateus 1-28 + Marcos 1-3)</option>
+            <option value="setembro">Setembro (Marcos 4-16 + Lucas 1-17)</option>
+            <option value="outubro">Outubro (Lucas 18-24 + João + Atos)</option>
+            <option value="novembro">Novembro (Romanos a Hebreus)</option>
+            <option value="dezembro">Dezembro (Tiago a Apocalipse 22)</option>
+          </select>
+        </div>
+
+        <div id="grid-modal-capitulos" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-xl bg-gray-50">
+          <!-- Injetado via JS -->
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs border-t pt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">Data</label>
+            <input type="text" id="reg-input-data" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
+          </div>
+
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">Horário do Registro</label>
+            <input type="text" id="reg-input-hora" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
+          </div>
         </div>
 
         <div>
-          <label class="font-bold text-gray-500 block mb-1">Horário do Registro</label>
-          <input type="text" id="reg-input-hora" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 font-bold text-gray-700 cursor-not-allowed">
-        </div>
-
-        <div>
-          <label for="reg-input-obs" class="font-bold text-gray-500 block mb-1">Observações (opcional)</label>
-          <textarea id="reg-input-obs" rows="3" placeholder="Ex: Lição muito abençoada sobre oração..." class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs font-medium"></textarea>
+          <label for="reg-input-obs" class="font-bold text-gray-500 block mb-1">Observações / Reflexão (Opcional)</label>
+          <textarea id="reg-input-obs" rows="2" placeholder="O que Deus falou com você hoje no capítulo? #anobiblico" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-600 text-xs font-medium"></textarea>
         </div>
       </div>
 
       <div class="pt-2 flex justify-end gap-2">
         <button onclick="fecharModalRegistro()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancelar</button>
         <button onclick="salvarRegistroComunhao()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Concluir Atividade
+          <i class="fa-solid fa-check"></i> Concluir Atividade (+50 pts)
         </button>
       </div>
     </div>
@@ -402,25 +432,83 @@
     };
 
     let atividadeSelecionadaChave = null;
+    let capituloSelecionadoAtual = 0;
 
-    // Estado diário das atividades de comunhão
     const registrosHoje = {
-      biblia: { concluido: false, hora: null },
       licao: { concluido: false, hora: null },
       ano: { concluido: false, hora: null }
     };
 
-    // Histórico inicial de comunhão
+    // GERADOR DO CRONOGRAMA DE MATEUS 1 A APOCALIPSE 22 (AGOSTO A DEZEMBRO)
+    function gerarCronogramaCompleto() {
+      const todosOsCapitulos = [
+        ...Array.from({length: 28}, (_, i) => ({ livro: "Mateus", cap: i + 1 })),
+        ...Array.from({length: 16}, (_, i) => ({ livro: "Marcos", cap: i + 1 })),
+        ...Array.from({length: 24}, (_, i) => ({ livro: "Lucas", cap: i + 1 })),
+        ...Array.from({length: 21}, (_, i) => ({ livro: "João", cap: i + 1 })),
+        ...Array.from({length: 28}, (_, i) => ({ livro: "Atos", cap: i + 1 })),
+        ...Array.from({length: 16}, (_, i) => ({ livro: "Romanos", cap: i + 1 })),
+        ...Array.from({length: 16}, (_, i) => ({ livro: "1 Coríntios", cap: i + 1 })),
+        ...Array.from({length: 13}, (_, i) => ({ livro: "2 Coríntios", cap: i + 1 })),
+        ...Array.from({length: 6}, (_, i) => ({ livro: "Gálatas", cap: i + 1 })),
+        ...Array.from({length: 6}, (_, i) => ({ livro: "Efésios", cap: i + 1 })),
+        ...Array.from({length: 4}, (_, i) => ({ livro: "Filipenses", cap: i + 1 })),
+        ...Array.from({length: 4}, (_, i) => ({ livro: "Colossenses", cap: i + 1 })),
+        ...Array.from({length: 5}, (_, i) => ({ livro: "1 Tessalonicenses", cap: i + 1 })),
+        ...Array.from({length: 3}, (_, i) => ({ livro: "2 Tessalonicenses", cap: i + 1 })),
+        ...Array.from({length: 6}, (_, i) => ({ livro: "1 Timóteo", cap: i + 1 })),
+        ...Array.from({length: 4}, (_, i) => ({ livro: "2 Timóteo", cap: i + 1 })),
+        ...Array.from({length: 3}, (_, i) => ({ livro: "Tito", cap: i + 1 })),
+        { livro: "Filemom", cap: 1 },
+        ...Array.from({length: 13}, (_, i) => ({ livro: "Hebreus", cap: i + 1 })),
+        ...Array.from({length: 5}, (_, i) => ({ livro: "Tiago", cap: i + 1 })),
+        ...Array.from({length: 5}, (_, i) => ({ livro: "1 Pedro", cap: i + 1 })),
+        ...Array.from({length: 3}, (_, i) => ({ livro: "2 Pedro", cap: i + 1 })),
+        ...Array.from({length: 5}, (_, i) => ({ livro: "1 João", cap: i + 1 })),
+        { livro: "2 João", cap: 1 },
+        { livro: "3 João", cap: 1 },
+        { livro: "Judas", cap: 1 },
+        ...Array.from({length: 22}, (_, i) => ({ livro: "Apocalipse", cap: i + 1 }))
+      ];
+
+      const plano = { agosto: [], setembro: [], outubro: [], novembro: [], dezembro: [] };
+      const diasPorMes = [
+        { mes: 'agosto', dias: 31 },
+        { mes: 'setembro', dias: 30 },
+        { mes: 'outubro', dias: 31 },
+        { mes: 'novembro', dias: 30 },
+        { mes: 'dezembro', dias: 31 }
+      ];
+
+      let idx = 0;
+      diasPorMes.forEach(m => {
+        for (let d = 1; d <= m.dias; d++) {
+          if (idx < todosOsCapitulos.length) {
+            plano[m.mes].push({
+              dia: d,
+              livro: todosOsCapitulos[idx].livro,
+              cap: todosOsCapitulos[idx].cap,
+              lido: false
+            });
+            idx++;
+          }
+        }
+      });
+
+      return plano;
+    }
+
+    const dadosPlano = gerarCronogramaCompleto();
+
     const historicoComunhao = [
-      { data: '2026-08-01', atividade: 'Leitura da Bíblia', hora: '07:30' },
       { data: '2026-07-31', atividade: 'Lição da Escola Sabatina', hora: '08:15' },
-      { data: '2026-07-31', atividade: 'Ano Bíblico', hora: '21:00' },
-      { data: '2026-07-30', atividade: 'Leitura da Bíblia', hora: '07:10' }
+      { data: '2026-07-31', atividade: 'Ano Bíblico (Mateus 1)', hora: '21:00' }
     ];
 
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
       atualizarDataAtual();
+      renderizarPlanoAnoBiblico();
       renderizarHistoricoComunhao();
       verificarLembreteComunhao();
     });
@@ -449,23 +537,98 @@
       document.getElementById('secao-atividades').scrollIntoView({ behavior: 'smooth' });
     }
 
+    function renderizarPlanoAnoBiblico() {
+      const mes = document.getElementById('filtro-mes-plano').value;
+      const container = document.getElementById('grid-plano-capitulos');
+      container.innerHTML = '';
+
+      const lista = dadosPlano[mes] || [];
+
+      lista.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `p-3 rounded-xl border flex items-center justify-between text-xs transition cursor-pointer ${
+          item.lido ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-gray-50 border-gray-200 hover:border-blue-400'
+        }`;
+
+        div.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <input type="checkbox" id="chk-${mes}-${index}" ${item.lido ? 'checked disabled' : ''} onchange="marcarCapituloPlano('${mes}', ${index})" class="w-4 h-4 text-blue-900 rounded focus:ring-blue-600 cursor-pointer">
+            <div>
+              <span class="font-extrabold text-gray-800 block">${item.livro} ${item.cap}</span>
+              <span class="text-[10px] text-gray-400 font-semibold">Dia ${item.dia}</span>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${item.lido ? 'bg-emerald-200 text-emerald-800' : 'bg-gray-200 text-gray-600'}">
+            ${item.lido ? 'Lido' : '+50 pts'}
+          </span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function marcarCapituloPlano(mes, index) {
+      const item = dadosPlano[mes][index];
+      capituloSelecionadoAtual = index;
+      document.getElementById('filtro-mes-modal').value = mes;
+      abrirModalRegistro('ano', `Ano Bíblico (${item.livro} ${item.cap})`);
+    }
+
     function abrirModalRegistro(chave, nomeAtividade) {
-      if (registrosHoje[chave].concluido) {
+      if (registrosHoje[chave] && registrosHoje[chave].concluido && chave !== 'ano') {
         alert("Esta atividade já foi registrada hoje!");
         return;
       }
 
       atividadeSelecionadaChave = chave;
       const hoje = new Date();
-      const dataStr = hoje.toLocaleDateString('pt-BR');
-      const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
       document.getElementById('modal-reg-titulo').innerText = `Registrar ${nomeAtividade}`;
-      document.getElementById('reg-input-data').value = dataStr;
-      document.getElementById('reg-input-hora').value = horaStr;
+      document.getElementById('reg-input-data').value = hoje.toLocaleDateString('pt-BR');
+      document.getElementById('reg-input-hora').value = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       document.getElementById('reg-input-obs').value = '';
 
+      const secaoCapitulos = document.getElementById('secao-selecao-capitulo');
+      
+      if (chave === 'ano') {
+        secaoCapitulos.classList.remove('hidden');
+        renderizarCapitulosModal();
+      } else {
+        secaoCapitulos.classList.add('hidden');
+      }
+
       document.getElementById('modal-registro-comunhao').classList.remove('hidden');
+    }
+
+    function renderizarCapitulosModal() {
+      const mes = document.getElementById('filtro-mes-modal').value;
+      const container = document.getElementById('grid-modal-capitulos');
+      container.innerHTML = '';
+
+      const lista = dadosPlano[mes] || [];
+
+      lista.forEach((item, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `p-2 rounded-lg text-left border text-xs font-bold transition flex items-center justify-between ${
+          item.lido 
+            ? 'bg-emerald-100 border-emerald-300 text-emerald-800 cursor-not-allowed' 
+            : (capituloSelecionadoAtual === index ? 'bg-blue-900 text-white border-blue-900' : 'bg-white hover:bg-blue-50 border-gray-200 text-gray-700')
+        }`;
+
+        btn.disabled = item.lido;
+        btn.innerHTML = `
+          <span>${item.livro} ${item.cap}</span>
+          <span class="text-[9px] opacity-75">${item.lido ? '✓' : 'Dia ' + item.dia}</span>
+        `;
+
+        btn.onclick = () => {
+          capituloSelecionadoAtual = index;
+          document.getElementById('modal-reg-titulo').innerText = `Registrar Ano Bíblico (${item.livro} ${item.cap})`;
+          renderizarCapitulosModal();
+        };
+
+        container.appendChild(btn);
+      });
     }
 
     function fecharModalRegistro() {
@@ -478,45 +641,51 @@
 
       const chave = atividadeSelecionadaChave;
       const horaStr = document.getElementById('reg-input-hora').value;
-      const hojeStr = '2026-08-01'; // Data de hoje padronizada
+      const hojeStr = '2026-08-01';
 
-      // 1. Marca atividade como concluída
-      registrosHoje[chave].concluido = true;
-      registrosHoje[chave].hora = horaStr;
+      if (chave === 'ano') {
+        const mes = document.getElementById('filtro-mes-modal').value;
+        if (dadosPlano[mes] && dadosPlano[mes][capituloSelecionadoAtual]) {
+          dadosPlano[mes][capituloSelecionadoAtual].lido = true;
+          const capLido = dadosPlano[mes][capituloSelecionadoAtual];
+          document.getElementById('capitulo-sugerido-hoje').innerText = `Último lido: ${capLido.livro} ${capLido.cap}`;
+          renderizarPlanoAnoBiblico();
+        }
+      }
 
-      // 2. Atualiza Card e Botão
+      registrosHoje[chave] = { concluido: true, hora: horaStr };
+
       const badge = document.getElementById(`badge-${chave}`);
       const horaTxt = document.getElementById(`hora-${chave}`);
       const btn = document.getElementById(`btn-${chave}`);
 
-      badge.innerText = "Concluído";
-      badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
-      horaTxt.innerText = `Registrado às ${horaStr}`;
+      if (badge) {
+        badge.innerText = "Concluído";
+        badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
+      }
+      if (horaTxt) horaTxt.innerText = `Registrado às ${horaStr}`;
       
-      btn.disabled = true;
-      btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
-      btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
+      if (btn) {
+        btn.disabled = true;
+        btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
+        btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
+      }
 
-      // 3. Adiciona ao histórico da comunhão
-      let acaoNome = "Leitura da Bíblia";
-      if (chave === 'licao') acaoNome = "Lição da Escola Sabatina";
-      if (chave === 'ano') acaoNome = "Ano Bíblico";
-
+      let acaoNome = document.getElementById('modal-reg-titulo').innerText.replace('Registrar ', '');
       historicoComunhao.unshift({ data: hojeStr, atividade: acaoNome, hora: horaStr });
       renderizarHistoricoComunhao();
 
-      // 4. Dispara Confetti & Animação de Sucesso
       if (typeof confetti === 'function') {
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
       }
 
       fecharModalRegistro();
       verificarLembreteComunhao();
-      exhibirToast("Comunhão registrada com sucesso! Pontuação atualizada.");
+      exhibirToast("Atividade registrada! +50 pontos adicionados no #anobiblico.");
     }
 
     function verificarLembreteComunhao() {
-      const todasConcluidas = registrosHoje.biblia.concluido && registrosHoje.licao.concluido && registrosHoje.ano.concluido;
+      const todasConcluidas = registrosHoje.licao.concluido && registrosHoje.ano.concluido;
       const aviso = document.getElementById('aviso-lembrete');
       if (todasConcluidas) {
         aviso.classList.add('hidden');
@@ -553,7 +722,7 @@
       renderizarHistoricoComunhao();
     }
 
-    /* --- FUNÇÕES AUXILIARES DE FOTO E PERFIL --- */
+    /* FUNÇÕES DE FOTO E PERFIL (INTACTAS) */
     function toggleAvatarMenu(e) {
       e.stopPropagation();
       document.getElementById('avatar-dropdown').classList.toggle('hidden');
