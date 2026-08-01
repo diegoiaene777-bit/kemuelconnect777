@@ -214,7 +214,7 @@
         </div>
       </div>
 
-      <!-- ATIVIDADES DE HOJE (UNIFICADO: ANO BÍBLICO / LEITURA DIÁRIA + LIÇÃO) -->
+      <!-- ATIVIDADES DE HOJE -->
       <section id="secao-atividades" class="space-y-4">
         <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-calendar-check text-blue-600"></i> Atividades de Hoje
@@ -270,7 +270,7 @@
         </div>
       </section>
 
-      <!-- PLANO DO ANO BÍBLICO (MATEUS 1 ATÉ APOCALIPSE 22) -->
+      <!-- PLANO DO ANO BÍBLICO (27 LIVROS DO NT: MATEUS A APOCALIPSE) -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <div>
@@ -282,12 +282,12 @@
 
           <div class="flex items-center gap-2 text-xs">
             <label for="filtro-mes-plano" class="font-bold text-gray-500">Mês:</label>
-            <select id="filtro-mes-plano" onchange="renderizarPlanoAnoBiblico()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              <option value="agosto" selected>Agosto (Mateus 1-28 + Marcos 1-3)</option>
-              <option value="setembro">Setembro (Marcos 4-16 + Lucas 1-17)</option>
-              <option value="outubro">Outubro (Lucas 18-24 + João + Atos)</option>
-              <option value="novembro">Novembro (Romanos a Hebreus)</option>
-              <option value="dezembro">Dezembro (Tiago a Apocalipse 22)</option>
+            <select id="filtro-mes-plano" onchange="sincronizarEFiltroPlano(this.value)" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="agosto" selected>Agosto (Mateus 1 a Lucas 9)</option>
+              <option value="setembro">Setembro (Lucas 10 a Atos 17)</option>
+              <option value="outubro">Outubro (Atos 18 a 2 Coríntios 10)</option>
+              <option value="novembro">Novembro (2 Coríntios 11 a Hebreus 6)</option>
+              <option value="dezembro">Dezembro (Hebreus 7 a Apocalipse 22)</option>
             </select>
           </div>
         </div>
@@ -349,11 +349,11 @@
         <div class="flex items-center justify-between gap-2">
           <label for="filtro-mes-modal" class="text-xs font-bold text-gray-600">Selecione o Capítulo lido:</label>
           <select id="filtro-mes-modal" onchange="renderizarCapitulosModal()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
-            <option value="agosto" selected>Agosto (Mateus 1-28 + Marcos 1-3)</option>
-            <option value="setembro">Setembro (Marcos 4-16 + Lucas 1-17)</option>
-            <option value="outubro">Outubro (Lucas 18-24 + João + Atos)</option>
-            <option value="novembro">Novembro (Romanos a Hebreus)</option>
-            <option value="dezembro">Dezembro (Tiago a Apocalipse 22)</option>
+            <option value="agosto" selected>Agosto (Mateus 1 a Lucas 9)</option>
+            <option value="setembro">Setembro (Lucas 10 a Atos 17)</option>
+            <option value="outubro">Outubro (Atos 18 a 2 Coríntios 10)</option>
+            <option value="novembro">Novembro (2 Coríntios 11 a Hebreus 6)</option>
+            <option value="dezembro">Dezembro (Hebreus 7 a Apocalipse 22)</option>
           </select>
         </div>
 
@@ -439,58 +439,66 @@
       ano: { concluido: false, hora: null }
     };
 
-    // GERADOR DO CRONOGRAMA DE MATEUS 1 A APOCALIPSE 22 (AGOSTO A DEZEMBRO)
+    // GERADOR DO CRONOGRAMA OFICIAL BASEADO NAS 27 LIVROS DO NOVO TESTAMENTO (260 CAPÍTULOS)
     function gerarCronogramaCompleto() {
-      const todosOsCapitulos = [
-        ...Array.from({length: 28}, (_, i) => ({ livro: "Mateus", cap: i + 1 })),
-        ...Array.from({length: 16}, (_, i) => ({ livro: "Marcos", cap: i + 1 })),
-        ...Array.from({length: 24}, (_, i) => ({ livro: "Lucas", cap: i + 1 })),
-        ...Array.from({length: 21}, (_, i) => ({ livro: "João", cap: i + 1 })),
-        ...Array.from({length: 28}, (_, i) => ({ livro: "Atos", cap: i + 1 })),
-        ...Array.from({length: 16}, (_, i) => ({ livro: "Romanos", cap: i + 1 })),
-        ...Array.from({length: 16}, (_, i) => ({ livro: "1 Coríntios", cap: i + 1 })),
-        ...Array.from({length: 13}, (_, i) => ({ livro: "2 Coríntios", cap: i + 1 })),
-        ...Array.from({length: 6}, (_, i) => ({ livro: "Gálatas", cap: i + 1 })),
-        ...Array.from({length: 6}, (_, i) => ({ livro: "Efésios", cap: i + 1 })),
-        ...Array.from({length: 4}, (_, i) => ({ livro: "Filipenses", cap: i + 1 })),
-        ...Array.from({length: 4}, (_, i) => ({ livro: "Colossenses", cap: i + 1 })),
-        ...Array.from({length: 5}, (_, i) => ({ livro: "1 Tessalonicenses", cap: i + 1 })),
-        ...Array.from({length: 3}, (_, i) => ({ livro: "2 Tessalonicenses", cap: i + 1 })),
-        ...Array.from({length: 6}, (_, i) => ({ livro: "1 Timóteo", cap: i + 1 })),
-        ...Array.from({length: 4}, (_, i) => ({ livro: "2 Timóteo", cap: i + 1 })),
-        ...Array.from({length: 3}, (_, i) => ({ livro: "Tito", cap: i + 1 })),
-        { livro: "Filemom", cap: 1 },
-        ...Array.from({length: 13}, (_, i) => ({ livro: "Hebreus", cap: i + 1 })),
-        ...Array.from({length: 5}, (_, i) => ({ livro: "Tiago", cap: i + 1 })),
-        ...Array.from({length: 5}, (_, i) => ({ livro: "1 Pedro", cap: i + 1 })),
-        ...Array.from({length: 3}, (_, i) => ({ livro: "2 Pedro", cap: i + 1 })),
-        ...Array.from({length: 5}, (_, i) => ({ livro: "1 João", cap: i + 1 })),
-        { livro: "2 João", cap: 1 },
-        { livro: "3 João", cap: 1 },
-        { livro: "Judas", cap: 1 },
-        ...Array.from({length: 22}, (_, i) => ({ livro: "Apocalipse", cap: i + 1 }))
+      const estruturaLivros = [
+        { livro: "Mateus", caps: 28 },
+        { livro: "Marcos", caps: 16 },
+        { livro: "Lucas", caps: 24 },
+        { livro: "João", caps: 21 },
+        { livro: "Atos dos Apóstolos", caps: 28 },
+        { livro: "Romanos", caps: 16 },
+        { livro: "1 Coríntios", caps: 16 },
+        { livro: "2 Coríntios", caps: 13 },
+        { livro: "Gálatas", caps: 6 },
+        { livro: "Efésios", caps: 6 },
+        { livro: "Filipenses", caps: 4 },
+        { livro: "Colossenses", caps: 4 },
+        { livro: "1 Tessalonicenses", caps: 5 },
+        { livro: "2 Tessalonicenses", caps: 3 },
+        { livro: "1 Timóteo", caps: 6 },
+        { livro: "2 Timóteo", caps: 4 },
+        { livro: "Tito", caps: 3 },
+        { livro: "Filemom", caps: 1 },
+        { livro: "Hebreus", caps: 13 },
+        { livro: "Tiago", caps: 5 },
+        { livro: "1 Pedro", caps: 5 },
+        { livro: "2 Pedro", caps: 3 },
+        { livro: "1 João", caps: 5 },
+        { livro: "2 João", caps: 1 },
+        { livro: "3 João", caps: 1 },
+        { livro: "Judas", caps: 1 },
+        { livro: "Apocalipse", caps: 22 }
       ];
+
+      const todosOsCapitulos = [];
+      estruturaLivros.forEach(item => {
+        for (let i = 1; i <= item.caps; i++) {
+          todosOsCapitulos.push({ livro: item.livro, cap: i });
+        }
+      });
 
       const plano = { agosto: [], setembro: [], outubro: [], novembro: [], dezembro: [] };
-      const diasPorMes = [
-        { mes: 'agosto', dias: 31 },
-        { mes: 'setembro', dias: 30 },
-        { mes: 'outubro', dias: 31 },
-        { mes: 'novembro', dias: 30 },
-        { mes: 'dezembro', dias: 31 }
+      const distribuicaoMeses = [
+        { mes: 'agosto', dias: 31, qtdCaps: 53 },
+        { mes: 'setembro', dias: 30, qtdCaps: 53 },
+        { mes: 'outubro', dias: 31, qtdCaps: 53 },
+        { mes: 'novembro', dias: 30, qtdCaps: 51 },
+        { mes: 'dezembro', dias: 31, qtdCaps: 50 }
       ];
 
-      let idx = 0;
-      diasPorMes.forEach(m => {
-        for (let d = 1; d <= m.dias; d++) {
-          if (idx < todosOsCapitulos.length) {
+      let idxCap = 0;
+      distribuicaoMeses.forEach(m => {
+        for (let i = 0; i < m.qtdCaps; i++) {
+          if (idxCap < todosOsCapitulos.length) {
+            const diaCalc = Math.min(Math.floor((i / m.qtdCaps) * m.dias) + 1, m.dias);
             plano[m.mes].push({
-              dia: d,
-              livro: todosOsCapitulos[idx].livro,
-              cap: todosOsCapitulos[idx].cap,
+              dia: diaCalc,
+              livro: todosOsCapitulos[idxCap].livro,
+              cap: todosOsCapitulos[idxCap].cap,
               lido: false
             });
-            idx++;
+            idxCap++;
           }
         }
       });
@@ -537,6 +545,11 @@
       document.getElementById('secao-atividades').scrollIntoView({ behavior: 'smooth' });
     }
 
+    function sincronizarEFiltroPlano(val) {
+      document.getElementById('filtro-mes-modal').value = val;
+      renderizarPlanoAnoBiblico();
+    }
+
     function renderizarPlanoAnoBiblico() {
       const mes = document.getElementById('filtro-mes-plano').value;
       const container = document.getElementById('grid-plano-capitulos');
@@ -570,6 +583,7 @@
       const item = dadosPlano[mes][index];
       capituloSelecionadoAtual = index;
       document.getElementById('filtro-mes-modal').value = mes;
+      document.getElementById('filtro-mes-plano').value = mes;
       abrirModalRegistro('ano', `Ano Bíblico (${item.livro} ${item.cap})`);
     }
 
@@ -601,6 +615,7 @@
 
     function renderizarCapitulosModal() {
       const mes = document.getElementById('filtro-mes-modal').value;
+      document.getElementById('filtro-mes-plano').value = mes;
       const container = document.getElementById('grid-modal-capitulos');
       container.innerHTML = '';
 
@@ -617,8 +632,8 @@
 
         btn.disabled = item.lido;
         btn.innerHTML = `
-          <span>${item.livro} ${item.cap}</span>
-          <span class="text-[9px] opacity-75">${item.lido ? '✓' : 'Dia ' + item.dia}</span>
+          <span class="truncate">${item.livro} ${item.cap}</span>
+          <span class="text-[9px] opacity-75 ml-1">${item.lido ? '✓' : 'Dia ' + item.dia}</span>
         `;
 
         btn.onclick = () => {
