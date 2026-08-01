@@ -18,7 +18,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
-  <!-- MENU LATERAL (SEM EMOJIS NO TEXTO) -->
+  <!-- MENU LATERAL ORIGINAL -->
   <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
     <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
       <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
@@ -113,7 +113,7 @@
   <!-- ÁREA PRINCIPAL -->
   <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-8">
     
-    <!-- DASHBOARD COMPLETO REFORMULADO -->
+    <!-- DASHBOARD -->
     <div id="sec-dashboard" class="space-y-6">
 
       <!-- CABEÇALHO COMPLETO -->
@@ -296,7 +296,7 @@
         </div>
       </div>
 
-      <!-- QUARTA LINHA: JORNADA DE PARTICIPAÇÃO (CARD LARGO) -->
+      <!-- QUARTA LINHA: JORNADA DE PARTICIPAÇÃO -->
       <div class="bg-white p-6 rounded-2xl shadow card-hover space-y-4 border border-gray-100">
         <div class="flex justify-between items-center border-b pb-3">
           <div>
@@ -417,7 +417,7 @@
         </div>
       </div>
 
-      <!-- ATALHOS RÁPIDOS (FIXOS NO FINAL DO DASHBOARD) -->
+      <!-- ATALHOS RÁPIDOS -->
       <div class="space-y-3 pt-4">
         <h3 class="font-extrabold text-base text-blue-950 uppercase tracking-wider">Atalhos Rápidos</h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -453,8 +453,71 @@
 
     </div>
 
-    <!-- OUTRAS SEÇÕES (ESCONDIDAS INICIALMENTE) -->
-    <div id="sec-perfil" class="hidden"><h2 class="text-2xl font-bold">Meu Perfil</h2></div>
+    <!-- SEÇÃO: MEU PERFIL (REFORMULADA) -->
+    <div id="sec-perfil" class="hidden space-y-6">
+
+      <!-- CABEÇALHO DO PERFIL (CARD DE DESTAQUE) -->
+      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        
+        <!-- Lado Esquerdo: Info do Jovem -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div class="relative">
+            <img id="perfil-avatar" src="https://ui-avatars.com/api/?name=Diego&background=f59e0b&color=0f172a&bold=true" class="w-20 h-20 rounded-full border-4 border-amber-400 object-cover shadow-lg" alt="Foto do Usuário">
+            <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full" title="Online"></span>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex items-center gap-3 flex-wrap">
+              <h2 id="perfil-nome" class="text-2xl md:text-3xl font-extrabold tracking-tight">Diego Iaene</h2>
+              <span id="perfil-status" class="text-[10px] bg-emerald-500 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
+            </div>
+            
+            <p id="perfil-funcao" class="text-sm text-blue-200 font-medium">Líder de Jovens • Clube Kemuel</p>
+            
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-300 pt-1">
+              <span><i class="fa-regular fa-calendar-alt text-amber-400 mr-1"></i> Cadastrado em: <strong class="text-white">15/01/2026</strong></span>
+              <span><i class="fa-regular fa-clock text-amber-400 mr-1"></i> Último acesso: <strong class="text-white">Hoje, 10:15</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lado Direito: Métricas Principais + Botão Editar -->
+        <div class="flex flex-col sm:flex-row md:flex-col items-start md:items-end justify-between w-full md:w-auto gap-4 pt-4 md:pt-0 border-t md:border-t-0 border-blue-900/60">
+          
+          <!-- Cards Rápidos de Status -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full md:w-auto">
+            <div class="bg-blue-900/60 backdrop-blur-sm border border-blue-800/80 p-2.5 rounded-xl text-center min-w-[90px]">
+              <span class="text-[10px] text-blue-300 font-bold uppercase block">Nível</span>
+              <span id="perfil-nivel" class="text-sm font-black text-amber-400">⭐⭐⭐ 3</span>
+            </div>
+            
+            <div class="bg-blue-900/60 backdrop-blur-sm border border-blue-800/80 p-2.5 rounded-xl text-center min-w-[90px]">
+              <span class="text-[10px] text-blue-300 font-bold uppercase block">Pontos</span>
+              <span id="perfil-pts" class="text-sm font-black text-white">1.320</span>
+            </div>
+            
+            <div class="bg-blue-900/60 backdrop-blur-sm border border-blue-800/80 p-2.5 rounded-xl text-center min-w-[90px]">
+              <span class="text-[10px] text-blue-300 font-bold uppercase block">Ranking</span>
+              <span id="perfil-pos" class="text-sm font-black text-emerald-400">5º Lugar</span>
+            </div>
+
+            <div class="bg-blue-900/60 backdrop-blur-sm border border-blue-800/80 p-2.5 rounded-xl text-center min-w-[90px]">
+              <span class="text-[10px] text-blue-300 font-bold uppercase block">Streak</span>
+              <span id="perfil-streak" class="text-sm font-black text-rose-400">🔥 18 d</span>
+            </div>
+          </div>
+
+          <!-- Botão Editar Perfil -->
+          <button onclick="alert('Abrir modal de edição de perfil')" class="w-full sm:w-auto px-4 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-pen-to-square"></i> Editar Perfil
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- OUTRAS SEÇÕES -->
     <div id="sec-comunhao" class="hidden"><h2 class="text-2xl font-bold">Minha Comunhão</h2></div>
     <div id="sec-biblia" class="hidden"><h2 class="text-2xl font-bold">Bíblia</h2></div>
     <div id="sec-licao" class="hidden"><h2 class="text-2xl font-bold">Lição da Escola Sabatina</h2></div>
@@ -465,19 +528,36 @@
     <div id="sec-notificacoes" class="hidden"><h2 class="text-2xl font-bold">Notificações</h2></div>
     <div id="sec-configuracoes" class="hidden"><h2 class="text-2xl font-bold">Configurações</h2></div>
 
+    <!-- SEÇÕES PAINEL DO DIRETOR -->
+    <div id="sec-admin-dash" class="hidden"><h2 class="text-2xl font-bold">Dashboard Admin</h2></div>
+    <div id="sec-admin-usuarios" class="hidden"><h2 class="text-2xl font-bold">Usuários</h2></div>
+    <div id="sec-aprovacoes" class="hidden"><h2 class="text-2xl font-bold">Aprovação de Cadastros</h2></div>
+    <div id="sec-admin-comprovantes" class="hidden"><h2 class="text-2xl font-bold">Validar Comprovantes</h2></div>
+    <div id="sec-admin-atividades" class="hidden"><h2 class="text-2xl font-bold">Gestão de Atividades</h2></div>
+    <div id="sec-admin-logs" class="hidden"><h2 class="text-2xl font-bold">Logs do Sistema</h2></div>
+
   </main>
 
   <script>
     function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao', 'calendario', 'ranking', 'desafios', 'evangelismo', 'notificacoes', 'configuracoes'];
+      const telas = [
+        'dashboard', 'perfil', 'comunhao', 'biblia', 'licao', 
+        'calendario', 'ranking', 'desafios', 'evangelismo', 
+        'notificacoes', 'configuracoes', 'admin-dash', 
+        'admin-usuarios', 'aprovacoes', 'admin-comprovantes', 
+        'admin-atividades', 'admin-logs'
+      ];
+      
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if(el) el.classList.add('hidden');
         const nav = document.getElementById(`nav-${t}`);
         if(nav) nav.classList.remove('sidebar-active');
       });
+      
       const alvo = document.getElementById(`sec-${tela}`);
       if(alvo) alvo.classList.remove('hidden');
+      
       const navAlvo = document.getElementById(`nav-${tela}`);
       if(navAlvo) navAlvo.classList.add('sidebar-active');
     }
