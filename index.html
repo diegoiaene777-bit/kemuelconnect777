@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   
-  <!-- CROPER.JS PARA RECORTAR FOTO (1:1) -->
+  <!-- CROPPER.JS PARA RECORTAR FOTO (1:1) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -17,10 +17,8 @@
     .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
     .card-hover { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
     .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15); }
-    .btn-quick { transition: all 0.2s ease; }
-    .btn-quick:hover { transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(30, 58, 138, 0.2); }
     
-    /* Animação suave para fotos de perfil */
+    /* Animação suave para foto de perfil */
     .avatar-container { transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .avatar-container:hover { transform: scale(1.03); }
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
@@ -40,11 +38,11 @@
     <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
       <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
       
-      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
+      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
         <i class="fa-solid fa-house w-5 text-amber-400 shrink-0"></i> Dashboard
       </button>
       
-      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
         <i class="fa-solid fa-user w-5 text-blue-400 shrink-0"></i> Meu Perfil
       </button>
 
@@ -83,18 +81,6 @@
       <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
         <i class="fa-solid fa-gear w-5 text-gray-400 shrink-0"></i> Configurações
       </button>
-
-      <!-- PAINEL DO DIRETOR -->
-      <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1">
-        <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p>
-        
-        <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-chart-line w-4 text-blue-300 shrink-0"></i> Dashboard Admin
-        </button>
-        <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-          <i class="fa-solid fa-users w-4 text-blue-300 shrink-0"></i> Usuários
-        </button>
-      </div>
     </nav>
 
     <div class="p-4 border-t border-blue-900">
@@ -108,71 +94,20 @@
   <main class="flex-1 p-4 md:p-8 overflow-y-auto space-y-8">
     
     <!-- DASHBOARD -->
-    <div id="sec-dashboard" class="space-y-6">
+    <div id="sec-dashboard" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 id="dash-saudacao" class="text-2xl md:text-3xl font-extrabold tracking-tight">Bom dia, Diego! 👋</h2>
           <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia.</p>
-          <p id="dash-data" class="text-[11px] text-amber-300 font-semibold pt-1"><i class="fa-regular fa-calendar-check mr-1 shrink-0"></i> Sexta-feira, 31 de julho de 2026</p>
-        </div>
-        <div class="flex items-center gap-4 self-end md:self-center">
-          <span class="text-xs bg-amber-500 text-blue-950 px-3 py-1 rounded-full font-black uppercase shadow-md">ATIVO</span>
-          <img id="dash-avatar" src="" class="user-avatar-target w-12 h-12 rounded-full border-2 border-amber-400 object-cover shadow-md shrink-0" alt="Foto Jovem">
-        </div>
-      </div>
-
-      <!-- CARDS PRINCIPAIS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-blue-900 card-hover flex flex-col justify-between min-w-0">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider truncate">Pontuação Total</span>
-            <i class="fa-solid fa-star text-amber-400 text-base shrink-0"></i>
-          </div>
-          <p id="dash-pts-total" class="text-3xl font-black text-blue-950 whitespace-nowrap">1.320 <span class="text-xs font-normal text-gray-500">pts</span></p>
-          <p class="text-xs text-emerald-600 font-bold flex items-center gap-1 mt-2">
-            <i class="fa-solid fa-arrow-trend-up shrink-0"></i> <span>+140 pts esta semana</span>
-          </p>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-amber-500 card-hover flex flex-col justify-between min-w-0">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider truncate">Nível Atual</span>
-            <span class="text-amber-500 text-xs shrink-0 whitespace-nowrap">⭐⭐⭐</span>
-          </div>
-          <div>
-            <p id="dash-nivel-nome" class="text-lg font-black text-amber-600 truncate">Nível 3 — Discípulo</p>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-              <div id="dash-nivel-bar" class="bg-amber-500 h-2.5 rounded-full" style="width: 70%"></div>
-            </div>
-          </div>
-          <p id="dash-nivel-txt" class="text-[11px] text-gray-500 font-medium mt-2 truncate">Faltam 180 pontos para o Nível 4</p>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-emerald-500 card-hover flex flex-col justify-between min-w-0">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider truncate">Posição Ranking</span>
-            <i class="fa-solid fa-trophy text-emerald-500 text-base shrink-0"></i>
-          </div>
-          <p id="dash-ranking-pos" class="text-3xl font-black text-emerald-600 whitespace-nowrap">5º <span class="text-xs font-normal text-gray-500">lugar</span></p>
-          <p class="text-xs text-gray-500 font-medium mt-2 truncate">de <strong class="text-gray-800">38</strong> jovens participantes</p>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow border-l-4 border-rose-500 card-hover flex flex-col justify-between min-w-0">
-          <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider truncate">Sequência (Streak)</span>
-            <i class="fa-solid fa-fire text-rose-500 text-base shrink-0"></i>
-          </div>
-          <p id="dash-streak" class="text-2xl font-black text-rose-600 whitespace-nowrap">🔥 18 dias</p>
-          <p class="text-[11px] text-gray-500 italic mt-2 truncate">Mantenha sua constância diária!</p>
         </div>
       </div>
     </div>
 
     <!-- MEU PERFIL -->
-    <div id="sec-perfil" class="hidden space-y-6">
+    <div id="sec-perfil" class="space-y-6">
+      
+      <!-- CABEÇALHO DO PERFIL (EXISTENTE) -->
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        
-        <!-- Info do Usuário & Foto -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
           
           <!-- CONTÊINER DA FOTO DE PERFIL COM MENU -->
@@ -207,15 +142,156 @@
             </div>
             <p id="perfil-funcao" class="text-sm text-blue-200 font-medium">Líder de Jovens • Clube Kemuel</p>
             <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-300 pt-1">
-              <span><i class="fa-regular fa-calendar-alt text-amber-400 mr-1 shrink-0"></i> Cadastrado em: <strong class="text-white">15/01/2026</strong></span>
+              <span><i class="fa-regular fa-calendar-alt text-amber-400 mr-1 shrink-0"></i> Cadastrado em: <strong class="text-white" id="perfil-data-cadastro">15/01/2026</strong></span>
             </div>
           </div>
         </div>
-
       </div>
+
+      <!-- 1. INFORMAÇÕES PESSOAIS -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+        <h3 class="font-bold text-base text-blue-950 border-b pb-2 flex items-center gap-2">
+          <i class="fa-solid fa-address-card text-blue-600"></i> Informações Pessoais
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <!-- E-mail (somente exibição) -->
+          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <span class="text-gray-500 font-bold block">E-mail</span>
+            <p class="text-gray-800 font-semibold text-sm mt-1" id="info-email">diego@kemuel.com</p>
+          </div>
+
+          <!-- Data de Nascimento (somente exibição) -->
+          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+            <span class="text-gray-500 font-bold block">Data de Nascimento</span>
+            <p class="text-gray-800 font-semibold text-sm mt-1" id="info-nascimento">20/05/2000</p>
+          </div>
+
+          <!-- Telefone (Editável) -->
+          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-1">
+            <label for="input-telefone" class="text-gray-500 font-bold block">Telefone / WhatsApp</label>
+            <input type="text" id="input-telefone" value="(85) 99999-8888" class="w-full bg-white border border-gray-300 rounded-lg px-2.5 py-1 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
+          </div>
+        </div>
+
+        <!-- Alteração de Senha -->
+        <div class="pt-3 border-t border-gray-100">
+          <p class="text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-lock text-amber-500"></i> Alterar Senha</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
+            <input type="password" id="input-senha-nova" placeholder="Nova senha" class="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600">
+            <input type="password" id="input-senha-confirma" placeholder="Confirmar nova senha" class="bg-gray-50 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-600">
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button onclick="salvarAlteracoesPessoais()" class="px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. ESTATÍSTICAS -->
+      <section class="space-y-3">
+        <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+          <i class="fa-solid fa-chart-simple text-amber-500"></i> Estatísticas
+        </h3>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏆 Pontuação Total</span>
+            <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.320 pts</p>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">⭐ Nível Atual</span>
+            <p class="text-xl font-black text-amber-500 mt-1" id="stat-nivel">Nível 3</p>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🥇 Ranking</span>
+            <p class="text-xl font-black text-emerald-600 mt-1" id="stat-ranking">5º Lugar</p>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🔥 Sequência</span>
+            <p class="text-xl font-black text-rose-600 mt-1" id="stat-streak">18 Dias</p>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover col-span-2 sm:col-span-1">
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏅 Medalhas</span>
+            <p class="text-xl font-black text-indigo-600 mt-1" id="stat-medalhas">3 Conquistadas</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. MINHAS MEDALHAS -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+            <i class="fa-solid fa-award text-yellow-500"></i> Minhas Medalhas
+          </h3>
+          <span class="text-xs text-gray-500 font-semibold">Clique para ver detalhes</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="grid-medalhas">
+          <!-- Medalhas injetadas via JS -->
+        </div>
+      </section>
+
+      <!-- 4. HISTÓRICO DE ATIVIDADES -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
+          <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico de Atividades
+          </h3>
+
+          <!-- Filtro por período -->
+          <div class="flex items-center gap-2 text-xs">
+            <label for="filtro-periodo" class="font-bold text-gray-500">Período:</label>
+            <select id="filtro-periodo" onchange="filtrarHistorico()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="todos">Todo o período</option>
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabela simples do histórico -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-gray-200 text-gray-400 uppercase tracking-wider font-bold">
+                <th class="pb-2">Data</th>
+                <th class="pb-2">Atividade</th>
+                <th class="pb-2 text-right">Pontos</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-historico-corpo" class="divide-y divide-gray-100 font-medium text-gray-700">
+              <!-- Linhas do histórico via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </div>
 
   </main>
+
+  <!-- MODAL DE DETALHES DA MEDALHA -->
+  <div id="modal-medalha" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalMedalha()">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative" onclick="event.stopPropagation()">
+      <button onclick="fecharModalMedalha()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <div id="modal-medalha-icone" class="text-6xl my-2">🏅</div>
+      <h4 id="modal-medalha-nome" class="text-lg font-black text-blue-950">Nome da Medalha</h4>
+      <span id="modal-medalha-status" class="inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase">Conquistada</span>
+      <p id="modal-medalha-desc" class="text-xs text-gray-600">Descrição detalhada da medalha.</p>
+      <div class="bg-gray-50 p-3 rounded-xl border text-left text-xs space-y-1">
+        <span class="font-bold text-gray-500 block uppercase text-[10px]">Requisitos para Conquistar:</span>
+        <p id="modal-medalha-req" class="text-gray-800 font-medium">Requisitos aqui...</p>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL DE CORTE DE IMAGEM -->
   <div id="modal-crop-foto" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -247,7 +323,7 @@
   <!-- TOAST DE NOTIFICAÇÃO -->
   <div id="toast-notificacao" class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition">
     <i class="fa-solid fa-circle-check text-base"></i>
-    <span id="toast-mensagem">Foto de perfil atualizada com sucesso.</span>
+    <span id="toast-mensagem">Operação realizada com sucesso.</span>
   </div>
 
   <script>
@@ -256,12 +332,34 @@
     let currentUser = {
       id: "usr-123456",
       nome: "Diego Iaene",
-      fotoUrl: null // null carrega o avatar padrão com iniciais
+      fotoUrl: null
     };
+
+    // COLEÇÃO DE MEDALHAS
+    const listaMedalhas = [
+      { id: 1, icone: '🔥', nome: 'Inabalável', conquistada: true, desc: 'Demonstrou alta constância no compromisso diário.', req: 'Manter a sequência de presença/comunhão por 15 dias seguidos.' },
+      { id: 2, icone: '📖', nome: 'Leitor Fiel', conquistada: true, desc: 'Estudou a palavra de Deus de forma contínua.', req: 'Completar o estudo de todas as lições da Escola Sabatina no mês.' },
+      { id: 3, icone: '🤝', nome: 'Evangelista', conquistada: true, desc: 'Ajudou a espalhar a mensagem de esperança.', req: 'Participar ativamente de pelo menos 3 ações sociais ou evangelísticas.' },
+      { id: 4, icone: '🛡️', nome: 'Guerreiro de Oração', conquistada: false, desc: 'Dedicação especial nos momentos de intercessão.', req: 'Participar dos encontros de oração matinais por 10 dias.' },
+      { id: 5, icone: '🎯', nome: 'Mestre dos Desafios', conquistada: false, desc: 'Superou metas elevadas no clube.', req: 'Concluir 10 desafios da plataforma com pontuação máxima.' },
+      { id: 6, icone: '👑', nome: 'Líder Exemplar', conquistada: false, desc: 'Reconhecimento por liderança e serviço voluntário.', req: 'Atingir o Nível 5 de progresso no Kemuel Connect.' }
+    ];
+
+    // HISTÓRICO DE ATIVIDADES
+    const historicoAtividades = [
+      { data: '2026-07-31', atividade: 'Estudo da Lição da Escola Sabatina', pontos: 50 },
+      { data: '2026-07-30', atividade: 'Presença no Culto JA', pontos: 100 },
+      { data: '2026-07-28', atividade: 'Participação na Ação Social', pontos: 150 },
+      { data: '2026-07-20', atividade: 'Conclusão de Desafio de Leitura', pontos: 80 },
+      { data: '2026-07-10', atividade: 'Presença na Reunião de Pequeno Grupo', pontos: 60 },
+      { data: '2026-06-25', atividade: 'Estudo Diário da Bíblia', pontos: 40 }
+    ];
 
     // INICIALIZAÇÃO
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
+      renderizarMedalhas();
+      filtrarHistorico();
     });
 
     // NAVEGAÇÃO
@@ -273,13 +371,16 @@
       });
       const alvo = document.getElementById(`sec-${tela}`);
       if(alvo) alvo.classList.remove('hidden');
+      
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
+      const activeBtn = document.getElementById(`nav-${tela}`);
+      if(activeBtn) activeBtn.classList.add('sidebar-active');
     }
 
-    // TOGGLE DO DROPDOWN
+    // DROPDOWN FOTO
     function toggleAvatarMenu(e) {
       e.stopPropagation();
-      const dropdown = document.getElementById('avatar-dropdown');
-      dropdown.classList.toggle('hidden');
+      document.getElementById('avatar-dropdown').classList.toggle('hidden');
     }
 
     document.addEventListener('click', () => {
@@ -287,25 +388,22 @@
       if (dropdown) dropdown.classList.add('hidden');
     });
 
-    // GERAR AVATAR PADRÃO COM INICIAIS (#0f172a - Azul Escuro)
+    // AVATAR PADRÃO COM INICIAIS
     function gerarAvatarPadrao(nome) {
       const canvas = document.createElement('canvas');
       canvas.width = 200;
       canvas.height = 200;
       const ctx = canvas.getContext('2d');
 
-      // Fundo Azul Escuro do Kemuel Connect
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, 200, 200);
 
-      // Extrair Iniciais
       const partes = nome.trim().split(' ');
       let iniciais = partes[0].charAt(0).toUpperCase();
       if (partes.length > 1) {
         iniciais += partes[partes.length - 1].charAt(0).toUpperCase();
       }
 
-      // Estilo das Letras (Amarelo Dourado)
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 80px sans-serif';
       ctx.textAlign = 'center';
@@ -315,16 +413,13 @@
       return canvas.toDataURL('image/png');
     }
 
-    // ATUALIZAR FOTO EM TODA A PLATAFORMA
     function atualizarFotosInterface() {
       const fotoUrlFinal = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
-      const avatares = document.querySelectorAll('.user-avatar-target');
-      avatares.forEach(img => {
+      document.querySelectorAll('.user-avatar-target').forEach(img => {
         img.src = fotoUrlFinal;
       });
     }
 
-    // SELECIONAR E VALIDAR ARQUIVO
     function abrirSeletorFoto() {
       document.getElementById('input-foto-upload').click();
     }
@@ -333,17 +428,15 @@
       const file = input.files[0];
       if (!file) return;
 
-      // Validação de Tamanho (Máx 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert("O tamanho da imagem não pode exceder 5 MB.");
         input.value = "";
         return;
       }
 
-      // Validação de Formato
-      const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-      if (!tiposPermitidos.includes(file.type)) {
-        alert("Formato não suportado. Por favor envie imagens JPG, JPEG, PNG ou WEBP.");
+      const tipos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!tipos.includes(file.type)) {
+        alert("Formato não suportado. Use JPG, PNG ou WEBP.");
         input.value = "";
         return;
       }
@@ -352,17 +445,9 @@
       reader.onload = (e) => {
         const previewImg = document.getElementById('crop-image-preview');
         previewImg.src = e.target.result;
-        
         document.getElementById('modal-crop-foto').classList.remove('hidden');
-        
         if (cropper) cropper.destroy();
-        
-        // Inicializar Cropper Quadrado (1:1)
-        cropper = new Cropper(previewImg, {
-          aspectRatio: 1,
-          viewMode: 1,
-          autoCropArea: 0.9
-        });
+        cropper = new Cropper(previewImg, { aspectRatio: 1, viewMode: 1, autoCropArea: 0.9 });
       };
       reader.readAsDataURL(file);
       input.value = "";
@@ -373,53 +458,140 @@
       if (cropper) cropper.destroy();
     }
 
-    // SALVAR FOTO RECORTADA
     function salvarFotoRecortada() {
       if (!cropper) return;
-
-      const canvas = cropper.getCroppedCanvas({
-        width: 300,
-        height: 300
-      });
-
-      const fotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-      // Atualiza estado e interface
-      currentUser.fotoUrl = fotoBase64;
+      const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
+      currentUser.fotoUrl = canvas.toDataURL('image/jpeg', 0.85);
       atualizarFotosInterface();
       fecharModalCrop();
-      
-      exibirToast("Foto de perfil atualizada com sucesso.");
-      registrarLog("UPDATE_AVATAR", "Usuário alterou a foto de perfil");
+      exhibirToast("Foto de perfil alterada com sucesso.");
     }
 
-    // REMOVER FOTO
     function confirmarRemoverFoto() {
-      if (confirm("Deseja realmente remover sua foto de perfil? O avatar padrão será restaurado.")) {
+      if (confirm("Deseja remover sua foto de perfil?")) {
         currentUser.fotoUrl = null;
         atualizarFotosInterface();
-        exibirToast("Foto de perfil removida com sucesso.");
-        registrarLog("DELETE_AVATAR", "Usuário removeu a foto de perfil");
+        exhibirToast("Foto de perfil removida.");
       }
     }
 
-    // VISUALIZAR FOTO
     function visualizarFoto() {
-      const fotoAmpliada = document.getElementById('foto-ampliada');
-      fotoAmpliada.src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
+      document.getElementById('foto-ampliada').src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
       document.getElementById('modal-view-foto').classList.remove('hidden');
     }
 
-    // UTILITÁRIOS
-    function exibirToast(msg) {
+    // SALVAR DADOS PESSOAIS (Telefone e Senha)
+    function salvarAlteracoesPessoais() {
+      const tel = document.getElementById('input-telefone').value;
+      const s1 = document.getElementById('input-senha-nova').value;
+      const s2 = document.getElementById('input-senha-confirma').value;
+
+      if (s1 || s2) {
+        if (s1 !== s2) {
+          alert("As senhas digitadas não coincidem.");
+          return;
+        }
+        if (s1.length < 6) {
+          alert("A senha deve conter no mínimo 6 caracteres.");
+          return;
+        }
+      }
+
+      document.getElementById('input-senha-nova').value = "";
+      document.getElementById('input-senha-confirma').value = "";
+      exhibirToast("Informações salvas com sucesso!");
+    }
+
+    // RENDERIZAR MEDALHAS
+    function renderizarMedalhas() {
+      const grid = document.getElementById('grid-medalhas');
+      grid.innerHTML = '';
+
+      listaMedalhas.forEach(m => {
+        const card = document.createElement('div');
+        card.onclick = () => abrirModalMedalha(m);
+        
+        if (m.conquistada) {
+          card.className = "bg-amber-50 border border-amber-200 p-3 rounded-xl text-center cursor-pointer card-hover flex flex-col items-center justify-center";
+          card.innerHTML = `
+            <span class="text-3xl">${m.icone}</span>
+            <p class="text-[11px] font-bold text-amber-950 mt-1 truncate w-full">${m.nome}</p>
+            <span class="text-[9px] text-amber-700 font-extrabold uppercase">Conquistada</span>
+          `;
+        } else {
+          card.className = "bg-gray-50 border border-gray-200 p-3 rounded-xl text-center cursor-pointer card-hover opacity-50 grayscale flex flex-col items-center justify-center";
+          card.innerHTML = `
+            <span class="text-3xl">${m.icone}</span>
+            <p class="text-[11px] font-bold text-gray-600 mt-1 truncate w-full">${m.nome}</p>
+            <span class="text-[9px] text-gray-500 font-extrabold uppercase"><i class="fa-solid fa-lock text-[8px]"></i> Bloqueada</span>
+          `;
+        }
+        grid.appendChild(card);
+      });
+    }
+
+    function abrirModalMedalha(m) {
+      document.getElementById('modal-medalha-icone').innerText = m.icone;
+      document.getElementById('modal-medalha-nome').innerText = m.nome;
+      document.getElementById('modal-medalha-desc').innerText = m.desc;
+      document.getElementById('modal-medalha-req').innerText = m.req;
+
+      const st = document.getElementById('modal-medalha-status');
+      if (m.conquistada) {
+        st.innerText = "Conquistada";
+        st.className = "inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase bg-emerald-100 text-emerald-800";
+      } else {
+        st.innerText = "Bloqueada";
+        st.className = "inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase bg-gray-200 text-gray-700";
+      }
+
+      document.getElementById('modal-medalha').classList.remove('hidden');
+    }
+
+    function fecharModalMedalha() {
+      document.getElementById('modal-medalha').classList.add('hidden');
+    }
+
+    // FILTRAR E RENDERIZAR HISTÓRICO
+    function filtrarHistorico() {
+      const periodo = document.getElementById('filtro-periodo').value;
+      const corpo = document.getElementById('tabela-historico-corpo');
+      corpo.innerHTML = '';
+
+      const hoje = new Date('2026-08-01'); // Data base do sistema
+
+      const listaFiltrada = historicoAtividades.filter(item => {
+        if (periodo === 'todos') return true;
+        const dataItem = new Date(item.data);
+        const diffDias = Math.floor((hoje - dataItem) / (1000 * 60 * 60 * 24));
+        return diffDias <= parseInt(periodo);
+      });
+
+      if (listaFiltrada.length === 0) {
+        corpo.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Nenhuma atividade encontrada neste período.</td></tr>`;
+        return;
+      }
+
+      listaFiltrada.forEach(item => {
+        const partesData = item.data.split('-');
+        const dataFmt = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
+        
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-gray-50 transition";
+        tr.innerHTML = `
+          <td class="py-2.5 text-gray-500 font-semibold">${dataFmt}</td>
+          <td class="py-2.5 font-bold text-gray-800">${item.atividade}</td>
+          <td class="py-2.5 text-right font-black text-emerald-600">+${item.pontos} pts</td>
+        `;
+        corpo.appendChild(tr);
+      });
+    }
+
+    function exhibirToast(msg) {
       const toast = document.getElementById('toast-notificacao');
       document.getElementById('toast-mensagem').innerText = msg;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 4000);
-    }
-
-    function registrarLog(acao, descricao) {
-      console.log(`[LOG REGISTRADO] - Ação: ${acao} | Descrição: ${descricao} | Data: ${new Date().toISOString()}`);
     }
   </script>
 </body>
