@@ -1,77 +1,172 @@
-<nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
-  <!-- ÁREA DO JOVEM -->
-  <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
-  
-  <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-house w-5 text-amber-400"></i> Dashboard
-  </button>
-  
-  <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-user w-5 text-blue-400"></i> Meu Perfil
-  </button>
-  
-  <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-hands-praying w-5 text-emerald-400"></i> Minha Comunhão
-  </button>
-  
-  <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-book-bible w-5 text-amber-300"></i> Bíblia
-  </button>
-  
-  <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-book-open-reader w-5 text-cyan-400"></i> Lição da Escola Sabatina
-  </button>
-  
-  <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-calendar-days w-5 text-purple-400"></i> Calendário
-  </button>
-  
-  <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-trophy w-5 text-yellow-400"></i> Ranking
-  </button>
-  
-  <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-bullseye w-5 text-red-400"></i> Desafios
-  </button>
-  
-  <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-heart w-5 text-rose-500"></i> Evangelismo
-  </button>
-  
-  <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-bell w-5 text-yellow-300"></i> Notificações
-  </button>
-  
-  <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-    <i class="fa-solid fa-gear w-5 text-gray-400"></i> Configurações
-  </button>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kemuel Connect 777 - Gestão JA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
+    .card-hover { transition: transform 0.2s ease, shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
 
-  <!-- EXCLUSIVO DO DIRETOR -->
-  <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1 hidden">
-    <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p>
-    
-    <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-      <i class="fa-solid fa-chart-line w-4 text-blue-300"></i> Dashboard Admin
-    </button>
-    
-    <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-      <i class="fa-solid fa-users w-4 text-blue-300"></i> Usuários
-    </button>
-    
-    <button onclick="navegarPara('aprovacoes')" id="nav-aprovacoes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-amber-300">
-      <i class="fa-solid fa-user-check w-4"></i> Aprovação Cadastros
-    </button>
-    
-    <button onclick="navegarPara('admin-comprovantes')" id="nav-admin-comprovantes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-emerald-300">
-      <i class="fa-solid fa-file-circle-check w-4"></i> Validar Comprovantes
-    </button>
-    
-    <button onclick="navegarPara('admin-atividades')" id="nav-admin-atividades" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
-      <i class="fa-solid fa-list-check w-4 text-blue-300"></i> Gestão de Atividades
-    </button>
-    
-    <button onclick="navegarPara('admin-logs')" id="nav-admin-logs" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-gray-400">
-      <i class="fa-solid fa-receipt w-4"></i> Logs do Sistema
-    </button>
-  </div>
-</nav>
+  <!-- MENU LATERAL (JOVEM E DIRETOR) -->
+  <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
+    <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
+      <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
+      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
+      <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span>
+    </div>
+
+    <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
+      <!-- ÁREA DO JOVEM -->
+      <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
+      
+      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
+        <i class="fa-solid fa-house w-5 text-amber-400"></i> Dashboard
+      </button>
+      
+      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-user w-5 text-blue-400"></i> Meu Perfil
+      </button>
+      
+      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-hands-praying w-5 text-emerald-400"></i> Minha Comunhão
+      </button>
+      
+      <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-book-bible w-5 text-amber-300"></i> Bíblia
+      </button>
+      
+      <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-book-open-reader w-5 text-cyan-400"></i> Lição da Escola Sabatina
+      </button>
+      
+      <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-calendar-days w-5 text-purple-400"></i> Calendário
+      </button>
+      
+      <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-trophy w-5 text-yellow-400"></i> Ranking
+      </button>
+      
+      <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-bullseye w-5 text-red-400"></i> Desafios
+      </button>
+      
+      <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-heart w-5 text-rose-500"></i> Evangelismo
+      </button>
+      
+      <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-bell w-5 text-yellow-300"></i> Notificações
+      </button>
+      
+      <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+        <i class="fa-solid fa-gear w-5 text-gray-400"></i> Configurações
+      </button>
+
+      <!-- EXCLUSIVO DO DIRETOR -->
+      <div id="diretor-menu" class="pt-4 border-t border-blue-900 mt-4 space-y-1">
+        <p class="text-xs text-amber-400 font-bold uppercase px-3 mb-2 tracking-wider">Painel do Diretor</p>
+        
+        <button onclick="navegarPara('admin-dash')" id="nav-admin-dash" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-chart-line w-4 text-blue-300"></i> Dashboard Admin
+        </button>
+        
+        <button onclick="navegarPara('admin-usuarios')" id="nav-admin-usuarios" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-users w-4 text-blue-300"></i> Usuários
+        </button>
+        
+        <button onclick="navegarPara('aprovacoes')" id="nav-aprovacoes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-amber-300">
+          <i class="fa-solid fa-user-check w-4"></i> Aprovação Cadastros
+        </button>
+        
+        <button onclick="navegarPara('admin-comprovantes')" id="nav-admin-comprovantes" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-emerald-300">
+          <i class="fa-solid fa-file-circle-check w-4"></i> Validar Comprovantes
+        </button>
+        
+        <button onclick="navegarPara('admin-atividades')" id="nav-admin-atividades" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-list-check w-4 text-blue-300"></i> Gestão de Atividades
+        </button>
+        
+        <button onclick="navegarPara('admin-logs')" id="nav-admin-logs" class="w-full text-left py-2 px-3 rounded hover:bg-blue-900 text-xs font-semibold flex items-center gap-2 text-gray-400">
+          <i class="fa-solid fa-receipt w-4"></i> Logs do Sistema
+        </button>
+      </div>
+    </nav>
+
+    <div class="p-4 border-t border-blue-900">
+      <button onclick="alert('Saindo...')" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- ÁREA PRINCIPAL DE CONTEÚDO -->
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+    <!-- DASHBOARD DO JOVEM -->
+    <div id="sec-dashboard" class="space-y-6">
+      <div class="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-6 rounded-2xl shadow-lg flex justify-between items-center">
+        <div>
+          <h2 id="dash-saudacao" class="text-2xl font-bold">Olá, Jovem! 👋</h2>
+          <p class="text-xs text-blue-200 mt-1">Que Deus abençoe grandemente o seu dia.</p>
+        </div>
+        <div>
+          <span class="text-xs bg-amber-400 text-blue-950 px-3 py-1 rounded-full font-black uppercase shadow">ATIVO</span>
+        </div>
+      </div>
+
+      <!-- CARDS DE MÉTRICAS -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-blue-900 card-hover">
+          <p class="text-xs font-bold text-gray-500 uppercase">Pontuação Total</p>
+          <p class="text-2xl font-black text-blue-950 mt-1">0 pts</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-amber-500 card-hover">
+          <p class="text-xs font-bold text-gray-500 uppercase">Nível Atual</p>
+          <p class="text-lg font-extrabold text-amber-600 mt-1">🌱 Iniciante</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-emerald-500 card-hover">
+          <p class="text-xs font-bold text-gray-500 uppercase">Posição Ranking</p>
+          <p class="text-2xl font-black text-emerald-600 mt-1">#-</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl shadow border-l-4 border-rose-500 card-hover">
+          <p class="text-xs font-bold text-gray-500 uppercase">Sequência (Streak)</p>
+          <p class="text-xl font-black text-rose-600 mt-1">🔥 0 dias</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO PERFIL (ESCONDIDA INICIALMENTE) -->
+    <div id="sec-perfil" class="hidden">
+      <h2 class="text-2xl font-bold text-blue-950 mb-4">Meu Perfil</h2>
+      <div class="bg-white p-6 rounded-2xl shadow">
+        <p class="text-sm text-gray-600">Área de perfil em construção...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function navegarPara(tela) {
+      const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao', 'calendario', 'ranking', 'desafios', 'evangelismo', 'notificacoes', 'configuracoes'];
+      telas.forEach(t => {
+        const el = document.getElementById(`sec-${t}`);
+        if(el) el.classList.add('hidden');
+        const nav = document.getElementById(`nav-${t}`);
+        if(nav) nav.classList.remove('sidebar-active');
+      });
+      const alvo = document.getElementById(`sec-${tela}`);
+      if(alvo) alvo.classList.remove('hidden');
+      const navAlvo = document.getElementById(`nav-${tela}`);
+      if(navAlvo) navAlvo.classList.add('sidebar-active');
+    }
+  </script>
+</body>
+</html>
