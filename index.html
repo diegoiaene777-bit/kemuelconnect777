@@ -22,6 +22,11 @@
     .avatar-container:hover { transform: scale(1.03); }
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
     .avatar-container:hover .avatar-overlay { opacity: 1; }
+
+    /* Estilização para o conteúdo HTML injetado pela API da Adventech */
+    #licao-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
+    #licao-conteudo h3, #licao-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
+    #licao-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; italic: true; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
@@ -222,29 +227,38 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
-          <!-- Card Limpo: Ano Bíblico -->
+          <!-- Card Integrado: Ano Bíblico -->
           <div id="card-ano" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
             <div class="space-y-3">
               <div class="flex justify-between items-start">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">📖</div>
+                <div class="flex items-center gap-3">
+                  <div class="relative flex items-center cursor-pointer" onclick="abrirModalReflexaoDireta('agosto', 0)">
+                    <input type="checkbox" id="chk-card-ano" class="w-6 h-6 text-blue-900 border-2 border-gray-300 rounded-lg cursor-pointer focus:ring-blue-600 transition" onclick="event.stopPropagation(); abrirModalReflexaoDireta('agosto', 0);">
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">📖</div>
+                </div>
                 <span id="badge-ano" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
               </div>
 
               <div>
                 <h4 class="font-extrabold text-gray-800 text-base">Ano Bíblico / Leitura Diária</h4>
                 <p class="text-xs text-blue-600 font-bold mt-1" id="capitulo-sugerido-hoje">Capítulo Sugerido: Mateus 1</p>
-                <p class="text-xs text-gray-400 font-medium mt-1" id="hora-ano">Clique abaixo para selecionar o capítulo e registrar sua reflexão.</p>
+                <p class="text-xs text-gray-400 font-medium" id="hora-ano">Clique no quadradinho ou no botão para registrar sua reflexão e marcar como lido.</p>
               </div>
             </div>
 
-            <div class="pt-1 border-t border-gray-50">
-              <button id="btn-ano" onclick="abrirModalRegistroCompleto()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> Registrar Leitura
+            <div class="space-y-2 pt-1 border-t border-gray-50">
+              <button id="btn-ano" onclick="abrirModalReflexaoDireta('agosto', 0)" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> Registrar Leitura e Reflexão
+              </button>
+
+              <button onclick="toggleGradeCapitulos()" class="w-full py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1.5 border border-gray-200">
+                <i class="fa-solid fa-list-check text-amber-500"></i> Ver Plano Completo dos 27 Livros
               </button>
             </div>
           </div>
 
-          <!-- Card: Lição da Escola Sabatina -->
+          <!-- Card: Lição da Escola Sabatina (Com a chamada para API) -->
           <div id="card-licao" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
             <div class="space-y-2">
               <div class="flex justify-between items-start">
@@ -254,11 +268,38 @@
               <h4 class="font-extrabold text-gray-800 text-base">Lição da Escola Sabatina</h4>
               <p class="text-xs text-gray-500" id="hora-licao">Nenhum registro hoje</p>
             </div>
-            <button id="btn-licao" onclick="registrarLicaoSabatina()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-check"></i> Registrar Estudo
+            <button id="btn-licao" onclick="abrirLicaoDoDiaAPI()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-book-open"></i> Ler e Registrar Estudo
             </button>
           </div>
 
+        </div>
+      </section>
+
+      <!-- PAINEL EXPANSÍVEL: PLANO COMPLETO DO ANO BÍBLICO DO NT -->
+      <section id="secao-plano-grade" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 transition">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
+          <div>
+            <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-amber-500"></i> Plano Ano Bíblico — Novo Testamento
+            </h3>
+            <p class="text-xs text-gray-500">Clique em qualquer quadradinho de capítulo para abrir a janela de reflexão e marcar a leitura. #anobiblico</p>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <label for="filtro-mes-plano" class="font-bold text-gray-500">Mês:</label>
+            <select id="filtro-mes-plano" onchange="renderizarPlanoAnoBiblico()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
+              <option value="agosto" selected>Agosto (Mateus 1 a Lucas 9)</option>
+              <option value="setembro">Setembro (Lucas 10 a Atos 17)</option>
+              <option value="outubro">Outubro (Atos 18 a 2 Coríntios 10)</option>
+              <option value="novembro">Novembro (2 Coríntios 11 a Hebreus 6)</option>
+              <option value="dezembro">Dezembro (Hebreus 7 a Apocalipse 22)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="grid-plano-capitulos">
+          <!-- Capítulos injetados via JS -->
         </div>
       </section>
 
@@ -313,66 +354,68 @@
 
   </main>
 
-  <!-- MODAL DE REGISTRO COMPLETO (INTEGRADO COM PLANO COMPLETO E REFLEXÃO) -->
+  <!-- MODAL DE REGISTRO E REFLEXÃO -->
   <div id="modal-registro-comunhao" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalRegistro()">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative flex flex-col" onclick="event.stopPropagation()">
       <button onclick="fecharModalRegistro()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       
       <div class="border-b pb-3">
-        <h4 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
+        <h4 id="modal-reg-titulo" class="text-base font-extrabold text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-book-open text-amber-500"></i> Registrar Ano Bíblico
         </h4>
-        <p class="text-xs text-gray-500 mt-0.5">Selecione o capítulo lido do Novo Testamento, insira sua reflexão e finalize sua devoção. #anobiblico</p>
+        <p class="text-xs text-gray-500 mt-0.5">Escreva sua observação diária para concluir a leitura. #anobiblico</p>
       </div>
 
-      <div class="overflow-y-auto space-y-4 pr-1 flex-1">
-        <!-- SEÇÃO: PLANO COMPLETO DE SELEÇÃO -->
-        <div class="space-y-2 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
-          <div class="flex justify-between items-center">
-            <span class="font-extrabold text-xs text-blue-950">1. Selecione o Capítulo Lido:</span>
-            <select id="filtro-mes-plano" onchange="renderizarPlanoAnoBiblico()" class="bg-white border border-gray-300 rounded-lg px-2 py-1 text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              <option value="agosto" selected>Agosto (Mateus 1 a Lucas 9)</option>
-              <option value="setembro">Setembro (Lucas 10 a Atos 17)</option>
-              <option value="outubro">Outubro (Atos 18 a 2 Coríntios 10)</option>
-              <option value="novembro">Novembro (2 Coríntios 11 a Hebreus 6)</option>
-              <option value="dezembro">Dezembro (Hebreus 7 a Apocalipse 22)</option>
-            </select>
-          </div>
-
-          <!-- GRID DOS CAPÍTULOS -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1 border border-gray-200 rounded-lg bg-white" id="grid-plano-capitulos">
-            <!-- Capítulos injetados via JS -->
-          </div>
-        </div>
-
-        <!-- SEÇÃO: REFLEXÃO E INFOS -->
-        <div class="space-y-3 text-xs">
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="font-bold text-gray-500 block mb-1">Data do Registro</label>
-              <input type="text" id="reg-input-data" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
-            </div>
-
-            <div>
-              <label class="font-bold text-gray-500 block mb-1">Horário</label>
-              <input type="text" id="reg-input-hora" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
-            </div>
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">Data</label>
+            <input type="text" id="reg-input-data" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
           </div>
 
           <div>
-            <label for="reg-input-obs" class="font-bold text-gray-700 block mb-1 flex items-center gap-1.5">
-              <i class="fa-solid fa-heart text-rose-500"></i> Reflexão / O que Deus falou comigo hoje?
-            </label>
-            <textarea id="reg-input-obs" rows="3" placeholder="Escreva aqui sua reflexão do capítulo lido... #anobiblico" class="w-full bg-amber-50/30 border border-amber-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-medium text-gray-800"></textarea>
+            <label class="font-bold text-gray-500 block mb-1">Horário do Registro</label>
+            <input type="text" id="reg-input-hora" readonly class="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 font-bold text-gray-700 cursor-not-allowed">
           </div>
+        </div>
+
+        <div>
+          <label for="reg-input-obs" class="font-bold text-gray-700 block mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-heart text-rose-500"></i> Reflexão e Observações do Capítulo
+          </label>
+          <textarea id="reg-input-obs" rows="4" placeholder="O que Deus falou ao seu coração hoje lendo este capítulo? Escreva aqui sua reflexão... #anobiblico" class="w-full bg-amber-50/30 border border-amber-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-medium text-gray-800"></textarea>
         </div>
       </div>
 
-      <!-- AÇÃO FINAL -->
-      <div class="pt-3 flex justify-end gap-2 border-t">
+      <div class="pt-2 flex justify-end gap-2 border-t">
         <button onclick="fecharModalRegistro()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancelar</button>
         <button onclick="salvarRegistroComunhao()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Concluir Devocional (+50 pts)
+          <i class="fa-solid fa-check"></i> Concluir e Salvar Reflexão (+50 pts)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DA LIÇÃO DA ESCOLA SABATINA (INTEGRADO COM API ADVENTECH) -->
+  <div id="modal-licao-api" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalLicaoAPI()">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
+      <button onclick="fecharModalLicaoAPI()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+
+      <div class="border-b pb-3 pr-6">
+        <h3 id="licao-api-titulo" class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
+          <i class="fa-solid fa-book-open-reader text-cyan-600"></i> Carregando Lição...
+        </h3>
+        <p class="text-xs text-gray-400 mt-0.5" id="licao-api-subtitulo">Escola Sabatina — Trimestre Atual</p>
+      </div>
+
+      <div id="licao-conteudo" class="overflow-y-auto flex-1 pr-2 text-sm text-gray-700 leading-relaxed space-y-3">
+        <!-- O conteúdo dinâmico retornado da API será inserido aqui -->
+      </div>
+
+      <div class="pt-3 border-t flex justify-end gap-2">
+        <button onclick="fecharModalLicaoAPI()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Fechar</button>
+        <button onclick="confirmarEstudoLicaoAPI()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+          <i class="fa-solid fa-check"></i> Marcar como Estudado (+50 pts)
         </button>
       </div>
     </div>
@@ -425,6 +468,8 @@
       licao: { concluido: false, hora: null },
       ano: { concluido: false, hora: null }
     };
+
+    const API_ADVENTECH_BASE = "https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq";
 
     // GERADOR DO CRONOGRAMA COMPLETO DOS 27 LIVROS DO NT
     function gerarCronogramaCompleto() {
@@ -504,6 +549,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
       atualizarDataAtual();
+      renderizarPlanoAnoBiblico();
       renderizarHistoricoComunhao();
       verificarLembreteComunhao();
     });
@@ -532,24 +578,9 @@
       document.getElementById('secao-atividades').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function abrirModalRegistroCompleto() {
-      if (registrosHoje.ano.concluido) {
-        alert("Sua leitura de hoje já foi registrada!");
-        return;
-      }
-
-      const hoje = new Date();
-      document.getElementById('reg-input-data').value = hoje.toLocaleDateString('pt-BR');
-      document.getElementById('reg-input-hora').value = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('reg-input-obs').value = '';
-
-      // Pré-seleciona Mateus 1 por padrão se nada estiver selecionado
-      if (!capituloSelecionadoAtual) {
-        capituloSelecionadoAtual = { mes: 'agosto', index: 0, item: dadosPlano['agosto'][0] };
-      }
-
-      renderizarPlanoAnoBiblico();
-      document.getElementById('modal-registro-comunhao').classList.remove('hidden');
+    function toggleGradeCapitulos() {
+      const sec = document.getElementById('secao-plano-grade');
+      sec.classList.toggle('hidden');
     }
 
     function renderizarPlanoAnoBiblico() {
@@ -560,42 +591,54 @@
       const lista = dadosPlano[mes] || [];
 
       lista.forEach((item, index) => {
-        const isSelecionado = capituloSelecionadoAtual && capituloSelecionadoAtual.mes === mes && capituloSelecionadoAtual.index === index;
-        
         const div = document.createElement('div');
-        div.className = `p-2 rounded-lg border flex items-center justify-between text-xs transition cursor-pointer ${
-          item.lido ? 'bg-emerald-50 border-emerald-200 text-emerald-800 opacity-60 cursor-not-allowed' :
-          isSelecionado ? 'bg-blue-900 text-white border-blue-900 font-bold shadow' : 'bg-gray-50 border-gray-200 hover:border-blue-400'
+        div.className = `p-3 rounded-xl border flex items-center justify-between text-xs transition cursor-pointer ${
+          item.lido ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-gray-50 border-gray-200 hover:border-blue-400'
         }`;
 
-        div.onclick = () => {
-          if (item.lido) return;
-          capituloSelecionadoAtual = { mes, index, item };
-          renderizarPlanoAnoBiblico();
-        };
+        div.onclick = () => abrirModalReflexaoDireta(mes, index);
 
         div.innerHTML = `
-          <div class="flex items-center gap-2">
-            <i class="fa-solid ${isSelecionado ? 'fa-circle-check text-amber-400' : item.lido ? 'fa-check text-emerald-600' : 'fa-circle text-gray-300'} text-xs"></i>
-            <span class="truncate">${item.livro} ${item.cap}</span>
+          <div class="flex items-center gap-2.5">
+            <input type="checkbox" ${item.lido ? 'checked disabled' : ''} class="w-4 h-4 text-blue-900 rounded focus:ring-blue-600 cursor-pointer" onclick="event.stopPropagation(); abrirModalReflexaoDireta('${mes}', ${index});">
+            <div>
+              <span class="font-extrabold text-gray-800 block">${item.livro} ${item.cap}</span>
+              <span class="text-[10px] text-gray-400 font-semibold">Dia ${item.dia}</span>
+            </div>
           </div>
-          <span class="text-[9px] px-1.5 py-0.5 rounded ${isSelecionado ? 'bg-amber-400 text-blue-950 font-bold' : item.lido ? 'bg-emerald-200 text-emerald-800' : 'bg-gray-200 text-gray-700'}">
-            ${item.lido ? 'Lido' : 'Dia ' + item.dia}
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${item.lido ? 'bg-emerald-200 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+            ${item.lido ? 'Lido' : '+50 pts'}
           </span>
         `;
         container.appendChild(div);
       });
     }
 
+    function abrirModalReflexaoDireta(mes, index) {
+      const item = dadosPlano[mes][index];
+      if (item.lido) {
+        alert(`O capítulo ${item.livro} ${item.cap} já foi registrado!`);
+        return;
+      }
+
+      capituloSelecionadoAtual = { mes, index, item };
+
+      const hoje = new Date();
+      document.getElementById('modal-reg-titulo').innerText = `Reflexão — ${item.livro} ${item.cap}`;
+      document.getElementById('reg-input-data').value = hoje.toLocaleDateString('pt-BR');
+      document.getElementById('reg-input-hora').value = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('reg-input-obs').value = '';
+
+      document.getElementById('modal-registro-comunhao').classList.remove('hidden');
+    }
+
     function fecharModalRegistro() {
       document.getElementById('modal-registro-comunhao').classList.add('hidden');
+      capituloSelecionadoAtual = null;
     }
 
     function salvarRegistroComunhao() {
-      if (!capituloSelecionadoAtual) {
-        alert("Por favor, selecione um capítulo antes de concluir.");
-        return;
-      }
+      if (!capituloSelecionadoAtual) return;
 
       const { mes, index, item } = capituloSelecionadoAtual;
       const horaStr = document.getElementById('reg-input-hora').value;
@@ -606,26 +649,26 @@
       dadosPlano[mes][index].reflexao = obsTexto;
 
       const acaoNome = `Ano Bíblico (${item.livro} ${item.cap})`;
-      document.getElementById('capitulo-sugerido-hoje').innerText = `Lido Hoje: ${item.livro} ${item.cap}`;
+      document.getElementById('capitulo-sugerido-hoje').innerText = `Último Lido: ${item.livro} ${item.cap}`;
+
+      const chkCard = document.getElementById('chk-card-ano');
+      if (chkCard) {
+        chkCard.checked = true;
+        chkCard.disabled = true;
+      }
 
       registrosHoje['ano'] = { concluido: true, hora: horaStr };
 
-      // Atualiza Card Principal
       const badge = document.getElementById('badge-ano');
       const horaTxt = document.getElementById('hora-ano');
-      const btnAno = document.getElementById('btn-ano');
 
       if (badge) {
         badge.innerText = "Concluído";
         badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
       }
-      if (horaTxt) horaTxt.innerText = `Devoção finalizada com sucesso às ${horaStr}`;
-      if (btnAno) {
-        btnAno.disabled = true;
-        btnAno.className = "w-full py-2.5 bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-300";
-        btnAno.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Leitura Registrada`;
-      }
+      if (horaTxt) horaTxt.innerText = `Registrado com reflexão às ${horaStr}`;
 
+      renderizarPlanoAnoBiblico();
       historicoComunhao.unshift({ data: hojeStr, atividade: acaoNome, hora: horaStr });
       renderizarHistoricoComunhao();
 
@@ -635,11 +678,48 @@
 
       fecharModalRegistro();
       verificarLembreteComunhao();
-      exhibirToast("Devoção concluída! +50 pontos no #anobiblico.");
+      exhibirToast("Reflexão registrada! +50 pontos no #anobiblico.");
     }
 
-    function registrarLicaoSabatina() {
-      if (registrosHoje.licao.concluido) return;
+    /* INTEGRAÇÃO DA API DA ADVENTECH */
+    async function abrirLicaoDoDiaAPI() {
+      const modal = document.getElementById('modal-licao-api');
+      const tituloEl = document.getElementById('licao-api-titulo');
+      const subtituloEl = document.getElementById('licao-api-subtitulo');
+      const conteudoEl = document.getElementById('licao-conteudo');
+
+      modal.classList.remove('hidden');
+      tituloEl.innerText = "Carregando Lição...";
+      subtituloEl.innerText = "Buscando dados no servidor da Adventech...";
+      conteudoEl.innerHTML = `<div class="p-8 text-center text-gray-400 font-medium"><i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i><p>Carregando o estudo de hoje...</p></div>`;
+
+      try {
+        const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
+        if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
+
+        const data = await response.json();
+
+        tituloEl.innerText = data.title || "Lição da Escola Sabatina";
+        subtituloEl.innerText = data.date || "Estudo Diário";
+        conteudoEl.innerHTML = data.content;
+
+      } catch (error) {
+        console.error("Erro ao carregar a lição:", error);
+        tituloEl.innerText = "Não foi possível carregar";
+        subtituloEl.innerText = "Aviso de Conexão";
+        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Ocorreu uma falha ao acessar o conteúdo da lição da Escola Sabatina.</p><p class="mt-1">Verifique sua conexão com a internet ou tente novamente mais tarde.</p></div>`;
+      }
+    }
+
+    function fecharModalLicaoAPI() {
+      document.getElementById('modal-licao-api').classList.add('hidden');
+    }
+
+    function confirmarEstudoLicaoAPI() {
+      if (registrosHoje.licao.concluido) {
+        fecharModalLicaoAPI();
+        return;
+      }
 
       const hoje = new Date();
       const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -652,7 +732,7 @@
 
       const btn = document.getElementById('btn-licao');
       btn.disabled = true;
-      btn.className = "w-full py-2.5 bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-300";
+      btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
       btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
 
       historicoComunhao.unshift({ data: '2026-08-01', atividade: 'Lição da Escola Sabatina', hora: horaStr });
@@ -662,8 +742,9 @@
         confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
       }
 
+      fecharModalLicaoAPI();
       verificarLembreteComunhao();
-      exhibirToast("Lição da Escola Sabatina registrada!");
+      exhibirToast("Estudo da Lição registrado! +50 pontos.");
     }
 
     function verificarLembreteComunhao() {
