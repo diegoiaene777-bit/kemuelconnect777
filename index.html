@@ -24,9 +24,9 @@
     .avatar-container:hover .avatar-overlay { opacity: 1; }
 
     /* Estilização para o conteúdo HTML injetado pela API da Adventech */
-    #licao-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-conteudo h3, #licao-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
-    #licao-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; italic: true; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
+    #licao-conteudo p, #licao-aba-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
+    #licao-conteudo h3, #licao-conteudo h4, #licao-aba-conteudo h3, #licao-aba-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
+    #licao-conteudo blockquote, #licao-aba-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
@@ -258,7 +258,7 @@
             </div>
           </div>
 
-          <!-- Card: Lição da Escola Sabatina (Com a chamada para API) -->
+          <!-- Card: Lição da Escola Sabatina -->
           <div id="card-licao" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
             <div class="space-y-2">
               <div class="flex justify-between items-start">
@@ -350,6 +350,30 @@
         </div>
       </section>
 
+    </div>
+
+    <!-- TELA: LIÇÃO DA ESCOLA SABATINA -->
+    <div id="sec-licao" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="space-y-1">
+          <h2 id="licao-aba-titulo" class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina
+          </h2>
+          <p id="licao-aba-subtitulo" class="text-xs md:text-sm text-blue-200">Escola Sabatina — Estudo Diário #licaoescolasabatina</p>
+        </div>
+        <button onclick="confirmarEstudoLicaoAPI()" id="btn-concluir-licao-aba" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center gap-2 shrink-0">
+          <i class="fa-solid fa-check"></i> Marcar como Estudado (+50 pts)
+        </button>
+      </div>
+
+      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div id="licao-aba-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-4">
+          <div class="p-8 text-center text-gray-400 font-medium">
+            <i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i>
+            <p>Carregando lição de hoje...</p>
+          </div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -555,17 +579,22 @@
     });
 
     function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao'];
+      const telas = ['dashboard', 'perfil', 'comunhao', 'licao'];
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if(el) el.classList.add('hidden');
       });
+
       const alvo = document.getElementById(`sec-${tela}`);
       if(alvo) alvo.classList.remove('hidden');
       
       document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
       const activeBtn = document.getElementById(`nav-${tela}`);
       if(activeBtn) activeBtn.classList.add('sidebar-active');
+
+      if (tela === 'licao') {
+        carregarLicaoNaAba();
+      }
     }
 
     function atualizarDataAtual() {
@@ -681,7 +710,41 @@
       exhibirToast("Reflexão registrada! +50 pontos no #anobiblico.");
     }
 
-    /* INTEGRAÇÃO DA API DA ADVENTECH */
+    /* CARREGAMENTO DA LIÇÃO DIRETAMENTE NA ABA */
+    async function carregarLicaoNaAba() {
+      const tituloEl = document.getElementById('licao-aba-titulo');
+      const subtituloEl = document.getElementById('licao-aba-subtitulo');
+      const conteudoEl = document.getElementById('licao-aba-conteudo');
+
+      conteudoEl.innerHTML = `
+        <div class="p-8 text-center text-gray-400 font-medium">
+          <i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i>
+          <p>Carregando lição de hoje...</p>
+        </div>
+      `;
+
+      try {
+        const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
+        if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
+
+        const data = await response.json();
+
+        tituloEl.innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title || "Lição da Escola Sabatina"}`;
+        subtituloEl.innerText = `${data.date || "Estudo Diário"} #licaoescolasabatina`;
+        conteudoEl.innerHTML = data.content;
+
+      } catch (error) {
+        console.error("Erro ao carregar a lição:", error);
+        conteudoEl.innerHTML = `
+          <div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs">
+            <p class="font-bold">Ocorreu uma falha ao carregar a lição da Escola Sabatina.</p>
+            <p class="mt-1">Verifique sua conexão ou tente novamente mais tarde.</p>
+          </div>
+        `;
+      }
+    }
+
+    /* INTEGRAÇÃO DA API DA ADVENTECH (MODAL) */
     async function abrirLicaoDoDiaAPI() {
       const modal = document.getElementById('modal-licao-api');
       const tituloEl = document.getElementById('licao-api-titulo');
@@ -731,9 +794,18 @@
       document.getElementById('hora-licao').innerText = `Registrado às ${horaStr}`;
 
       const btn = document.getElementById('btn-licao');
-      btn.disabled = true;
-      btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
-      btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
+      if (btn) {
+        btn.disabled = true;
+        btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
+        btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
+      }
+
+      const btnAba = document.getElementById('btn-concluir-licao-aba');
+      if (btnAba) {
+        btnAba.disabled = true;
+        btnAba.className = "px-5 py-2.5 bg-gray-200 text-emerald-800 font-bold text-xs rounded-xl cursor-not-allowed flex items-center gap-2 shrink-0 border border-emerald-300";
+        btnAba.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Estudo Concluído`;
+      }
 
       historicoComunhao.unshift({ data: '2026-08-01', atividade: 'Lição da Escola Sabatina', hora: horaStr });
       renderizarHistoricoComunhao();
