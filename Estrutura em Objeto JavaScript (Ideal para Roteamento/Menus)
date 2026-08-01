@@ -1,0 +1,44 @@
+// estrutura-modulos.js
+const ESTRUTURA_SISTEMA = {
+  parte1: {
+    titulo: "PARTE I — ACESSO E PERFIL",
+    capitulos: [
+      {
+        id: 1,
+        titulo: "Capítulo 1 — Login, Cadastro e Autenticação",
+        topicos: ["Login", "Cadastro", "Aprovação de Cadastro", "Recuperação de Senha", "Perfis", "Permissões", "Segurança", "Logs", "Regras de Negócio"]
+      },
+      {
+        id: 2,
+        titulo: "Capítulo 2 — Dashboard do Jovem",
+        topicos: ["Cards de Indicadores", "Minha Comunhão", "Próximos Eventos", "Desafios", "Evangelismo", "Jornada", "Notificações", "Atalhos"]
+      },
+      {
+        id: 3,
+        titulo: "Capítulo 3 — Meu Perfil",
+        topicos: ["Dados Pessoais", "Foto", "Função no Clube", "Estatísticas", "Histórico", "Medalhas", "Configurações"]
+      }
+    ]
+  },
+  parte2: {
+    titulo: "PARTE II — VIDA ESPIRITUAL",
+    capitulos: [
+      {
+        id: 4,
+        titulo: "Capítulo 4 — Minha Comunhão",
+        topicos: ["Registro Diário", "Histórico", "Streak", "Lembretes", "Pontuação Automática"]
+      },
+      {
+        id: 5,
+        titulo: "Capítulo 5 — Bíblia Integrada",
+        topicos: ["Traduções", "Pesquisa", "Favoritos", "Histórico", "Leitura", "Progresso"]
+      },
+      {
+        id: 6,
+        titulo: "Capítulo 6 — Lição da Escola Sabatina",
+        topicos: ["Cadastro pelo Diretor", "Organização Semanal", "Conteúdo Diário", "Registro", "Pontuação"]
+      }
+    ]
+  }
+  // ... adicione as demais partes conforme necessário
+};
