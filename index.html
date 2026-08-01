@@ -183,13 +183,13 @@
         </div>
       </section>
 
-      <!-- 2. ESTATÍSTICAS -->
+      <!-- 2. ESTATÍSTICAS (SISTEMA DE 4 COLUNAS SEM MEDALHAS) -->
       <section class="space-y-3">
         <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
           <i class="fa-solid fa-chart-simple text-amber-500"></i> Estatísticas
         </h3>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏆 Pontuação Total</span>
             <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.320 pts</p>
@@ -209,31 +209,10 @@
             <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🔥 Sequência</span>
             <p class="text-xl font-black text-rose-600 mt-1" id="stat-streak">18 Dias</p>
           </div>
-
-          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover col-span-2 sm:col-span-1">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏅 Medalhas</span>
-            <p class="text-xl font-black text-indigo-600 mt-1" id="stat-medalhas">3 Conquistadas</p>
-          </div>
         </div>
       </section>
 
-      <!-- 3. MINHAS MEDALHAS -->
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-        <div class="flex items-center justify-between border-b pb-2">
-          <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-award text-yellow-500"></i> Minhas Medalhas
-          </h3>
-          <button onclick="abrirPrimeiraMedalha()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold hover:underline flex items-center gap-1 cursor-pointer">
-            <i class="fa-solid fa-circle-info"></i> Clique para ver detalhes
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="grid-medalhas">
-          <!-- Medalhas injetadas via JS -->
-        </div>
-      </section>
-
-      <!-- 4. HISTÓRICO DE ATIVIDADES -->
+      <!-- 3. HISTÓRICO DE ATIVIDADES -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
@@ -270,21 +249,6 @@
     </div>
 
   </main>
-
-  <!-- MODAL DE DETALHES DA MEDALHA -->
-  <div id="modal-medalha" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalMedalha()">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative" onclick="event.stopPropagation()">
-      <button onclick="fecharModalMedalha()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      <div id="modal-medalha-icone" class="text-6xl my-2">🏅</div>
-      <h4 id="modal-medalha-nome" class="text-lg font-black text-blue-950">Nome da Medalha</h4>
-      <span id="modal-medalha-status" class="inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase">Conquistada</span>
-      <p id="modal-medalha-desc" class="text-xs text-gray-600">Descrição detalhada da medalha.</p>
-      <div class="bg-gray-50 p-3 rounded-xl border text-left text-xs space-y-1">
-        <span class="font-bold text-gray-500 block uppercase text-[10px]">Requisitos para Conquistar:</span>
-        <p id="modal-medalha-req" class="text-gray-800 font-medium">Requisitos aqui...</p>
-      </div>
-    </div>
-  </div>
 
   <!-- MODAL DE CORTE DE IMAGEM -->
   <div id="modal-crop-foto" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -327,15 +291,6 @@
       fotoUrl: null
     };
 
-    const listaMedalhas = [
-      { id: 1, icone: '🔥', nome: 'Inabalável', conquistada: true, desc: 'Demonstrou alta constância no compromisso diário.', req: 'Manter a sequência de presença/comunhão por 15 dias seguidos.' },
-      { id: 2, icone: '📖', nome: 'Leitor Fiel', conquistada: true, desc: 'Estudou a palavra de Deus de forma contínua.', req: 'Completar o estudo de todas as lições da Escola Sabatina no mês.' },
-      { id: 3, icone: '🤝', nome: 'Evangelista', conquistada: true, desc: 'Ajudou a espalhar a mensagem de esperança.', req: 'Participar ativamente de pelo menos 3 ações sociais ou evangelísticas.' },
-      { id: 4, icone: '🛡️', nome: 'Guerreiro de Oração', conquistada: false, desc: 'Dedicação especial nos momentos de intercessão.', req: 'Participar dos encontros de oração matinais por 10 dias.' },
-      { id: 5, icone: '🎯', nome: 'Mestre dos Desafios', conquistada: false, desc: 'Superou metas elevadas no clube.', req: 'Concluir 10 desafios da plataforma com pontuação máxima.' },
-      { id: 6, icone: '👑', nome: 'Líder Exemplar', conquistada: false, desc: 'Reconhecimento por liderança e serviço voluntário.', req: 'Atingir o Nível 5 de progresso no Kemuel Connect.' }
-    ];
-
     const historicoAtividades = [
       { data: '2026-07-31', atividade: 'Estudo da Lição da Escola Sabatina', pontos: 50 },
       { data: '2026-07-30', atividade: 'Presença no Culto JA', pontos: 100 },
@@ -347,7 +302,6 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
-      renderizarMedalhas();
       filtrarHistorico();
     });
 
@@ -486,61 +440,6 @@
       exhibirToast("Informações salvas com sucesso!");
     }
 
-    function renderizarMedalhas() {
-      const grid = document.getElementById('grid-medalhas');
-      grid.innerHTML = '';
-
-      listaMedalhas.forEach(m => {
-        const card = document.createElement('div');
-        card.onclick = () => abrirModalMedalha(m);
-        
-        if (m.conquistada) {
-          card.className = "bg-amber-50 border border-amber-200 p-3 rounded-xl text-center cursor-pointer card-hover flex flex-col items-center justify-center";
-          card.innerHTML = `
-            <span class="text-3xl">${m.icone}</span>
-            <p class="text-[11px] font-bold text-amber-950 mt-1 truncate w-full">${m.nome}</p>
-            <span class="text-[9px] text-amber-700 font-extrabold uppercase">Conquistada</span>
-          `;
-        } else {
-          card.className = "bg-gray-50 border border-gray-200 p-3 rounded-xl text-center cursor-pointer card-hover opacity-50 grayscale flex flex-col items-center justify-center";
-          card.innerHTML = `
-            <span class="text-3xl">${m.icone}</span>
-            <p class="text-[11px] font-bold text-gray-600 mt-1 truncate w-full">${m.nome}</p>
-            <span class="text-[9px] text-gray-500 font-extrabold uppercase"><i class="fa-solid fa-lock text-[8px]"></i> Bloqueada</span>
-          `;
-        }
-        grid.appendChild(card);
-      });
-    }
-
-    function abrirPrimeiraMedalha() {
-      if (listaMedalhas && listaMedalhas.length > 0) {
-        abrirModalMedalha(listaMedalhas[0]);
-      }
-    }
-
-    function abrirModalMedalha(m) {
-      document.getElementById('modal-medalha-icone').innerText = m.icone;
-      document.getElementById('modal-medalha-nome').innerText = m.nome;
-      document.getElementById('modal-medalha-desc').innerText = m.desc;
-      document.getElementById('modal-medalha-req').innerText = m.req;
-
-      const st = document.getElementById('modal-medalha-status');
-      if (m.conquistada) {
-        st.innerText = "Conquistada";
-        st.className = "inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase bg-emerald-100 text-emerald-800";
-      } else {
-        st.innerText = "Bloqueada";
-        st.className = "inline-block text-[10px] px-2.5 py-0.5 rounded-full font-black uppercase bg-gray-200 text-gray-700";
-      }
-
-      document.getElementById('modal-medalha').classList.remove('hidden');
-    }
-
-    function fecharModalMedalha() {
-      document.getElementById('modal-medalha').classList.add('hidden');
-    }
-
     function filtrarHistorico() {
       const periodo = document.getElementById('filtro-periodo').value;
       const corpo = document.getElementById('tabela-historico-corpo');
@@ -584,9 +483,3 @@
   </script>
 </body>
 </html>
-<!-- REMOVER ESTE BLOCO -->
-<div class="stat-card">
-    <span class="stat-icon">🏅</span>
-    <span class="stat-title">MEDALHAS</span>
-    <span class="stat-value" id="stat-medalhas">0</span>
-</div>
