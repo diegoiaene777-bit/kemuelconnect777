@@ -3,142 +3,536 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemuel Connect 777 - Gestão JA</title>
+  <title>Kemuel Connect 777 - Dashboard</title>
   <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
 
-  <!-- TOPBAR / HEADER -->
-  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-fire text-amber-500 text-2xl"></i>
-        <h1 class="text-xl font-bold tracking-wide">Kemuel Connect 777</h1>
+  <style>
+    /* Atalhos Rápidos - Hover e Animações Suaves */
+    .btn-quick-access {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-quick-access:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
+
+  <!-- CABEÇALHO SUPERIOR COMPLETO -->
+  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      
+      <!-- Saudação e Mensagem -->
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <h1 id="saudacao-texto" class="text-xl md:text-2xl font-bold text-white">Bom dia, Diego! 👋</h1>
+          <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold px-2.5 py-0.5 rounded-full">ATIVO</span>
+        </div>
+        <p class="text-xs md:text-sm text-slate-400">Que Deus abençoe grandemente o seu dia.</p>
+        <p id="data-atual" class="text-xs text-amber-500 font-medium">Sexta-feira, 31 de julho de 2026</p>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-300">Olá, Jovem! 👋</span>
-        <div class="w-9 h-9 rounded-full bg-amber-500 text-slate-900 font-bold flex items-center justify-center">
+
+      <!-- Perfil do Usuário no Canto Direito -->
+      <div class="flex items-center gap-3 self-end md:self-center">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-semibold text-slate-300">Diego Silva</div>
+          <div class="text-[10px] text-slate-400">Jovem Conectado</div>
+        </div>
+        <div class="w-11 h-11 rounded-full bg-amber-500 text-slate-900 font-bold flex items-center justify-center border-2 border-amber-400 shadow-md">
           JC
         </div>
       </div>
+
     </div>
   </header>
 
-  <!-- CONTAINER PRINCIPAL -->
+  <!-- CONTAINER PRINCIPAL DO DASHBOARD -->
   <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- SEÇÃO 1: CARDS DE INDICADORES DO DASHBOARD (CAPÍTULO 2) -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- LINHA 1: 4 CARDS INDICADORES -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
       <!-- Pontuação Total -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
-        <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span class="text-xs font-semibold uppercase tracking-wider">Pontuação</span>
-          <i class="fa-solid fa-star text-amber-500"></i>
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Pontuação Total</span>
+          <i class="fa-solid fa-star text-amber-500 text-lg"></i>
         </div>
-        <h2 id="card-pontos" class="text-2xl font-bold text-white">1.320 pts</h2>
+        <div>
+          <h2 id="val-pontos" class="text-3xl font-extrabold text-white">1.320 <span class="text-sm font-normal text-slate-400">pts</span></h2>
+          <span class="text-xs text-emerald-400 font-medium mt-1 inline-block"><i class="fa-solid fa-arrow-up mr-1"></i>+120 pts na semana</span>
+        </div>
       </div>
 
-      <!-- Nível -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
-        <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span class="text-xs font-semibold uppercase tracking-wider">Nível</span>
-          <i class="fa-solid fa-trophy text-amber-500"></i>
+      <!-- Nível Atual -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg flex flex-col justify-between space-y-2">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-xs font-semibold uppercase tracking-wider">Nível Atual</span>
+          <span id="val-estrelas" class="text-amber-400 text-xs">⭐⭐⭐</span>
         </div>
-        <h2 id="card-nivel" class="text-2xl font-bold text-white">Nível 3</h2>
+        <div>
+          <h2 id="val-nivel" class="text-2xl font-bold text-white">Nível 3</h2>
+          <div class="w-full bg-slate-700 rounded-full h-2 mt-2">
+            <div id="bar-nivel-top" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 88%"></div>
+          </div>
+          <span id="txt-faltam-pts-top" class="text-[11px] text-slate-400 mt-1 block">Faltam 180 pontos</span>
+        </div>
       </div>
 
-      <!-- Streak / Sequência -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
-        <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span class="text-xs font-semibold uppercase tracking-wider">Streak</span>
-          <i class="fa-solid fa-fire text-amber-500"></i>
+      <!-- Posição no Ranking -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Ranking Geral</span>
+          <i class="fa-solid fa-trophy text-amber-500 text-lg"></i>
         </div>
-        <h2 id="card-streak" class="text-2xl font-bold text-amber-500">18 Dias</h2>
+        <div>
+          <h2 id="val-ranking" class="text-3xl font-extrabold text-white">5º</h2>
+          <span class="text-xs text-slate-400 font-medium mt-1 inline-block">de 38 jovens</span>
+        </div>
       </div>
 
-      <!-- Ranking -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
-        <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span class="text-xs font-semibold uppercase tracking-wider">Ranking</span>
-          <i class="fa-solid fa-ranking-star text-amber-500"></i>
+      <!-- Sequência (Streak) -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider">Sequência</span>
+          <i class="fa-solid fa-fire text-amber-500 text-lg"></i>
         </div>
-        <h2 id="card-ranking" class="text-2xl font-bold text-white">#5</h2>
+        <div>
+          <h2 id="val-streak" class="text-2xl font-bold text-amber-500">🔥 18 dias consecutivos</h2>
+          <span class="text-xs text-slate-400 mt-1 block">Mantenha sua constância.</span>
+        </div>
       </div>
+
     </div>
 
-    <!-- SEÇÃO 2: GRID COM DEMAIS MÓDULOS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- LINHA 2: COMUNHÃO & PRÓXIMOS EVENTOS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <!-- CARD: MINHA COMUNHÃO -->
+      <!-- Card: Minha Comunhão -->
       <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4">
-        <div class="flex items-center gap-2 border-b border-slate-700 pb-3">
-          <i class="fa-solid fa-book-open text-amber-500 text-lg"></i>
-          <h3 class="font-bold text-white">Minha Comunhão</h3>
+        <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-amber-500"></i>
+            <h3 class="font-bold text-white">Minha Comunhão</h3>
+          </div>
+          <span class="text-xs text-slate-400">Hoje</span>
         </div>
-        <p class="text-xs text-slate-400">Registre seu estudo diário para somar pontos e manter sua sequência ativa.</p>
-        
-        <div class="space-y-3">
-          <button id="btn-comunhao-biblia" onclick="registrarComunhaoRapida('biblia')" class="w-full py-2.5 px-4 bg-slate-700 hover:bg-amber-500 hover:text-slate-900 rounded-lg text-sm font-semibold transition duration-200 flex items-center justify-between text-slate-200">
-            <span><i class="fa-solid fa-book-bible mr-2"></i> Registrar Bíblia</span>
-            <span class="text-xs bg-slate-800 px-2 py-0.5 rounded border border-slate-600">+10 pts</span>
-          </button>
 
-          <button id="btn-comunhao-licao" onclick="registrarComunhaoRapida('licao')" class="w-full py-2.5 px-4 bg-slate-700 hover:bg-amber-500 hover:text-slate-900 rounded-lg text-sm font-semibold transition duration-200 flex items-center justify-between text-slate-200">
-            <span><i class="fa-solid fa-scroll mr-2"></i> Registrar Lição</span>
-            <span class="text-xs bg-slate-800 px-2 py-0.5 rounded border border-slate-600">+10 pts</span>
-          </button>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <span class="text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-500"></i> Bíblia</span>
+            <span id="status-comunhao-biblia" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold">✔️ Concluído</span>
+          </div>
+
+          <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <span class="text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-scroll text-amber-500"></i> Lição</span>
+            <span id="status-comunhao-licao" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-semibold">⏳ Pendente</span>
+          </div>
+
+          <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <span class="text-sm font-medium flex items-center gap-2"><i class="fa-solid fa-bookmark text-amber-500"></i> Ano Bíblico</span>
+            <span id="status-comunhao-anobiblico" class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold">✔️ Concluído</span>
+          </div>
+        </div>
+
+        <button onclick="registrarAtividadeRapida()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-sm rounded-lg transition duration-200 shadow-md">
+          <i class="fa-solid fa-plus-circle mr-1"></i> Registrar Atividade
+        </button>
+      </div>
+
+      <!-- Card: Próximos Eventos -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-calendar-alt text-amber-500"></i>
+              <h3 class="font-bold text-white">Próximos Eventos</h3>
+            </div>
+            <span class="text-xs text-amber-400 font-semibold">Agenda JA</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+              <div>
+                <span class="text-xs text-amber-500 font-bold uppercase block">Sábado</span>
+                <h4 class="text-sm font-bold text-white">Culto Jovem</h4>
+              </div>
+              <span class="text-xs text-slate-300 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">19:30</span>
+            </div>
+
+            <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+              <div>
+                <span class="text-xs text-amber-500 font-bold uppercase block">Domingo</span>
+                <h4 class="text-sm font-bold text-white">Pequeno Grupo</h4>
+              </div>
+              <span class="text-xs text-slate-300 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">19:00</span>
+            </div>
+
+            <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+              <div>
+                <span class="text-xs text-amber-500 font-bold uppercase block">Próxima</span>
+                <h4 class="text-sm font-bold text-white">Escola Sabatina</h4>
+              </div>
+              <span class="text-xs text-slate-300 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">09:00</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="alert('Navegando para o Calendário')" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-sm rounded-lg transition duration-200 border border-slate-600">
+          Ver Calendário
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LINHA 3: DESAFIO ATUAL & EVANGELISMO -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Card: Desafio Atual -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bullseye text-amber-500"></i>
+            <h3 class="font-bold text-white">Desafio Atual</h3>
+          </div>
+          <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-bold">+250 pontos</span>
+        </div>
+
+        <div>
+          <h4 class="text-base font-bold text-white">Estudar a Lição</h4>
+          <p class="text-xs text-slate-400 mt-1">Mantenha a constância no estudo da Escola Sabatina diariamente.</p>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Progresso: <strong id="txt-desafio-dias" class="text-slate-200">5/7 dias</strong></span>
+            <span>2 dias restantes</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2.5">
+            <div id="bar-desafio" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 71%"></div>
+          </div>
         </div>
       </div>
 
-      <!-- CARD: JORNADA DE PARTICIPAÇÃO -->
-      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg col-span-1 md:col-span-2 space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-rocket text-amber-500 text-lg"></i>
-            <h3 class="font-bold text-white">Jornada de Participação</h3>
+      <!-- Card: Evangelismo -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-heart-pulse text-amber-500"></i>
+              <h3 class="font-bold text-white">Evangelismo</h3>
+            </div>
+            <span class="text-xs text-slate-400">Atividades</span>
           </div>
-          <span class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">Próximo Nível: 4</span>
+
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center">
+            <div>
+              <h4 class="text-xs font-bold text-white">Entrega de Cesta e Oração</h4>
+              <p class="text-[11px] text-slate-400">Última atividade enviada</p>
+            </div>
+            <span id="status-evangelismo" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-semibold">⏳ Em Análise</span>
+          </div>
         </div>
 
-        <!-- Barra de Progresso de Pontos -->
-        <div class="space-y-2">
-          <div class="flex justify-between text-xs text-slate-400 font-medium">
-            <span>Progresso de Pontos</span>
-            <span>1.320 / 1.500 pts (Faltam 180 pts)</span>
+        <button onclick="alert('Formulário de Nova Atividade')" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-sm rounded-lg transition duration-200 border border-slate-600">
+          <i class="fa-solid fa-plus mr-1"></i> Nova Atividade
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LINHA 4: JORNADA DE PARTICIPAÇÃO (CARD LARGO) -->
+    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-4">
+      <div class="border-b border-slate-700 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-chart-line text-amber-500"></i> Jornada de Participação
+        </h3>
+        <p class="text-xs text-slate-400 mt-0.5">Indicador do engajamento em cada área do projeto.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+        
+        <!-- Bíblia -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">📖 Bíblia</span>
+            <span id="pct-biblia" class="text-amber-400">90%</span>
           </div>
-          <div class="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-            <div class="bg-amber-500 h-3 rounded-full transition-all duration-500" style="width: 88%"></div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-biblia" class="bg-emerald-500 h-2 rounded-full" style="width: 90%"></div>
           </div>
         </div>
 
-        <!-- Próxima Medalha -->
-        <div class="flex items-center gap-4 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50">
-          <div class="text-3xl">🎖️</div>
-          <div>
-            <h4 class="text-sm font-bold text-white">Próxima Medalha: Consagrado</h4>
-            <p class="text-xs text-slate-400">Mantenha a sequência de comunhão por 20 dias consecutivos (Atual: 18 dias).</p>
+        <!-- Lição -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">📚 Lição</span>
+            <span id="pct-licao" class="text-amber-400">72%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-licao" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 72%"></div>
+          </div>
+        </div>
+
+        <!-- Escola Sabatina -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">🏠 Escola Sabatina</span>
+            <span id="pct-escola" class="text-amber-400">83%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-escola" class="bg-blue-500 h-2 rounded-full" style="width: 83%"></div>
+          </div>
+        </div>
+
+        <!-- Pequeno Grupo -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">👥 Pequeno Grupo</span>
+            <span id="pct-pg" class="text-amber-400">65%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-pg" class="bg-indigo-500 h-2 rounded-full" style="width: 65%"></div>
+          </div>
+        </div>
+
+        <!-- Evangelismo -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">❤️ Evangelismo</span>
+            <span id="pct-evangelismo" class="text-amber-400">40%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-evangelismo" class="bg-rose-500 h-2 rounded-full" style="width: 40%"></div>
+          </div>
+        </div>
+
+        <!-- Desafios -->
+        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 space-y-1">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-300">🎯 Desafios</span>
+            <span id="pct-desafios" class="text-amber-400">80%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2">
+            <div id="bar-desafios" class="bg-cyan-500 h-2 rounded-full transition-all duration-500" style="width: 80%"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LINHA 5: ÚLTIMA MEDALHA & PRÓXIMO NÍVEL -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Card: Última Medalha -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-award text-amber-500"></i>
+              <h3 class="font-bold text-white">Última Medalha</h3>
+            </div>
+            <span class="text-xs text-amber-400 font-semibold">Conquista</span>
+          </div>
+
+          <div class="flex items-center gap-4 bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <div class="text-4xl">🎖️</div>
+            <div>
+              <h4 class="text-sm font-bold text-white">Fidelidade Diária</h4>
+              <p class="text-xs text-slate-400">Completou 15 dias seguidos de estudo.</p>
+              <span class="text-[10px] text-amber-500 mt-1 block">Conquistada em 25/07/2026</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="alert('Ver todas as medalhas')" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-sm rounded-lg transition duration-200 border border-slate-600">
+          Ver Todas as Medalhas
+        </button>
+      </div>
+
+      <!-- Card: Próximo Nível -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-angles-up text-amber-500"></i>
+              <h3 class="font-bold text-white">Próximo Nível</h3>
+            </div>
+            <span class="text-xs text-slate-400">Meta</span>
+          </div>
+
+          <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 text-center space-y-2">
+            <p class="text-xs text-slate-400">Faltam <strong id="val-faltam-pts" class="text-amber-400 text-sm">180 pontos</strong> para alcançar</p>
+            <h4 class="text-xl font-bold text-white">Nível 4</h4>
+            
+            <div class="w-full bg-slate-700 rounded-full h-3">
+              <div id="bar-nivel-bottom" class="bg-amber-500 h-3 rounded-full transition-all duration-500" style="width: 88%"></div>
+            </div>
           </div>
         </div>
       </div>
 
     </div>
+
+    <!-- LINHA 6: NOTIFICAÇÕES RECENTES & ATALHOS RÁPIDOS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Card: Notificações Recentes -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-bell text-amber-500"></i>
+              <h3 class="font-bold text-white">Notificações Recentes</h3>
+            </div>
+            <span class="text-xs text-slate-400">Cinco mais recentes</span>
+          </div>
+
+          <ul class="space-y-2 text-xs">
+            <li class="p-2 bg-slate-900/40 rounded border border-slate-700/40 text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-circle text-[8px] text-amber-500"></i> Você ganhou a medalha "Constância".
+            </li>
+            <li class="p-2 bg-slate-900/40 rounded border border-slate-700/40 text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-circle text-[8px] text-amber-500"></i> Novo desafio disponível.
+            </li>
+            <li class="p-2 bg-slate-900/40 rounded border border-slate-700/40 text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-circle text-[8px] text-amber-500"></i> Sua comprovação foi aprovada.
+            </li>
+            <li class="p-2 bg-slate-900/40 rounded border border-slate-700/40 text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-circle text-[8px] text-amber-500"></i> Evento sábado às 19h30.
+            </li>
+            <li class="p-2 bg-slate-900/40 rounded border border-slate-700/40 text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-circle text-[8px] text-amber-500"></i> Você subiu de nível.
+            </li>
+          </ul>
+        </div>
+
+        <button onclick="alert('Acessar todas as notificações')" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold text-xs rounded-lg transition border border-slate-600">
+          Ver todas
+        </button>
+      </div>
+
+      <!-- Card: Atalhos Rápidos com Elevação e Hover -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg space-y-4">
+        <div class="border-b border-slate-700 pb-3">
+          <h3 class="font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-amber-500"></i> Atalhos Rápidos
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Acesso direto aos principais módulos do sistema.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button onclick="alert('Módulo Bíblia')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-book-bible text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">📚 Bíblia</span>
+          </button>
+
+          <button onclick="alert('Módulo Lição')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-scroll text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">📖 Lição</span>
+          </button>
+
+          <button onclick="alert('Módulo Evangelismo')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-heart-pulse text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">❤️ Evangelismo</span>
+          </button>
+
+          <button onclick="alert('Módulo Desafios')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-bullseye text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">🎯 Desafios</span>
+          </button>
+
+          <button onclick="alert('Módulo Calendário')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-calendar-alt text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">📅 Calendário</span>
+          </button>
+
+          <button onclick="alert('Módulo Ranking')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 rounded-xl border border-slate-700 text-center space-y-1">
+            <i class="fa-solid fa-trophy text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">🏆 Ranking</span>
+          </button>
+
+          <button onclick="alert('Módulo Minha Comunhão')" class="btn-quick-access p-3 bg-slate-900/80 hover:bg-slate-700 border border-slate-700 rounded-xl text-center space-y-1 col-span-2">
+            <i class="fa-solid fa-hands-praying text-xl text-amber-500 block"></i>
+            <span class="text-xs font-bold text-slate-200 block">🙏 Minha Comunhão</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
   </main>
 
-  <!-- LÓGICA JAVASCRIPT -->
+  <!-- ATUALIZAÇÃO AUTOMÁTICA EM TEMPO REAL (SEM REFRESH) -->
   <script>
-    async function registrarComunhaoRapida(tipo) {
-      const btn = document.getElementById(`btn-comunhao-${tipo}`);
-      if (btn) {
-        btn.classList.remove('bg-slate-700', 'hover:bg-amber-500', 'hover:text-slate-900');
-        btn.classList.add('bg-emerald-600', 'text-white');
-        btn.innerHTML = `<span><i class="fa-solid fa-circle-check mr-2"></i> Concluído!</span> <span class="text-xs bg-emerald-700 px-2 py-0.5 rounded">+10 pts</span>`;
-        btn.disabled = true;
+    // Estado do Usuário
+    let dadosUsuario = {
+      pontos: 1320,
+      nivel: 3,
+      ranking: 5,
+      streak: 18,
+      licaoPendente: true,
+      desafioProgresso: 5,
+      pctLicao: 72,
+      pctDesafios: 80
+    };
+
+    // Função para registrar atividade e atualizar todo o Dashboard sem recarregar
+    function registrarAtividadeRapida() {
+      if (dadosUsuario.licaoPendente) {
+        dadosUsuario.pontos += 30; // +30 pontos ao registrar
+        dadosUsuario.streak += 1; // +1 no streak
+        dadosUsuario.licaoPendente = false;
+        dadosUsuario.desafioProgresso = 6;
+        dadosUsuario.pctLicao = 86;
+        dadosUsuario.pctDesafios = 95;
+
+        // Atualiza status da Lição na Comunhão
+        const elLicao = document.getElementById('status-comunhao-licao');
+        if (elLicao) {
+          elLicao.className = "text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold";
+          elLicao.innerText = "✔️ Concluído";
+        }
+
+        // Executa atualização visual do Dashboard
+        atualizarDashboard();
+        alert("✨ Excelente! Atividade registrada com sucesso. Pontuação, Nível, Streak, Desafios e Jornada foram atualizados!");
+      } else {
+        alert("Sua lição e estudos de hoje já foram registrados!");
       }
-      alert(`✨ Excelente! Sua leitura da ${tipo.toUpperCase()} foi registrada (+10 pontos).`);
+    }
+
+    // Atualiza todos os componentes do Dashboard
+    function atualizarDashboard() {
+      // 1. Atualiza Pontuação
+      document.getElementById('val-pontos').innerHTML = `${dadosUsuario.pontos} <span class="text-sm font-normal text-slate-400">pts</span>`;
+
+      // 2. Recalcula Faltam Pontos para o Nível 4 (Meta: 1500 pts)
+      const faltam = Math.max(0, 1500 - dadosUsuario.pontos);
+      const porcentagemNivel = Math.min(100, Math.floor((dadosUsuario.pontos / 1500) * 100));
+
+      document.getElementById('val-faltam-pts').innerText = `${faltam} pontos`;
+      document.getElementById('txt-faltam-pts-top').innerText = `Faltam ${faltam} pontos`;
+      document.getElementById('bar-nivel-top').style.width = `${porcentagemNivel}%`;
+      document.getElementById('bar-nivel-bottom').style.width = `${porcentagemNivel}%`;
+
+      // 3. Atualiza Streak
+      document.getElementById('val-streak').innerText = `🔥 ${dadosUsuario.streak} dias consecutivos`;
+
+      // 4. Atualiza Desafio Atual
+      document.getElementById('txt-desafio-dias').innerText = `${dadosUsuario.desafioProgresso}/7 dias`;
+      document.getElementById('bar-desafio').style.width = `${Math.floor((dadosUsuario.desafioProgresso/7)*100)}%`;
+
+      // 5. Atualiza Jornada de Participação
+      document.getElementById('pct-licao').innerText = `${dadosUsuario.pctLicao}%`;
+      document.getElementById('bar-licao').style.width = `${dadosUsuario.pctLicao}%`;
+      document.getElementById('pct-desafios').innerText = `${dadosUsuario.pctDesafios}%`;
+      document.getElementById('bar-desafios').style.width = `${dadosUsuario.pctDesafios}%`;
     }
   </script>
 </body>
