@@ -474,7 +474,15 @@
       ano: { concluido: false, hora: null }
     };
 
-    const API_ADVENTECH_BASE = "https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq";
+    // Função dinâmica para obter a URL da lição com base no dia da semana atual
+    function obterUrlLicaoDoDia() {
+      const hoje = new Date().getDay(); // 0 (Domingo) a 6 (Sábado)
+      const diaMapeado = hoje === 0 ? 1 : hoje + 1; // Domingo = 01, Segunda = 02, etc.
+      const diaString = String(diaMapeado).padStart(2, '0');
+
+      // Mantendo o trimestre 2026-03-cq e lição 06, alterando dinamicamente o dia (${diaString})
+      return `https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${diaString}/read/index.json`;
+    }
 
     function gerarCronogramaCompleto() {
       const estruturaLivros = [
@@ -682,9 +690,11 @@
       `;
 
       try {
-        const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
+        const urlDinamica = obterUrlLicaoDoDia();
+        const response = await fetch(urlDinamica);
         if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
         const data = await response.json();
+        
         tituloEl.innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title || "Lição da Escola Sabatina"}`;
         subtituloEl.innerText = `${data.date || "Estudo Diário"} #licaoescolasabatina`;
         conteudoEl.innerHTML = data.content;
@@ -705,9 +715,11 @@
       conteudoEl.innerHTML = `<div class="p-8 text-center text-gray-400 font-medium"><i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i><p>Carregando o estudo de hoje...</p></div>`;
 
       try {
-        const response = await fetch(`${API_ADVENTECH_BASE}/lessons/01/days/01/read/index.json`);
+        const urlDinamica = obterUrlLicaoDoDia();
+        const response = await fetch(urlDinamica);
         if (!response.ok) throw new Error("Erro de resposta da API");
         const data = await response.json();
+        
         tituloEl.innerText = data.title || "Lição da Escola Sabatina";
         subtituloEl.innerText = data.date || "Estudo Diário";
         conteudoEl.innerHTML = data.content;
