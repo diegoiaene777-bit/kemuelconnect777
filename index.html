@@ -224,53 +224,56 @@
       </div>
     </div>
 
-    <!-- TELA: CALENDÁRIO (TEMA ESCURO, AZUL ESCURO #0F172A, AZUL #2563EB) -->
+    <!-- TELA: CALENDÁRIO (PADRÃO VISUAL DOS CARDS DE MINHA COMUNHÃO: #FFFFFF, CANTOS 16PX, SOMBRAS SUAVES) -->
     <div id="sec-calendario" class="space-y-8">
       
       <!-- CABEÇALHO DO CALENDÁRIO -->
-      <div class="bg-[#0F172A] border border-blue-900/50 text-white p-8 rounded-[16px] shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
             📅 Calendário
           </h2>
           <p class="text-xs md:text-sm text-blue-200">"Acompanhe todos os eventos dos Jovens Kemuel." #calendario</p>
         </div>
-        <div class="flex items-center gap-3 w-full md:w-auto">
+        <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
           <div class="relative w-full md:w-64">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-blue-300">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
               <i class="fa-solid fa-magnifying-glass text-xs"></i>
             </span>
-            <input type="text" id="input-busca-evento" oninput="filtrarEventosCalendario()" placeholder="Pesquisar evento..." class="w-full bg-[#1E293B] border border-blue-800 text-white text-xs rounded-[16px] pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2563EB] transition">
+            <input type="text" id="input-busca-evento" oninput="filtrarEventosCalendario()" placeholder="Pesquisar evento..." class="w-full bg-white text-gray-800 border border-gray-200 text-xs rounded-[16px] pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition shadow-inner">
           </div>
+          <button onclick="abrirModalNovoEvento()" class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-plus"></i> Novo Evento (Admin)
+          </button>
         </div>
       </div>
 
       <!-- SEÇÃO DE FILTROS RÁPIDOS -->
       <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        <button onclick="selecionarFiltroCategoria('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#2563EB] text-white shadow transition shrink-0">Todos</button>
-        <button onclick="selecionarFiltroCategoria('Espiritual')" id="btn-filtro-Espiritual" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">📖 Espiritual</button>
-        <button onclick="selecionarFiltroCategoria('Evangelismo')" id="btn-filtro-Evangelismo" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">🤝 Evangelismo</button>
-        <button onclick="selecionarFiltroCategoria('Social')" id="btn-filtro-Social" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">🎉 Social</button>
-        <button onclick="selecionarFiltroCategoria('Desafios')" id="btn-filtro-Desafios" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">🏆 Desafios</button>
-        <button onclick="selecionarFiltroCategoria('Treinamentos')" id="btn-filtro-Treinamentos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">🎓 Treinamentos</button>
-        <button onclick="selecionarFiltroCategoria('Solidário')" id="btn-filtro-Solidário" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0">❤️ Solidário</button>
+        <button onclick="selecionarFiltroCategoria('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0">Todos</button>
+        <button onclick="selecionarFiltroCategoria('Espiritual')" id="btn-filtro-Espiritual" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">📖 Espiritual</button>
+        <button onclick="selecionarFiltroCategoria('Evangelismo')" id="btn-filtro-Evangelismo" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🤝 Evangelismo</button>
+        <button onclick="selecionarFiltroCategoria('Social')" id="btn-filtro-Social" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎉 Social</button>
+        <button onclick="selecionarFiltroCategoria('Desafios')" id="btn-filtro-Desafios" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🏆 Desafios</button>
+        <button onclick="selecionarFiltroCategoria('Treinamentos')" id="btn-filtro-Treinamentos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎓 Treinamentos</button>
+        <button onclick="selecionarFiltroCategoria('Solidário')" id="btn-filtro-Solidário" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">❤️ Solidário</button>
       </div>
 
       <!-- GRID: CALENDÁRIO MENSAL + PRÓXIMOS EVENTOS -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         <!-- COLUNA 1 & 2: CALENDÁRIO MENSAL -->
-        <div class="lg:col-span-2 bg-[#0F172A] border border-blue-900/50 p-6 rounded-[16px] shadow-lg space-y-6">
+        <div class="lg:col-span-2 bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-6">
           <div class="flex justify-between items-center">
-            <h3 id="calendar-month-year" class="text-lg font-extrabold text-white capitalize">Agosto 2026</h3>
+            <h3 id="calendar-month-year" class="text-lg font-extrabold text-blue-950 capitalize">Agosto 2026</h3>
             <div class="flex gap-2">
-              <button onclick="mudarMesCalendario(-1)" class="w-8 h-8 rounded-[16px] bg-[#1E293B] hover:bg-blue-900 text-white flex items-center justify-center transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-              <button onclick="mudarMesCalendario(1)" class="w-8 h-8 rounded-[16px] bg-[#1E293B] hover:bg-blue-900 text-white flex items-center justify-center transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+              <button onclick="mudarMesCalendario(-1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+              <button onclick="mudarMesCalendario(1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>
             </div>
           </div>
 
           <!-- DIAS DA SEMANA -->
-          <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-blue-400 pb-2 border-b border-blue-900/40">
+          <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-gray-400 pb-2 border-b border-gray-100">
             <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
           </div>
 
@@ -281,9 +284,9 @@
         </div>
 
         <!-- COLUNA 3: PRÓXIMOS EVENTOS EM ORDEM CRONOLÓGICA -->
-        <div class="bg-[#0F172A] border border-blue-900/50 p-6 rounded-[16px] shadow-lg flex flex-col space-y-4">
-          <h3 class="text-base font-extrabold text-white flex items-center gap-2 pb-2 border-b border-blue-900/40">
-            <i class="fa-solid fa-clock text-[#2563EB]"></i> Próximos Eventos
+        <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col space-y-4">
+          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-2 border-b border-gray-100">
+            <i class="fa-solid fa-clock text-blue-900"></i> Próximos Eventos
           </h3>
           <div id="proximos-eventos-lista" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
             <!-- Gerado via JavaScript -->
@@ -295,10 +298,10 @@
       <!-- SEÇÃO INFERIOR: EVENTOS DO DIA SELECIONADO -->
       <div class="space-y-4 pt-4">
         <div class="flex justify-between items-center">
-          <h3 id="titulo-eventos-dia" class="text-lg font-extrabold text-white flex items-center gap-2">
-            <i class="fa-solid fa-calendar-day text-[#2563EB]"></i> Eventos para o dia selecionado
+          <h3 id="titulo-eventos-dia" class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
+            <i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para o dia selecionado
           </h3>
-          <span id="badge-total-eventos-dia" class="text-xs bg-[#2563EB] text-white px-2.5 py-1 rounded-[16px] font-bold">0 eventos</span>
+          <span id="badge-total-eventos-dia" class="text-xs bg-blue-900 text-white px-2.5 py-1 rounded-[16px] font-bold">0 eventos</span>
         </div>
 
         <div id="container-eventos-dia" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -449,6 +452,63 @@
     </div>
   </div>
 
+  <!-- MODAL DO ADMINISTRADOR: CADASTRAR NOVO EVENTO -->
+  <div id="modal-novo-evento" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-calendar-plus text-amber-400"></i> Inserir Novo Evento (Administrador)</h3>
+        <button onclick="fecharModalNovoEvento()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="p-6 flex-1 overflow-y-auto space-y-4">
+        <div>
+          <label class="text-xs font-bold text-gray-700 block mb-1">Nome do Evento:</label>
+          <input type="text" id="admin-evento-nome" placeholder="Ex: Vigília Jovem" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold text-gray-700 block mb-1">Data:</label>
+            <input type="date" id="admin-evento-data" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-700 block mb-1">Horário:</label>
+            <input type="time" id="admin-evento-horario" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold text-gray-700 block mb-1">Local:</label>
+            <input type="text" id="admin-evento-local" placeholder="Ex: Templo Central" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-700 block mb-1">Categoria:</label>
+            <select id="admin-evento-categoria" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+              <option value="Espiritual">📖 Espiritual</option>
+              <option value="Evangelismo">🤝 Evangelismo</option>
+              <option value="Social">🎉 Social</option>
+              <option value="Desafios">🏆 Desafios</option>
+              <option value="Treinamentos">🎓 Treinamentos</option>
+              <option value="Solidário">❤️ Solidário</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-700 block mb-1">Pontuação Disponível:</label>
+          <input type="number" id="admin-evento-pontos" placeholder="Ex: 50" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-gray-700 block mb-1">Descrição Curta:</label>
+          <textarea id="admin-evento-descricao" rows="3" placeholder="Detalhes do evento..." class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></textarea>
+        </div>
+      </div>
+      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
+        <button onclick="fecharModalNovoEvento()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-[16px] transition">Cancelar</button>
+        <button onclick="salvarNovoEventoAdmin()" class="px-6 py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-black text-xs rounded-[16px] shadow transition flex items-center gap-2">
+          <i class="fa-solid fa-check"></i> Cadastrar Evento
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST DE NOTIFICAÇÃO -->
   <div id="toast-notificacao" class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-[16px] shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition">
     <i class="fa-solid fa-circle-check text-base"></i>
@@ -483,7 +543,7 @@
 
     const listaNovoTestamento = listaLivrosBiblia.slice(39);
 
-    // DADOS MOCADOS DO CALENDÁRIO (EXCLUSIVAMENTE CADASTRADOS PELO ADMIN - CONSULTA)
+    // DADOS MOCADOS DO CALENDÁRIO
     const eventosBancoDeDados = [
       { id: 1, nome: "Culto JA Especial", data: "2026-08-08", horario: "18:00", local: "Templo Central", categoria: "Espiritual", descricao: "Louvor, comunhão e palavra voltada para a juventude.", pontos: 50 },
       { id: 2, nome: "Ação Solidária de Inverno", data: "2026-08-15", horario: "08:30", local: "Praça da Cidade", categoria: "Solidário", descricao: "Entrega de agasalhos e sopa para pessoas em situação de rua. #solidariedade", pontos: 100 },
@@ -558,11 +618,11 @@
         let classes = "h-10 md:h-12 rounded-[16px] flex flex-col items-center justify-center text-xs font-bold transition relative card-hover ";
         
         if (ehSelecionado) {
-          classes += "bg-[#2563EB] text-white shadow-lg ring-2 ring-white/50 ";
+          classes += "bg-blue-900 text-white shadow-lg ring-2 ring-blue-950/20 ";
         } else if (ehHoje) {
-          classes += "bg-blue-900/60 text-white border border-blue-500 ";
+          classes += "bg-blue-50 text-blue-900 border border-blue-200 ";
         } else {
-          classes += "bg-[#1E293B] text-blue-100 hover:bg-blue-900 ";
+          classes += "bg-gray-50 text-gray-700 hover:bg-gray-100 ";
         }
 
         btnDia.className = classes;
@@ -570,7 +630,7 @@
 
         let html = `<span>${dia}</span>`;
         if (temEvento) {
-          html += `<span class="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1"></span>`;
+          html += `<span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1"></span>`;
         }
         btnDia.innerHTML = html;
 
@@ -592,15 +652,14 @@
     function selecionarFiltroCategoria(categoria) {
       filtroCategoriaAtivo = categoria;
       
-      // Atualizar estilos dos botões de filtro
       const botoes = ['todos', 'Espiritual', 'Evangelismo', 'Social', 'Desafios', 'Treinamentos', 'Solidário'];
       botoes.forEach(b => {
         const btnEl = document.getElementById(`btn-filtro-${b}`);
         if(btnEl) {
           if(b === categoria) {
-            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-[#2563EB] text-white shadow transition shrink-0";
+            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0";
           } else {
-            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-[#1E293B] text-blue-200 hover:bg-blue-900 transition shrink-0";
+            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0";
           }
         }
       });
@@ -616,13 +675,13 @@
 
     function obterCorCategoria(cat) {
       switch(cat) {
-        case 'Espiritual': return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-        case 'Evangelismo': return 'bg-rose-500/20 text-rose-300 border-rose-500/30';
-        case 'Social': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-        case 'Desafios': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-        case 'Treinamentos': return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
-        case 'Solidário': return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-        default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+        case 'Espiritual': return 'bg-amber-50 text-amber-700 border-amber-200';
+        case 'Evangelismo': return 'bg-rose-50 text-rose-700 border-rose-200';
+        case 'Social': return 'bg-blue-50 text-blue-700 border-blue-200';
+        case 'Desafios': return 'bg-purple-50 text-purple-700 border-purple-200';
+        case 'Treinamentos': return 'bg-cyan-50 text-cyan-700 border-cyan-200';
+        case 'Solidário': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        default: return 'bg-gray-50 text-gray-700 border-gray-200';
       }
     }
 
@@ -632,7 +691,7 @@
       const badgeEl = document.getElementById('badge-total-eventos-dia');
       const termoBusca = document.getElementById('input-busca-evento').value.toLowerCase();
 
-      tituloEl.innerHTML = `<i class="fa-solid fa-calendar-day text-[#2563EB]"></i> Eventos para ${formatarDataLegivel(diaSelecionadoCalendario)}`;
+      tituloEl.innerHTML = `<i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para ${formatarDataLegivel(diaSelecionadoCalendario)}`;
 
       let filtrados = eventosBancoDeDados.filter(e => e.data === diaSelecionadoCalendario);
 
@@ -648,12 +707,12 @@
 
       if (filtrados.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full bg-[#1E293B]/50 border border-blue-900/30 p-10 rounded-[16px] text-center space-y-3">
-            <div class="w-12 h-12 bg-blue-900/40 text-blue-400 rounded-full flex items-center justify-center mx-auto text-lg">
+          <div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center space-y-3 shadow-sm">
+            <div class="w-12 h-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto text-lg">
               <i class="fa-solid fa-calendar-xmark"></i>
             </div>
-            <p class="text-sm font-bold text-white">Nenhum evento encontrado.</p>
-            <p class="text-xs text-blue-300">Não há eventos cadastrados para esta data com os filtros selecionados.</p>
+            <p class="text-sm font-bold text-gray-800">Nenhum evento encontrado.</p>
+            <p class="text-xs text-gray-500">Não há eventos cadastrados para esta data com os filtros selecionados.</p>
           </div>
         `;
         return;
@@ -663,22 +722,22 @@
       filtrados.forEach(e => {
         const corCat = obterCorCategoria(e.categoria);
         html += `
-          <div class="bg-[#1E293B] border border-blue-900/50 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
+          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
             <div class="space-y-3">
               <div class="flex justify-between items-start gap-2">
                 <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">
                   ${e.categoria}
                 </span>
-                ${e.pontos ? `<span class="text-[10px] bg-amber-500/20 text-amber-300 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-500/30">+${e.pontos} pts</span>` : ''}
+                ${e.pontos ? `<span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${e.pontos} pts</span>` : ''}
               </div>
               <div>
-                <h4 class="text-base font-extrabold text-white">${e.nome}</h4>
-                <p class="text-xs text-blue-200 mt-1">${e.descricao}</p>
+                <h4 class="text-base font-extrabold text-blue-950">${e.nome}</h4>
+                <p class="text-xs text-gray-500 mt-1">${e.descricao}</p>
               </div>
             </div>
-            <div class="pt-4 border-t border-blue-900/40 space-y-2 text-xs text-blue-300 font-medium">
+            <div class="pt-4 border-t border-gray-100 space-y-2 text-xs text-gray-600 font-medium">
               <div class="flex items-center gap-2">
-                <i class="fa-regular fa-clock text-[#2563EB]"></i> <span>${e.horario}</span>
+                <i class="fa-regular fa-clock text-blue-900"></i> <span>${e.horario}</span>
               </div>
               <div class="flex items-center gap-2">
                 <i class="fa-solid fa-location-dot text-rose-500"></i> <span>${e.local}</span>
@@ -694,7 +753,6 @@
       const container = document.getElementById('proximos-eventos-lista');
       const termoBusca = document.getElementById('input-busca-evento').value.toLowerCase();
 
-      // Ordem cronológica
       let ordenados = [...eventosBancoDeDados].sort((a, b) => new Date(a.data) - new Date(b.data));
 
       if (filtroCategoriaAtivo !== 'todos') {
@@ -706,19 +764,19 @@
       }
 
       if (ordenados.length === 0) {
-        container.innerHTML = `<p class="text-xs text-blue-300 text-center py-4">Nenhum evento próximo.</p>`;
+        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Nenhum evento próximo.</p>`;
         return;
       }
 
       let html = '';
       ordenados.forEach(e => {
         html += `
-          <div onclick="selecionarDiaCalendario('${e.data}')" class="bg-[#1E293B] border border-blue-900/40 p-3.5 rounded-[16px] hover:bg-blue-900/40 transition cursor-pointer flex items-center justify-between gap-3">
+          <div onclick="selecionarDiaCalendario('${e.data}')" class="bg-gray-50 border border-gray-100 p-3.5 rounded-[16px] hover:bg-gray-100 transition cursor-pointer flex items-center justify-between gap-3">
             <div class="space-y-0.5">
-              <span class="text-[10px] text-blue-400 font-bold">${formatarDataCurta(e.data)}</span>
-              <h5 class="text-xs font-bold text-white">${e.nome}</h5>
+              <span class="text-[10px] text-blue-900 font-bold">${formatarDataCurta(e.data)}</span>
+              <h5 class="text-xs font-bold text-blue-950">${e.nome}</h5>
             </div>
-            <span class="text-[10px] bg-blue-950 text-blue-200 font-bold px-2 py-1 rounded-[16px] shrink-0">${e.horario}</span>
+            <span class="text-[10px] bg-blue-50 text-blue-900 font-bold px-2 py-1 rounded-[16px] shrink-0">${e.horario}</span>
           </div>
         `;
       });
@@ -735,6 +793,57 @@
       const [ano, mes, dia] = dataStr.split('-');
       const mesesAbbr = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
       return `${dia} ${mesesAbbr[parseInt(mes) - 1]}`;
+    }
+
+    // MODAL NOVO EVENTO (ADMIN)
+    function abrirModalNovoEvento() {
+      document.getElementById('modal-novo-evento').classList.remove('hidden');
+      document.getElementById('admin-evento-nome').value = '';
+      document.getElementById('admin-evento-data').value = new Date().toISOString().split('T')[0];
+      document.getElementById('admin-evento-horario').value = '19:00';
+      document.getElementById('admin-evento-local').value = '';
+      document.getElementById('admin-evento-pontos').value = '50';
+      document.getElementById('admin-evento-descricao').value = '';
+    }
+
+    function fecharModalNovoEvento() {
+      document.getElementById('modal-novo-evento').classList.add('hidden');
+    }
+
+    function salvarNovoEventoAdmin() {
+      const nome = document.getElementById('admin-evento-nome').value.trim();
+      const data = document.getElementById('admin-evento-data').value;
+      const horario = document.getElementById('admin-evento-horario').value;
+      const local = document.getElementById('admin-evento-local').value.trim();
+      const categoria = document.getElementById('admin-evento-categoria').value;
+      const pontos = parseInt(document.getElementById('admin-evento-pontos').value) || 0;
+      const descricao = document.getElementById('admin-evento-descricao').value.trim();
+
+      if (!nome || !data || !horario || !local) {
+        alert("Por favor, preencha todos os campos obrigatórios do evento!");
+        return;
+      }
+
+      const novoId = eventosBancoDeDados.length > 0 ? Math.max(...eventosBancoDeDados.map(e => e.id)) + 1 : 1;
+      
+      eventosBancoDeDados.push({
+        id: novoId,
+        nome,
+        data,
+        horario,
+        local,
+        categoria,
+        descricao: descricao || "Sem descrição informada.",
+        pontos
+      });
+
+      fecharModalNovoEvento();
+      diaSelecionadoCalendario = data;
+      renderizarCalendario();
+      renderizarProximosEventos();
+      renderizarEventosDoDia();
+      exhibirToast("Novo evento cadastrado com sucesso pelo Administrador!");
+      if (typeof confetti === "function") confetti({ particleCount: 70, spread: 50, origin: { y: 0.6 } });
     }
 
     function inicializarSeletorLivrosBiblia() {
