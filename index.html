@@ -49,11 +49,11 @@
         <i class="fa-solid fa-user w-5 text-blue-600 shrink-0"></i> Meu Perfil
       </button>
 
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
+      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
         <i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
       </button>
       
-      <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+      <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
         <i class="fa-solid fa-book-bible w-5 text-amber-300 shrink-0"></i> Bíblia
       </button>
       
@@ -165,47 +165,10 @@
           </div>
         </div>
       </section>
-
-      <section class="space-y-3">
-        <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
-          <i class="fa-solid fa-chart-simple text-amber-500"></i> Estatísticas
-        </h3>
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🏆 Pontuação Total</span>
-            <p class="text-xl font-black text-blue-950 mt-1" id="stat-pontos">1.370 pts</p>
-          </div>
-          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">⭐ Nível Atual</span>
-            <p class="text-xl font-black text-amber-500 mt-1" id="stat-nivel">Nível 3</p>
-          </div>
-          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🥇 Ranking</span>
-            <p class="text-xl font-black text-emerald-600 mt-1" id="stat-ranking">5º Lugar</p>
-          </div>
-          <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-100 text-center card-hover">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">🔥 Sequência</span>
-            <p class="text-xl font-black text-rose-600 mt-1" id="stat-streak">18 Dias</p>
-          </div>
-        </div>
-      </section>
     </div>
 
     <!-- TELA: MINHA COMUNHÃO -->
-    <div id="sec-comunhao" class="space-y-6">
-
-      <!-- LEMBRETE DISCRETO -->
-      <div id="aviso-lembrete" class="bg-amber-500/10 border border-amber-500/30 text-amber-900 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm transition">
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-bell text-amber-600 text-lg animate-bounce"></i>
-          <p class="text-xs sm:text-sm font-semibold">Você ainda não registrou sua comunhão diária de hoje. #comunhao</p>
-        </div>
-        <button onclick="focarAtividades()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-blue-950 font-black text-xs rounded-xl transition shrink-0 shadow">
-          Registrar Agora
-        </button>
-      </div>
-
-      <!-- CABEÇALHO -->
+    <div id="sec-comunhao" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -213,106 +176,84 @@
           </h2>
           <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus."</p>
         </div>
-        <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold border border-white/20 shrink-0">
-          <i class="fa-regular fa-calendar text-amber-400 mr-1.5"></i> <span id="data-atual-txt">01 de Agosto de 2026</span>
+      </div>
+    </div>
+
+    <!-- TELA: BÍBLIA COMPLETA VIA API GRATUITA -->
+    <div id="sec-biblia" class="space-y-6">
+      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="space-y-1">
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+            <i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa
+          </h2>
+          <p class="text-xs md:text-sm text-blue-200">Acesse todos os livros, capítulos e versículos. #biblia #anobiblico</p>
+        </div>
+        <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl text-xs font-bold border border-white/20">
+          <label for="select-versao-biblia" class="text-blue-200">Versão:</label>
+          <select id="select-versao-biblia" onchange="carregarTextoBiblia()" class="bg-blue-950 text-amber-400 font-bold px-2 py-1 rounded-lg border border-blue-800 focus:outline-none">
+            <option value="almeida">Almeida (Português)</option>
+            <option value="kjv">King James Version (Inglês)</option>
+          </select>
         </div>
       </div>
 
-      <!-- ATIVIDADES DE HOJE -->
-      <section id="secao-atividades" class="space-y-4">
-        <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
-          <i class="fa-solid fa-calendar-check text-blue-600"></i> Atividades de Hoje
-        </h3>
+      <!-- PAINEL DE NAVEGAÇÃO E LEITURA COMPLETA -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Seletor de Livros, Capítulos e Versículos -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-4 lg:col-span-1">
+          <h3 class="font-bold text-sm text-blue-950 border-b pb-2 flex items-center gap-2">
+            <i class="fa-solid fa-list text-blue-600"></i> Navegação Bíblica
+          </h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          <!-- Card: Ano Bíblico -->
-          <div id="card-ano" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
-            <div class="space-y-3">
-              <div class="flex justify-between items-start">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">📖</div>
-                <span id="badge-ano" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
-              </div>
-
-              <div>
-                <h4 class="font-extrabold text-gray-800 text-base">Ano Bíblico / Leitura Diária</h4>
-                <p class="text-xs text-blue-600 font-bold mt-1" id="capitulo-sugerido-hoje">Capítulo Sugerido: Mateus 1</p>
-                <p class="text-xs text-gray-400 font-medium" id="hora-ano">Clique abaixo para escolher o capítulo, registrar sua reflexão e concluir.</p>
-              </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label for="biblia-livro" class="font-bold text-gray-600 block mb-1">Livro:</label>
+              <select id="biblia-livro" onchange="atualizarCapitulosBiblia()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
+                <!-- Preenchido via JS -->
+              </select>
             </div>
 
-            <div class="pt-1 border-t border-gray-50">
-              <button onclick="abrirModalReflexaoDireta()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> Registrar Leitura e Reflexão
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="biblia-capitulo" class="font-bold text-gray-600 block mb-1">Capítulo:</label>
+                <select id="biblia-capitulo" onchange="carregarTextoBiblia()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
+                  <!-- Preenchido via JS -->
+                </select>
+              </div>
+              <div class="flex items-end">
+                <button onclick="carregarTextoBiblia()" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl transition shadow text-xs">
+                  Ler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exibição do Texto Bíblico Completo -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 lg:col-span-3 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+            <div>
+              <h3 id="biblia-titulo-leitura" class="text-xl font-extrabold text-blue-950">Gênesis 1</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Texto completo via API • Clique em um versículo para interagir</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="mudarCapituloBiblia(-1)" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">
+                <i class="fa-solid fa-chevron-left mr-1"></i> Anterior
+              </button>
+              <button onclick="mudarCapituloBiblia(1)" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow">
+                Próximo <i class="fa-solid fa-chevron-right ml-1"></i>
               </button>
             </div>
           </div>
 
-          <!-- Card: Lição da Escola Sabatina -->
-          <div id="card-licao" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between space-y-4 card-hover">
-            <div class="space-y-2">
-              <div class="flex justify-between items-start">
-                <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl font-bold">📚</div>
-                <span id="badge-licao" class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full uppercase">Pendente</span>
-              </div>
-              <h4 class="font-extrabold text-gray-800 text-base">Lição da Escola Sabatina</h4>
-              <p class="text-xs text-gray-500" id="hora-licao">Nenhum registro hoje</p>
+          <div id="biblia-conteudo-texto" class="space-y-3 text-sm text-gray-800 leading-relaxed">
+            <div class="p-8 text-center text-gray-400 font-medium">
+              <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
+              <p>Carregando texto sagrado completo...</p>
             </div>
-            <button id="btn-licao" onclick="abrirLicaoDoDiaAPI()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-2">
-              <i class="fa-solid fa-book-open"></i> Ler e Registrar Estudo
-            </button>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- SEQUÊNCIA (STREAK) -->
-      <section class="bg-gradient-to-br from-amber-500 to-orange-600 p-6 rounded-2xl text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-4 text-center sm:text-left">
-          <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shrink-0 backdrop-blur-sm">
-            🔥
-          </div>
-          <div>
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-100">Sequência Atual</h4>
-            <p class="text-2xl sm:text-3xl font-black" id="comunhao-streak">18 Dias Consecutivos</p>
-            <p class="text-xs text-amber-100 mt-0.5">"Continue firme! A constância gera crescimento." #anobiblico</p>
           </div>
         </div>
-      </section>
-
-      <!-- HISTÓRICO DA COMUNHÃO -->
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
-          <h3 class="font-bold text-base text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> Histórico da Comunhão
-          </h3>
-
-          <div class="flex items-center gap-2 text-xs">
-            <label for="filtro-historico-comunhao" class="font-bold text-gray-500">Filtrar por:</label>
-            <select id="filtro-historico-comunhao" onchange="filtrarHistoricoComunhao()" class="bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              <option value="semana">Esta Semana</option>
-              <option value="mes" selected>Este Mês</option>
-              <option value="ano">Este Ano</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-gray-200 text-gray-400 uppercase tracking-wider font-bold">
-                <th class="pb-2">Data</th>
-                <th class="pb-2">Atividade / Livro</th>
-                <th class="pb-2 text-right">Horário</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-historico-comunhao" class="divide-y divide-gray-100 font-medium text-gray-700">
-              <!-- Histórico via JS -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
+      </div>
     </div>
 
     <!-- TELA: LIÇÃO DA ESCOLA SABATINA -->
@@ -340,91 +281,6 @@
     </div>
 
   </main>
-
-  <!-- MODAL DE REGISTRO, ESCOLHA DO CAPÍTULO E REFLEXÃO -->
-  <div id="modal-registro-comunhao" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalRegistro()">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
-      <button onclick="fecharModalRegistro()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      
-      <div class="border-b pb-3 pr-6">
-        <h4 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
-          <i class="fa-solid fa-book-open text-amber-500"></i> Registrar Leitura do Ano Bíblico
-        </h4>
-        <p class="text-xs text-gray-500 mt-0.5">Selecione o capítulo de hoje, escreva sua reflexão e conclua para computar os pontos. #anobiblico</p>
-      </div>
-
-      <div class="space-y-4 text-xs overflow-y-auto flex-1 pr-1">
-        <!-- Seletor de Mês e Grade Completa -->
-        <div class="space-y-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <label for="filtro-mes-plano" class="font-bold text-gray-700">Escolha o Mês do Plano:</label>
-            <select id="filtro-mes-plano" onchange="renderizarPlanoAnoBiblico()" class="bg-white border border-gray-300 rounded-lg px-2.5 py-1 font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              <option value="agosto" selected>Agosto (Mateus 1 a Lucas 9)</option>
-              <option value="setembro">Setembro (Lucas 10 a Atos 17)</option>
-              <option value="outubro">Outubro (Atos 18 a 2 Coríntios 10)</option>
-              <option value="novembro">Novembro (2 Coríntios 11 a Hebreus 6)</option>
-              <option value="dezembro">Dezembro (Hebreus 7 a Apocalipse 22)</option>
-            </select>
-          </div>
-          <p class="text-[11px] text-gray-400">Clique no capítulo que você leu hoje para selecioná-lo:</p>
-          
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-48 overflow-y-auto p-1 bg-white border border-gray-200 rounded-lg" id="grid-plano-capitulos">
-            <!-- Capítulos injetados via JS -->
-          </div>
-        </div>
-
-        <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100 flex items-center justify-between">
-          <div>
-            <span class="text-gray-500 font-bold block">Capítulo Selecionado:</span>
-            <p id="txt-capitulo-selecionado" class="font-black text-blue-950 text-sm mt-0.5">Nenhum selecionado</p>
-          </div>
-          <div class="text-right">
-            <span class="text-gray-500 font-bold block">Data / Hora</span>
-            <p class="font-bold text-gray-700 text-xs mt-0.5" id="reg-data-hora-txt">-</p>
-          </div>
-        </div>
-
-        <div>
-          <label for="reg-input-obs" class="font-bold text-gray-700 block mb-1 flex items-center gap-1.5">
-            <i class="fa-solid fa-heart text-rose-500"></i> Reflexão e Observações do Capítulo
-          </label>
-          <textarea id="reg-input-obs" rows="3" placeholder="O que Deus falou ao seu coração hoje lendo este capítulo? Escreva aqui sua reflexão... #anobiblico" class="w-full bg-amber-50/30 border border-amber-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-medium text-gray-800"></textarea>
-        </div>
-      </div>
-
-      <div class="pt-2 flex justify-end gap-2 border-t">
-        <button onclick="fecharModalRegistro()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancelar</button>
-        <button onclick="salvarRegistroComunhao()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Concluir Devoção (+50 pts)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DA LIÇÃO DA ESCOLA SABATINA -->
-  <div id="modal-licao-api" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onclick="fecharModalLicaoAPI()">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
-      <button onclick="fecharModalLicaoAPI()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-
-      <div class="border-b pb-3 pr-6">
-        <h3 id="licao-api-titulo" class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
-          <i class="fa-solid fa-book-open-reader text-cyan-600"></i> Carregando Lição...
-        </h3>
-        <p class="text-xs text-gray-400 mt-0.5" id="licao-api-subtitulo">Escola Sabatina — Trimestre Atual</p>
-      </div>
-
-      <div id="licao-conteudo" class="overflow-y-auto flex-1 pr-2 text-sm text-gray-700 leading-relaxed space-y-3">
-        <!-- Conteúdo da API -->
-      </div>
-
-      <div class="pt-3 border-t flex justify-end gap-2">
-        <button onclick="fecharModalLicaoAPI()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Fechar</button>
-        <button onclick="confirmarEstudoLicaoAPI()" class="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Marcar como Estudado (+50 pts)
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- MODAL DE CORTE DE IMAGEM -->
   <div id="modal-crop-foto" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -467,88 +323,40 @@
       fotoUrl: null
     };
 
-    let capituloSelecionadoAtual = null;
-
-    const registrosHoje = {
-      licao: { concluido: false, hora: null },
-      ano: { concluido: false, hora: null }
-    };
-
-    // Função dinâmica para obter a URL da lição com base no dia da semana atual
-    function obterUrlLicaoDoDia() {
-      const hoje = new Date().getDay(); // 0 (Domingo) a 6 (Sábado)
-      const diaMapeado = hoje === 0 ? 1 : hoje + 1; // Domingo = 01, Segunda = 02, etc.
-      const diaString = String(diaMapeado).padStart(2, '0');
-
-      // Mantendo o trimestre 2026-03-cq e lição 06, alterando dinamicamente o dia (${diaString})
-      return `https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${diaString}/read/index.json`;
-    }
-
-    function gerarCronogramaCompleto() {
-      const estruturaLivros = [
-        { livro: "Mateus", caps: 28 }, { livro: "Marcos", caps: 16 }, { livro: "Lucas", caps: 24 },
-        { livro: "João", caps: 21 }, { livro: "Atos dos Apóstolos", caps: 28 }, { livro: "Romanos", caps: 16 },
-        { livro: "1 Coríntios", caps: 16 }, { livro: "2 Coríntios", caps: 13 }, { livro: "Gálatas", caps: 6 },
-        { livro: "Efésios", caps: 6 }, { livro: "Filipenses", caps: 4 }, { livro: "Colossenses", caps: 4 },
-        { livro: "1 Tessalonicenses", caps: 5 }, { livro: "2 Tessalonicenses", caps: 3 }, { livro: "1 Timóteo", caps: 6 },
-        { livro: "2 Timóteo", caps: 4 }, { livro: "Tito", caps: 3 }, { livro: "Filemom", caps: 1 },
-        { livro: "Hebreus", caps: 13 }, { livro: "Tiago", caps: 5 }, { livro: "1 Pedro", caps: 5 },
-        { livro: "2 Pedro", caps: 3 }, { livro: "1 João", caps: 5 }, { livro: "2 João", caps: 1 },
-        { livro: "3 João", caps: 1 }, { livro: "Judas", caps: 1 }, { livro: "Apocalipse", caps: 22 }
-      ];
-
-      const todosOsCapitulos = [];
-      estruturaLivros.forEach(item => {
-        for (let i = 1; i <= item.caps; i++) {
-          todosOsCapitulos.push({ livro: item.livro, cap: i });
-        }
-      });
-
-      const plano = { agosto: [], setembro: [], outubro: [], novembro: [], dezembro: [] };
-      const distribuicaoMeses = [
-        { mes: 'agosto', dias: 31, qtdCaps: 53 },
-        { mes: 'setembro', dias: 30, qtdCaps: 53 },
-        { mes: 'outubro', dias: 31, qtdCaps: 53 },
-        { mes: 'novembro', dias: 30, qtdCaps: 51 },
-        { mes: 'dezembro', dias: 31, qtdCaps: 50 }
-      ];
-
-      let idxCap = 0;
-      distribuicaoMeses.forEach(m => {
-        for (let i = 0; i < m.qtdCaps; i++) {
-          if (idxCap < todosOsCapitulos.length) {
-            const diaCalc = Math.min(Math.floor((i / m.qtdCaps) * m.dias) + 1, m.dias);
-            plano[m.mes].push({
-              dia: diaCalc,
-              livro: todosOsCapitulos[idxCap].livro,
-              cap: todosOsCapitulos[idxCap].cap,
-              lido: false,
-              reflexao: ""
-            });
-            idxCap++;
-          }
-        }
-      });
-
-      return plano;
-    }
-
-    const dadosPlano = gerarCronogramaCompleto();
-    const historicoComunhao = [
-      { data: '2026-07-31', atividade: 'Lição da Escola Sabatina', hora: '08:15' },
-      { data: '2026-07-31', atividade: 'Ano Bíblico (Mateus 1)', hora: '21:00' }
+    // Lista completa dos 66 livros da Bíblia com quantidade exata de capítulos
+    const listaLivrosBiblia = [
+      { nome: "Gênesis", caps: 50 }, { nome: "Êxodo", caps: 40 }, { nome: "Levítico", caps: 27 },
+      { nome: "Números", caps: 36 }, { nome: "Deuteronômio", caps: 34 }, { nome: "Josué", caps: 24 },
+      { nome: "Juízes", caps: 21 }, { nome: "Rute", caps: 4 }, { nome: "1 Samuel", caps: 31 },
+      { nome: "2 Samuel", caps: 24 }, { nome: "1 Reis", caps: 22 }, { nome: "2 Reis", caps: 25 },
+      { nome: "1 Crônicas", caps: 29 }, { nome: "2 Crônicas", caps: 36 }, { nome: "Esdras", caps: 10 },
+      { nome: "Neemias", caps: 13 }, { nome: "Ester", caps: 10 }, { nome: "Jó", caps: 42 },
+      { nome: "Salmos", caps: 150 }, { nome: "Provérbios", caps: 31 }, { nome: "Eclesiastes", caps: 12 },
+      { nome: "Cantares", caps: 8 }, { nome: "Isaías", caps: 66 }, { nome: "Jeremias", caps: 52 },
+      { nome: "Lamentações", caps: 5 }, { nome: "Ezequiel", caps: 48 }, { nome: "Daniel", caps: 12 },
+      { nome: "Oséias", caps: 14 }, { nome: "Joel", caps: 3 }, { nome: "Amós", caps: 9 },
+      { nome: "Obadias", caps: 1 }, { nome: "Jonas", caps: 4 }, { nome: "Miquéias", caps: 7 },
+      { nome: "Naum", caps: 3 }, { nome: "Habacuque", caps: 3 }, { nome: "Sofonias", caps: 3 },
+      { nome: "Ageu", caps: 2 }, { nome: "Zacarias", caps: 14 }, { nome: "Malaquias", caps: 4 },
+      { nome: "Mateus", caps: 28 }, { nome: "Marcos", caps: 16 }, { nome: "Lucas", caps: 24 },
+      { nome: "João", caps: 21 }, { nome: "Atos", caps: 28 }, { nome: "Romanos", caps: 16 },
+      { nome: "1 Coríntios", caps: 16 }, { nome: "2 Coríntios", caps: 13 }, { nome: "Gálatas", caps: 6 },
+      { nome: "Efésios", caps: 6 }, { nome: "Filipenses", caps: 4 }, { nome: "Colossenses", caps: 4 },
+      { nome: "1 Tessalonicenses", caps: 5 }, { nome: "2 Tessalonicenses", caps: 3 }, { nome: "1 Timóteo", caps: 6 },
+      { nome: "2 Timóteo", caps: 4 }, { nome: "Tito", caps: 3 }, { nome: "Filemom", caps: 1 },
+      { nome: "Hebreus", caps: 13 }, { nome: "Tiago", caps: 5 }, { nome: "1 Pedro", caps: 5 },
+      { nome: "2 Pedro", caps: 3 }, { nome: "1 João", caps: 5 }, { nome: "2 João", caps: 1 },
+      { nome: "3 João", caps: 1 }, { nome: "Judas", caps: 1 }, { nome: "Apocalipse", caps: 22 }
     ];
 
     document.addEventListener("DOMContentLoaded", () => {
       atualizarFotosInterface();
-      atualizarDataAtual();
-      renderizarPlanoAnoBiblico();
-      renderizarHistoricoComunhao();
-      verificarLembreteComunhao();
+      inicializarSeletorLivrosBiblia();
+      carregarTextoBiblia();
     });
 
     function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao', 'licao'];
+      const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao'];
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if(el) el.classList.add('hidden');
@@ -566,115 +374,108 @@
       }
     }
 
-    function atualizarDataAtual() {
-      const hoje = new Date();
-      const opcoes = { day: '2-digit', month: 'long', year: 'numeric' };
-      document.getElementById('data-atual-txt').innerText = hoje.toLocaleDateString('pt-BR', opcoes);
-    }
+    // Funções da Aba Bíblia com API Bible-API Completa
+    function inicializarSeletorLivrosBiblia() {
+      const selectLivro = document.getElementById('biblia-livro');
+      selectLivro.innerHTML = '';
 
-    function focarAtividades() {
-      document.getElementById('secao-atividades').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function renderizarPlanoAnoBiblico() {
-      const mes = document.getElementById('filtro-mes-plano').value;
-      const container = document.getElementById('grid-plano-capitulos');
-      container.innerHTML = '';
-
-      const lista = dadosPlano[mes] || [];
-
-      lista.forEach((item, index) => {
-        const div = document.createElement('div');
-        const selecionado = capituloSelecionadoAtual && capituloSelecionadoAtual.mes === mes && capituloSelecionadoAtual.index === index;
-
-        div.className = `p-2.5 rounded-lg border flex flex-col justify-between text-xs transition cursor-pointer ${
-          selecionado 
-            ? 'bg-blue-900 text-white border-blue-950 font-bold shadow-md' 
-            : item.lido 
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-900' 
-              : 'bg-white border-gray-200 hover:border-blue-400 text-gray-700'
-        }`;
-
-        div.onclick = () => selecionarCapituloNoModal(mes, index);
-
-        div.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-extrabold">${item.livro} ${item.cap}</span>
-            ${selecionado ? '<i class="fa-solid fa-circle-check text-amber-400"></i>' : ''}
-          </div>
-          <span class="text-[10px] opacity-80 mt-1">Dia ${item.dia} ${item.lido ? '• Lido' : ''}</span>
-        `;
-        container.appendChild(div);
+      listaLivrosBiblia.forEach((livro, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.innerText = livro.nome;
+        selectLivro.appendChild(opt);
       });
+
+      atualizarCapitulosBiblia();
     }
 
-    function selecionarCapituloNoModal(mes, index) {
-      const item = dadosPlano[mes][index];
-      capituloSelecionadoAtual = { mes, index, item };
+    function atualizarCapitulosBiblia() {
+      const idxLivro = document.getElementById('biblia-livro').value;
+      const livroObj = listaLivrosBiblia[idxLivro];
+      const selectCap = document.getElementById('biblia-capitulo');
+      selectCap.innerHTML = '';
 
-      document.getElementById('txt-capitulo-selecionado').innerText = `${item.livro} ${item.cap}`;
-      renderizarPlanoAnoBiblico();
+      for (let i = 1; i <= livroObj.caps; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = `Cap. ${i}`;
+        selectCap.appendChild(opt);
+      }
     }
 
-    function abrirModalReflexaoDireta() {
-      const hoje = new Date();
-      const dataStr = hoje.toLocaleDateString('pt-BR');
-      const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    async function carregarTextoBiblia() {
+      const idxLivro = document.getElementById('biblia-livro').value;
+      const livroObj = listaLivrosBiblia[idxLivro];
+      const capitulo = document.getElementById('biblia-capitulo').value || 1;
+      const versao = document.getElementById('select-versao-biblia').value;
 
-      document.getElementById('reg-data-hora-txt').innerText = `${dataStr} às ${horaStr}`;
-      document.getElementById('reg-input-obs').value = '';
+      const tituloEl = document.getElementById('biblia-titulo-leitura');
+      const conteudoEl = document.getElementById('biblia-conteudo-texto');
 
-      if (!capituloSelecionadoAtual) {
-        selecionarCapituloNoModal('agosto', 0);
-      } else {
-        renderizarPlanoAnoBiblico();
+      tituloEl.innerText = `${livroObj.nome} ${capitulo}`;
+      conteudoEl.innerHTML = `
+        <div class="p-8 text-center text-gray-400 font-medium">
+          <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
+          <p>Carregando ${livroObj.nome} ${capitulo} (${versao.toUpperCase()})...</p>
+        </div>
+      `;
+
+      try {
+        const query = `${livroObj.nome} ${capitulo}`;
+        const url = `https://bible-api.com/${encodeURIComponent(query)}?translation=${versao}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Erro ao buscar versículos");
+        const data = await res.json();
+
+        let htmlVersiculos = '';
+        if (data.verses && data.verses.length > 0) {
+          data.verses.forEach(v => {
+            htmlVersiculos += `
+              <p class="hover:bg-blue-50/60 p-1.5 rounded-lg transition cursor-pointer" onclick="selecionarVersiculoBiblia(${v.verse}, '${v.text.replace(/'/g, "\\'")}')">
+                <strong class="text-blue-950 font-bold mr-1.5 select-none">${v.verse}</strong> ${v.text}
+              </p>
+            `;
+          });
+        } else {
+          htmlVersiculos = `<p class="text-gray-500 italic">Texto não retornado pela API para esta seleção.</p>`;
+        }
+
+        conteudoEl.innerHTML = htmlVersiculos;
+      } catch (err) {
+        conteudoEl.innerHTML = `
+          <div class="p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs space-y-2">
+            <p class="font-bold">Não foi possível carregar o texto online no momento.</p>
+            <p>Verifique sua conexão com a internet. #biblia</p>
+          </div>
+        `;
       }
-
-      document.getElementById('modal-registro-comunhao').classList.remove('hidden');
     }
 
-    function fecharModalRegistro() {
-      document.getElementById('modal-registro-comunhao').classList.add('hidden');
+    function mudarCapituloBiblia(direcao) {
+      const selectCap = document.getElementById('biblia-capitulo');
+      const idxAtual = selectCap.selectedIndex;
+      const novoIdx = idxAtual + direcao;
+
+      if (novoIdx >= 0 && novoIdx < selectCap.options.length) {
+        selectCap.selectedIndex = novoIdx;
+        carregarTextoBiblia();
+      }
     }
 
-    function salvarRegistroComunhao() {
-      if (!capituloSelecionadoAtual) {
-        alert("Por favor, selecione um capítulo do plano.");
-        return;
-      }
+    function selecionarVersiculoBiblia(num, texto) {
+      const livroObj = listaLivrosBiblia[document.getElementById('biblia-livro').value];
+      const cap = document.getElementById('biblia-capitulo').value;
+      const referencia = `${livroObj.nome} ${cap}:${num}`;
+      
+      exhibirToast(`Versículo selecionado: ${referencia}`);
+    }
 
-      const { mes, index, item } = capituloSelecionadoAtual;
-      const obsTexto = document.getElementById('reg-input-obs').value;
-      const hoje = new Date();
-      const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-      dadosPlano[mes][index].lido = true;
-      dadosPlano[mes][index].reflexao = obsTexto;
-
-      const acaoNome = `Ano Bíblico (${item.livro} ${item.cap})`;
-      document.getElementById('capitulo-sugerido-hoje').innerText = `Último Lido: ${item.livro} ${item.cap}`;
-
-      registrosHoje['ano'] = { concluido: true, hora: horaStr };
-
-      const badge = document.getElementById('badge-ano');
-      const horaTxt = document.getElementById('hora-ano');
-
-      if (badge) {
-        badge.innerText = "Concluído";
-        badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
-      }
-      if (horaTxt) horaTxt.innerText = `Registrado com reflexão às ${horaStr}`;
-
-      historicoComunhao.unshift({ data: '2026-08-01', atividade: acaoNome, hora: horaStr });
-      renderizarHistoricoComunhao();
-
-      if (typeof confetti === 'function') {
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-      }
-
-      fecharModalRegistro();
-      verificarLembreteComunhao();
-      exhibirToast("Reflexão registrada! +50 pontos no #anobiblico.");
+    // Funções auxiliares da Escola Sabatina
+    function obterUrlLicaoDoDia() {
+      const hoje = new Date().getDay();
+      const diaMapeado = hoje === 0 ? 1 : hoje + 1;
+      const diaString = String(diaMapeado).padStart(2, '0');
+      return `https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${diaString}/read/index.json`;
     }
 
     async function carregarLicaoNaAba() {
@@ -682,144 +483,26 @@
       const subtituloEl = document.getElementById('licao-aba-subtitulo');
       const conteudoEl = document.getElementById('licao-aba-conteudo');
 
-      conteudoEl.innerHTML = `
-        <div class="p-8 text-center text-gray-400 font-medium">
-          <i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i>
-          <p>Carregando lição de hoje...</p>
-        </div>
-      `;
-
       try {
-        const urlDinamica = obterUrlLicaoDoDia();
-        const response = await fetch(urlDinamica);
-        if (!response.ok) throw new Error("Erro de resposta da API da Adventech");
+        const response = await fetch(obterUrlLicaoDoDia());
+        if (!response.ok) throw new Error("Erro");
         const data = await response.json();
-        
         tituloEl.innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title || "Lição da Escola Sabatina"}`;
         subtituloEl.innerText = `${data.date || "Estudo Diário"} #licaoescolasabatina`;
         conteudoEl.innerHTML = data.content;
-      } catch (error) {
-        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Ocorreu uma falha ao carregar a lição da Escola Sabatina.</p></div>`;
+      } catch (e) {
+        conteudoEl.innerHTML = `<p class="text-red-600">Erro ao carregar a lição.</p>`;
       }
-    }
-
-    async function abrirLicaoDoDiaAPI() {
-      const modal = document.getElementById('modal-licao-api');
-      const tituloEl = document.getElementById('licao-api-titulo');
-      const subtituloEl = document.getElementById('licao-api-subtitulo');
-      const conteudoEl = document.getElementById('licao-conteudo');
-
-      modal.classList.remove('hidden');
-      tituloEl.innerText = "Carregando Lição...";
-      subtituloEl.innerText = "Buscando dados no servidor...";
-      conteudoEl.innerHTML = `<div class="p-8 text-center text-gray-400 font-medium"><i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i><p>Carregando o estudo de hoje...</p></div>`;
-
-      try {
-        const urlDinamica = obterUrlLicaoDoDia();
-        const response = await fetch(urlDinamica);
-        if (!response.ok) throw new Error("Erro de resposta da API");
-        const data = await response.json();
-        
-        tituloEl.innerText = data.title || "Lição da Escola Sabatina";
-        subtituloEl.innerText = data.date || "Estudo Diário";
-        conteudoEl.innerHTML = data.content;
-      } catch (error) {
-        tituloEl.innerText = "Não foi possível carregar";
-        conteudoEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-xs"><p class="font-bold">Falha ao acessar o conteúdo da lição.</p></div>`;
-      }
-    }
-
-    function fecharModalLicaoAPI() {
-      document.getElementById('modal-licao-api').classList.add('hidden');
     }
 
     function confirmarEstudoLicaoAPI() {
-      if (registrosHoje.licao.concluido) {
-        fecharModalLicaoAPI();
-        return;
-      }
-
-      const hoje = new Date();
-      const horaStr = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-      
-      registrosHoje.licao = { concluido: true, hora: horaStr };
-
-      document.getElementById('badge-licao').innerText = "Concluído";
-      document.getElementById('badge-licao').className = "text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-1 rounded-full uppercase";
-      document.getElementById('hora-licao').innerText = `Registrado às ${horaStr}`;
-
-      const btn = document.getElementById('btn-licao');
-      if (btn) {
-        btn.disabled = true;
-        btn.className = "w-full py-2.5 bg-gray-100 text-emerald-700 font-bold text-xs rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200";
-        btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Registrado`;
-      }
-
-      const btnAba = document.getElementById('btn-concluir-licao-aba');
-      if (btnAba) {
-        btnAba.disabled = true;
-        btnAba.className = "px-5 py-2.5 bg-gray-200 text-emerald-800 font-bold text-xs rounded-xl cursor-not-allowed flex items-center gap-2 shrink-0 border border-emerald-300";
-        btnAba.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Estudo Concluído`;
-      }
-
-      historicoComunhao.unshift({ data: '2026-08-01', atividade: 'Lição da Escola Sabatina', hora: horaStr });
-      renderizarHistoricoComunhao();
-
-      if (typeof confetti === 'function') {
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-      }
-
-      fecharModalLicaoAPI();
-      verificarLembreteComunhao();
       exhibirToast("Estudo da Lição registrado! +50 pontos.");
-    }
-
-    function verificarLembreteComunhao() {
-      const todasConcluidas = registrosHoje.licao.concluido && registrosHoje.ano.concluido;
-      const aviso = document.getElementById('aviso-lembrete');
-      if (todasConcluidas) {
-        aviso.classList.add('hidden');
-      } else {
-        aviso.classList.remove('hidden');
-      }
-    }
-
-    function renderizarHistoricoComunhao() {
-      const corpo = document.getElementById('tabela-historico-comunhao');
-      corpo.innerHTML = '';
-
-      if (historicoComunhao.length === 0) {
-        corpo.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Nenhum registro no histórico.</td></tr>`;
-        return;
-      }
-
-      historicoComunhao.forEach(item => {
-        const partesData = item.data.split('-');
-        const dataFmt = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-gray-50 transition";
-        tr.innerHTML = `
-          <td class="py-2.5 text-gray-500 font-semibold">${dataFmt}</td>
-          <td class="py-2.5 font-bold text-gray-800">${item.atividade}</td>
-          <td class="py-2.5 text-right font-black text-blue-900">${item.hora}</td>
-        `;
-        corpo.appendChild(tr);
-      });
-    }
-
-    function filtrarHistoricoComunhao() {
-      renderizarHistoricoComunhao();
     }
 
     function toggleAvatarMenu(e) {
       e.stopPropagation();
       document.getElementById('avatar-dropdown').classList.toggle('hidden');
     }
-
-    document.addEventListener('click', () => {
-      const dropdown = document.getElementById('avatar-dropdown');
-      if (dropdown) dropdown.classList.add('hidden');
-    });
 
     function gerarAvatarPadrao(nome) {
       const canvas = document.createElement('canvas');
@@ -828,17 +511,11 @@
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, 200, 200);
-
-      const partes = nome.trim().split(' ');
-      let iniciais = partes[0].charAt(0).toUpperCase();
-      if (partes.length > 1) iniciais += partes[partes.length - 1].charAt(0).toUpperCase();
-
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 80px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(iniciais, 100, 105);
-
+      ctx.fillText(nome.charAt(0).toUpperCase(), 100, 105);
       return canvas.toDataURL('image/png');
     }
 
@@ -847,59 +524,10 @@
       document.querySelectorAll('.user-avatar-target').forEach(img => img.src = fotoUrlFinal);
     }
 
-    function abrirSeletorFoto() {
-      document.getElementById('input-foto-upload').click();
-    }
-
-    function processarArquivoSelecionado(input) {
-      const file = input.files[0];
-      if (!file) return;
-
-      if (file.size > 5 * 1024 * 1024) {
-        alert("O tamanho da imagem não pode exceder 5 MB.");
-        input.value = "";
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const previewImg = document.getElementById('crop-image-preview');
-        previewImg.src = e.target.result;
-        document.getElementById('modal-crop-foto').classList.remove('hidden');
-        if (cropper) cropper.destroy();
-        cropper = new Cropper(previewImg, { aspectRatio: 1, viewMode: 1, autoCropArea: 0.9 });
-      };
-      reader.readAsDataURL(file);
-      input.value = "";
-    }
-
-    function fecharModalCrop() {
-      document.getElementById('modal-crop-foto').classList.add('hidden');
-      if (cropper) cropper.destroy();
-    }
-
-    function salvarFotoRecortada() {
-      if (!cropper) return;
-      const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
-      currentUser.fotoUrl = canvas.toDataURL('image/jpeg', 0.85);
-      atualizarFotosInterface();
-      fecharModalCrop();
-      exhibirToast("Foto de perfil alterada com sucesso.");
-    }
-
-    function confirmarRemoverFoto() {
-      if (confirm("Deseja remover sua foto de perfil?")) {
-        currentUser.fotoUrl = null;
-        atualizarFotosInterface();
-        exhibirToast("Foto de perfil removida.");
-      }
-    }
-
-    function visualizarFoto() {
-      document.getElementById('foto-ampliada').src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
-      document.getElementById('modal-view-foto').classList.remove('hidden');
-    }
-
+    function abrirSeletorFoto() { document.getElementById('input-foto-upload').click(); }
+    function fecharModalCrop() { document.getElementById('modal-crop-foto').classList.add('hidden'); if(cropper) cropper.destroy(); }
+    function visualizarFoto() { document.getElementById('foto-ampliada').src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome); document.getElementById('modal-view-foto').classList.remove('hidden'); }
+    
     function exhibirToast(msg) {
       const toast = document.getElementById('toast-notificacao');
       document.getElementById('toast-mensagem').innerText = msg;
