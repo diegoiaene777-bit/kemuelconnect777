@@ -1,1380 +1,23 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemuel Connect 777 - Gestão JA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  
-  <!-- CROPPER.JS PARA RECORTAR FOTO -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-  <style>
-    .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
-    .card-hover { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15); }
-    
-    .avatar-container { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .avatar-container:hover { transform: scale(1.03); }
-    .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
-    .avatar-container:hover .avatar-overlay { opacity: 1; }
-
-    #licao-modal-conteudo p, #pg-modal-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-modal-conteudo h3, #licao-modal-conteudo h4, #pg-modal-conteudo h3, #pg-modal-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
-  </style>
-</head>
-<body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
-
-  <!-- MENU LATERAL -->
-  <aside id="sidebar" class="w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
-    <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
-      <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
-      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes." #kemuelconnect</p>
-      <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span>
-    </div>
-
-    <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
-      <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
-      
-      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-house w-5 text-amber-400 shrink-0"></i> Dashboard
-      </button>
-      
-      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-user w-5 text-blue-600 shrink-0"></i> Meu Perfil
-      </button>
-
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
-      </button>
-      
-      <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
-        <i class="fa-solid fa-calendar-days w-5 text-purple-400 shrink-0"></i> Calendário
-      </button>
-      
-      <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-trophy w-5 text-yellow-400 shrink-0"></i> Ranking
-      </button>
-      
-      <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bullseye w-5 text-red-400 shrink-0"></i> Desafios
-      </button>
-      
-      <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-heart w-5 text-rose-500 shrink-0"></i> Evangelismo
-      </button>
-      
-      <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bell w-5 text-yellow-300 shrink-0"></i> Notificações
-      </button>
-      
-      <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-gear w-5 text-gray-400 shrink-0"></i> Configurações
-      </button>
-    </nav>
-
-    <div class="p-4 border-t border-blue-900">
-      <button onclick="alert('Saindo...')" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow">
-        <i class="fa-solid fa-right-from-bracket shrink-0"></i> Sair
-      </button>
-    </div>
-  </aside>
-
-  <!-- ÁREA PRINCIPAL -->
-  <main class="flex-1 p-6 md:p-10 overflow-y-auto space-y-8 w-full">
-    
-    <!-- DASHBOARD -->
-    <div id="sec-dashboard" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 id="dash-saudacao" class="text-2xl md:text-3xl font-extrabold tracking-tight">Bom dia, Diego! 👋</h2>
-          <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- MEU PERFIL -->
-    <div id="sec-perfil" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          <div class="relative shrink-0">
-            <div onclick="toggleAvatarMenu(event)" class="avatar-container relative w-20 h-20 rounded-full cursor-pointer overflow-hidden border-4 border-amber-400 shadow-lg">
-              <img id="perfil-avatar" src="" class="user-avatar-target w-full h-full object-cover" alt="Foto do Usuário">
-              <div class="avatar-overlay absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white text-xs font-bold">
-                <i class="fa-solid fa-camera text-base mb-0.5"></i>
-                <span class="text-[9px]">Editar</span>
-              </div>
-            </div>
-
-            <div id="avatar-dropdown" class="hidden absolute top-22 left-0 w-48 bg-white text-gray-800 rounded-xl shadow-2xl border border-gray-100 z-50 py-1 overflow-hidden">
-              <button onclick="abrirSeletorFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition">
-                <i class="fa-solid fa-camera text-blue-600 w-4"></i> Alterar Foto
-              </button>
-              <button onclick="visualizarFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition">
-                <i class="fa-solid fa-eye text-emerald-600 w-4"></i> Visualizar Foto
-              </button>
-              <button onclick="confirmarRemoverFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-50 text-red-600 flex items-center gap-2.5 transition border-t border-gray-100">
-                <i class="fa-solid fa-trash-can w-4"></i> Remover Foto
-              </button>
-            </div>
-            <input type="file" id="input-foto-upload" accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden" onchange="processarArquivoSelecionado(this)">
-          </div>
-
-          <div class="space-y-1">
-            <div class="flex items-center gap-3 flex-wrap">
-              <h2 id="perfil-nome" class="text-2xl md:text-3xl font-extrabold tracking-tight">Diego Iaene</h2>
-              <span id="perfil-status" class="text-[10px] bg-emerald-500 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
-            </div>
-            <p id="perfil-funcao" class="text-sm text-blue-200 font-medium">Líder de Jovens • Clube Kemuel</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: MINHA COMUNHÃO -->
-    <div id="sec-comunhao" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
-            <i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus." #comunhao #anobiblico</p>
-        </div>
-      </div>
-
-      <!-- GRID COM OS CARDS PRINCIPAIS -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- CARD 1: ANO BÍBLICO (NOVO TESTAMENTO) -->
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-open"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Ano Bíblico</h3>
-              <p class="text-xs text-gray-500 mt-1">Leitura diária do Novo Testamento, marcação de conclusão e anotação de reflexões. #anobiblico</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalDevocional()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-pen-nib"></i> Acessar Ano Bíblico
-            </button>
-          </div>
-        </div>
-
-        <!-- CARD 2: BÍBLIA SAGRADA -->
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-bible"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Bíblia Sagrada</h3>
-              <p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada. #biblia</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalBiblia()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-book-open-reader"></i> Abrir Bíblia
-            </button>
-          </div>
-        </div>
-
-        <!-- CARD 3: ESCOLA SABATINA -->
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-open-reader"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Escola Sabatina</h3>
-              <p class="text-xs text-gray-500 mt-1">Acompanhe e estude a lição diária da Escola Sabatina #licaoescolasabatina.</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalLicao()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-book-bookmark"></i> Ler Lição de Hoje
-            </button>
-          </div>
-        </div>
-
-        <!-- CARD 4: PG MY STYLE -->
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-people-group"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">PG my Style</h3>
-              <p class="text-xs text-gray-500 mt-1">Acompanhe o conteúdo especial de sábado (Comunidade) para o seu Pequeno Grupo. #pgmystyle</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalPG()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-users-rectangle"></i> Acessar PG
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TELA: CALENDÁRIO -->
-    <div id="sec-calendario" class="space-y-8">
-      
-      <!-- CABEÇALHO DO CALENDÁRIO -->
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            📅 Calendário
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Acompanhe todos os eventos dos Jovens Kemuel." #calendario</p>
-        </div>
-        <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
-          <div class="relative w-full md:w-64">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-              <i class="fa-solid fa-magnifying-glass text-xs"></i>
-            </span>
-            <input type="text" id="input-busca-evento" oninput="filtrarEventosCalendario()" placeholder="Pesquisar evento..." class="w-full bg-white text-gray-800 border border-gray-200 text-xs rounded-[16px] pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition shadow-inner">
-          </div>
-          <button onclick="abrirModalNovoEvento()" class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0">
-            <i class="fa-solid fa-plus"></i> Novo Evento (Admin)
-          </button>
-        </div>
-      </div>
-
-      <!-- SEÇÃO DE FILTROS RÁPIDOS -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        <button onclick="selecionarFiltroCategoria('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0">Todos</button>
-        <button onclick="selecionarFiltroCategoria('Espiritual')" id="btn-filtro-Espiritual" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">📖 Espiritual</button>
-        <button onclick="selecionarFiltroCategoria('Evangelismo')" id="btn-filtro-Evangelismo" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🤝 Evangelismo</button>
-        <button onclick="selecionarFiltroCategoria('Social')" id="btn-filtro-Social" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎉 Social</button>
-        <button onclick="selecionarFiltroCategoria('Desafios')" id="btn-filtro-Desafios" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🏆 Desafios</button>
-        <button onclick="selecionarFiltroCategoria('Treinamentos')" id="btn-filtro-Treinamentos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎓 Treinamentos</button>
-        <button onclick="selecionarFiltroCategoria('Solidário')" id="btn-filtro-Solidário" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">❤️ Solidário</button>
-      </div>
-
-      <!-- GRID: CALENDÁRIO MENSAL + PRÓXIMOS EVENTOS -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <!-- COLUNA 1 & 2: CALENDÁRIO MENSAL -->
-        <div class="lg:col-span-2 bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-6">
-          <div class="flex justify-between items-center">
-            <h3 id="calendar-month-year" class="text-lg font-extrabold text-blue-950 capitalize">Agosto 2026</h3>
-            <div class="flex gap-2">
-              <button onclick="mudarMesCalendario(-1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-              <button onclick="mudarMesCalendario(1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-            </div>
-          </div>
-
-          <!-- DIAS DA SEMANA -->
-          <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-gray-400 pb-2 border-b border-gray-100">
-            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
-          </div>
-
-          <!-- GRID DE DIAS -->
-          <div id="calendar-grid" class="grid grid-cols-7 gap-2">
-            <!-- Gerado via JavaScript -->
-          </div>
-        </div>
-
-        <!-- COLUNA 3: PRÓXIMOS EVENTOS EM ORDEM CRONOLÓGICA -->
-        <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col space-y-4">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-2 border-b border-gray-100">
-            <i class="fa-solid fa-clock text-blue-900"></i> Próximos Eventos
-          </h3>
-          <div id="proximos-eventos-lista" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
-            <!-- Gerado via JavaScript -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- SEÇÃO INFERIOR: EVENTOS DO DIA SELECIONADO -->
-      <div class="space-y-4 pt-4">
-        <div class="flex justify-between items-center">
-          <h3 id="titulo-eventos-dia" class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para o dia selecionado
-          </h3>
-          <span id="badge-total-eventos-dia" class="text-xs bg-blue-900 text-white px-2.5 py-1 rounded-[16px] font-bold">0 eventos</span>
-        </div>
-
-        <div id="container-eventos-dia" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Gerado dinamicamente -->
-        </div>
-      </div>
-
-    </div>
-
-    <!-- TELA: RANKING -->
-    <div id="sec-ranking" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-trophy text-yellow-400"></i> Ranking
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Corramos com perseverança a carreira que nos é proposta." Hb 12:1 #ranking</p>
-        </div>
-        <span id="ranking-minha-posicao" class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0">Sua posição: --</span>
-      </div>
-
-      <!-- PÓDIO TOP 3 -->
-      <div id="ranking-podio" class="grid grid-cols-3 gap-3 md:gap-6 items-end">
-        <!-- Gerado via JavaScript -->
-      </div>
-
-      <!-- LISTA COMPLETA -->
-      <div class="bg-white border border-gray-100 rounded-[16px] shadow-md overflow-hidden">
-        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-list-ol text-blue-900"></i> Classificação Geral
-          </h3>
-          <span class="text-[10px] text-gray-400 font-bold uppercase">Clube Kemuel</span>
-        </div>
-        <div id="ranking-lista" class="divide-y divide-gray-50">
-          <!-- Gerado via JavaScript -->
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: DESAFIOS -->
-    <div id="sec-desafios" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-bullseye text-red-400"></i> Desafios
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Prossigo para o alvo, para o prêmio da soberana vocação de Deus." Fp 3:14 #desafios</p>
-        </div>
-        <span id="desafios-resumo" class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0">0 de 0 concluídos</span>
-      </div>
-
-      <div id="desafios-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Gerado via JavaScript -->
-      </div>
-    </div>
-
-    <!-- TELA: EVANGELISMO -->
-    <div id="sec-evangelismo" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-heart text-rose-400"></i> Evangelismo
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Ide por todo o mundo e pregai o evangelho a toda criatura." Mc 16:15 #evangelismo</p>
-        </div>
-        <button onclick="abrirModalNovoContato()" class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0">
-          <i class="fa-solid fa-plus"></i> Registrar Contato
-        </button>
-      </div>
-
-      <!-- CARDS DE ESTATÍSTICAS -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500 text-xl shrink-0">
-            <i class="fa-solid fa-people-arrows"></i>
-          </div>
-          <div>
-            <p id="evangelismo-total-contatos" class="text-2xl font-extrabold text-blue-950">0</p>
-            <p class="text-xs text-gray-500 font-medium">Contatos registrados</p>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl shrink-0">
-            <i class="fa-solid fa-book-open"></i>
-          </div>
-          <div>
-            <p id="evangelismo-total-materiais" class="text-2xl font-extrabold text-blue-950">0</p>
-            <p class="text-xs text-gray-500 font-medium">Materiais distribuídos</p>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 text-xl shrink-0">
-            <i class="fa-solid fa-hands-praying"></i>
-          </div>
-          <div>
-            <p id="evangelismo-total-oracao" class="text-2xl font-extrabold text-blue-950">0</p>
-            <p class="text-xs text-gray-500 font-medium">Pedidos de oração</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- LISTA DE CONTATOS -->
-      <div class="space-y-4">
-        <h3 class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
-          <i class="fa-solid fa-clipboard-list text-blue-900"></i> Meus Contatos de Evangelismo
-        </h3>
-        <div id="evangelismo-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Gerado via JavaScript -->
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: NOTIFICAÇÕES -->
-    <div id="sec-notificacoes" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-bell text-yellow-300"></i> Notificações
-          </h2>
-          <p id="notificacoes-subtitulo" class="text-xs md:text-sm text-blue-200">Fique por dentro de tudo o que acontece no Kemuel Connect.</p>
-        </div>
-        <button onclick="marcarTodasNotificacoesLidas()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-[16px] text-xs font-bold shadow transition flex items-center gap-2 shrink-0">
-          <i class="fa-solid fa-check-double"></i> Marcar todas como lidas
-        </button>
-      </div>
-
-      <div id="notificacoes-lista" class="space-y-3">
-        <!-- Gerado via JavaScript -->
-      </div>
-    </div>
-
-    <!-- TELA: CONFIGURAÇÕES -->
-    <div id="sec-configuracoes" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-gear text-gray-300"></i> Configurações
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">Gerencie seus dados, preferências e segurança da conta.</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- DADOS PESSOAIS -->
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100">
-            <i class="fa-solid fa-id-card text-blue-900"></i> Dados Pessoais
-          </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">Nome completo:</label>
-              <input type="text" id="config-nome" value="Diego Iaene" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label>
-              <input type="email" id="config-email" value="diego.iaene@kemuelconnect.com" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">Telefone:</label>
-              <input type="tel" id="config-telefone" value="(11) 99999-0000" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-          </div>
-          <button onclick="salvarDadosPessoais()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-check"></i> Salvar Dados Pessoais
-          </button>
-        </div>
-
-        <!-- SEGURANÇA -->
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100">
-            <i class="fa-solid fa-lock text-blue-900"></i> Segurança
-          </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">Senha atual:</label>
-              <input type="password" id="config-senha-atual" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">Nova senha:</label>
-              <input type="password" id="config-senha-nova" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-700 block mb-1">Confirmar nova senha:</label>
-              <input type="password" id="config-senha-confirmar" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            </div>
-          </div>
-          <button onclick="alterarSenha()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-key"></i> Alterar Senha
-          </button>
-        </div>
-
-        <!-- PREFERÊNCIAS DE NOTIFICAÇÃO -->
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-4 lg:col-span-2">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100">
-            <i class="fa-solid fa-sliders text-blue-900"></i> Preferências
-          </h3>
-          <label class="flex items-center justify-between gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <span class="text-xs font-bold text-gray-800">Notificações de novos eventos</span>
-            <input type="checkbox" id="pref-notif-eventos" checked class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-          </label>
-          <label class="flex items-center justify-between gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <span class="text-xs font-bold text-gray-800">Notificações de pontos e conquistas</span>
-            <input type="checkbox" id="pref-notif-pontos" checked class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-          </label>
-          <label class="flex items-center justify-between gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <span class="text-xs font-bold text-gray-800">Avisos da liderança</span>
-            <input type="checkbox" id="pref-notif-admin" checked class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-          </label>
-          <label class="flex items-center justify-between gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <span class="text-xs font-bold text-gray-800">Aparecer no Ranking público do clube</span>
-            <input type="checkbox" id="pref-ranking-publico" checked class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-          </label>
-          <button onclick="salvarPreferencias()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-check"></i> Salvar Preferências
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-  </main>
-
-  <!-- MODAL DE ANO BÍBLICO (NOVO TESTAMENTO) -->
-  <div id="modal-devocional" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open text-amber-400"></i> Ano Bíblico - Novo Testamento</h3>
-        <button onclick="fecharModalDevocional()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      
-      <div class="p-6 flex-1 overflow-y-auto space-y-6">
-        <div class="bg-blue-50 border border-blue-100 p-5 rounded-[16px] space-y-4">
-          <h4 class="text-sm font-bold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-book-bible text-blue-600"></i> Selecione a Leitura do Novo Testamento #anobiblico
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-gray-600 block mb-1">Livro:</label>
-              <select id="ano-biblico-livro" onchange="atualizarCapitulosAnoBiblico()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select>
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-600 block mb-1">Capítulo:</label>
-              <select id="ano-biblico-capitulo" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <label class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <input type="checkbox" id="check-concluido-leitura" class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-            <span class="text-xs font-bold text-gray-800">Concluí a leitura deste capítulo do Ano Bíblico hoje!</span>
-          </label>
-
-          <div class="space-y-2">
-            <label for="texto-reflexao" class="font-bold text-gray-700 flex items-center gap-2 text-sm">
-              <i class="fa-solid fa-pen text-amber-500"></i> Observação / Reflexão Pessoal
-            </label>
-            <textarea id="texto-reflexao" rows="5" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-4 text-sm text-gray-800 focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Escreva aqui a sua observação ou reflexão sobre o que Deus falou com você nesta leitura..."></textarea>
-          </div>
-        </div>
-      </div>
-      
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalDevocional()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm rounded-[16px] transition">Cancelar</button>
-        <button onclick="salvarDevocional()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-[16px] shadow-md transition hover:-translate-y-0.5 flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Concluir Ano Bíblico
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DA BÍBLIA -->
-  <div id="modal-biblia" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa</h3>
-        <button onclick="fecharModalBiblia()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-[16px] border">
-          <div>
-            <label class="font-bold text-xs text-gray-600 block mb-1">Livro:</label>
-            <select id="biblia-livro" onchange="atualizarCapitulosBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800">
-            </select>
-          </div>
-          <div>
-            <label class="font-bold text-xs text-gray-600 block mb-1">Capítulo:</label>
-            <select id="biblia-capitulo" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800">
-            </select>
-          </div>
-          <div>
-            <label class="font-bold text-xs text-gray-600 block mb-1">Versão:</label>
-            <select id="select-versao-biblia" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800">
-              <option value="almeida">Almeida (Português)</option>
-              <option value="kjv">King James (Inglês)</option>
-            </select>
-          </div>
-          <div class="flex items-end">
-            <button onclick="carregarTextoBiblia()" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-[16px] text-xs shadow transition">Ler Texto</button>
-          </div>
-        </div>
-
-        <div class="border-b pb-3 flex justify-between items-center">
-          <h4 id="biblia-titulo-leitura" class="text-base font-extrabold text-blue-950">Mateus 1</h4>
-          <div class="flex gap-2">
-            <button onclick="mudarCapituloBiblia(-1)" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-[16px]"><i class="fa-solid fa-chevron-left"></i></button>
-            <button onclick="mudarCapituloBiblia(1)" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-[16px]">Próximo <i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-        </div>
-
-        <div id="biblia-conteudo-texto" class="space-y-3 text-sm text-gray-800 leading-relaxed max-h-96 overflow-y-auto pr-2">
-          <p class="text-center text-gray-400">Selecione um livro e capítulo acima.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DA ESCOLA SABATINA -->
-  <div id="modal-licao" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-cyan-900 to-blue-950 text-white flex justify-between items-center">
-        <h3 id="licao-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina</h3>
-        <button onclick="fecharModalLicao()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <p id="licao-modal-subtitulo" class="text-xs text-blue-600 font-bold uppercase tracking-wider">Estudo Diário</p>
-        <div id="licao-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3">
-          <div class="p-8 text-center text-gray-400">Carregando lição de hoje...</div>
-        </div>
-      </div>
-      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
-        <button onclick="fecharModalLicao()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Fechar</button>
-        <button onclick="confirmarEstudoLicaoAPI()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-[16px] shadow transition">
-          <i class="fa-solid fa-check mr-1"></i> Marcar como Estudado (+50 pts)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DO PG MY STYLE (COMUNIDADE - SÁBADO) -->
-  <div id="modal-pg" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-indigo-900 to-blue-950 text-white flex justify-between items-center">
-        <h3 id="pg-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-people-group text-indigo-300"></i> PG my Style - Comunidade</h3>
-        <button onclick="fecharModalPG()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <p id="pg-modal-subtitulo" class="text-xs text-indigo-600 font-bold uppercase tracking-wider">Estudo de Sábado #pgmystyle</p>
-        <div id="pg-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3">
-          <div class="p-8 text-center text-gray-400">Carregando conteúdo de sábado...</div>
-        </div>
-      </div>
-      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
-        <button onclick="fecharModalPG()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Fechar</button>
-        <button onclick="confirmarEstudoPG()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-[16px] shadow transition">
-          <i class="fa-solid fa-check mr-1"></i> Marcar Presença / Estudo (+70 pts)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DO ADMINISTRADOR: CADASTRAR NOVO EVENTO -->
-  <div id="modal-novo-evento" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-calendar-plus text-amber-400"></i> Inserir Novo Evento (Administrador)</h3>
-        <button onclick="fecharModalNovoEvento()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Nome do Evento:</label>
-          <input type="text" id="admin-evento-nome" placeholder="Ex: Vigília Jovem" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Data:</label>
-            <input type="date" id="admin-evento-data" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Horário:</label>
-            <input type="time" id="admin-evento-horario" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Local:</label>
-            <input type="text" id="admin-evento-local" placeholder="Ex: Templo Central" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Categoria:</label>
-            <select id="admin-evento-categoria" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-              <option value="Espiritual">📖 Espiritual</option>
-              <option value="Evangelismo">🤝 Evangelismo</option>
-              <option value="Social">🎉 Social</option>
-              <option value="Desafios">🏆 Desafios</option>
-              <option value="Treinamentos">🎓 Treinamentos</option>
-              <option value="Solidário">❤️ Solidário</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Pontuação Disponível:</label>
-          <input type="number" id="admin-evento-pontos" placeholder="Ex: 50" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Descrição Curta:</label>
-          <textarea id="admin-evento-descricao" rows="3" placeholder="Detalhes do evento..." class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></textarea>
-        </div>
-      </div>
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalNovoEvento()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-[16px] transition">Cancelar</button>
-        <button onclick="salvarNovoEventoAdmin()" class="px-6 py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-black text-xs rounded-[16px] shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Cadastrar Evento
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: NOVO CONTATO DE EVANGELISMO -->
-  <div id="modal-novo-contato" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-heart text-rose-400"></i> Registrar Contato de Evangelismo</h3>
-        <button onclick="fecharModalNovoContato()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Nome do contato:</label>
-          <input type="text" id="evang-contato-nome" placeholder="Ex: Maria da Silva" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Data do contato:</label>
-            <input type="date" id="evang-contato-data" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-gray-700 block mb-1">Tipo de contato:</label>
-            <select id="evang-contato-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-              <option value="Visita">🚪 Visita</option>
-              <option value="Estudo Bíblico">📖 Estudo Bíblico</option>
-              <option value="Distribuição">📚 Distribuição de Material</option>
-              <option value="Pedido de Oração">🙏 Pedido de Oração</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Observações:</label>
-          <textarea id="evang-contato-obs" rows="3" placeholder="Como foi o contato, próximos passos..." class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></textarea>
-        </div>
-      </div>
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalNovoContato()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-[16px] transition">Cancelar</button>
-        <button onclick="salvarNovoContato()" class="px-6 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black text-xs rounded-[16px] shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Registrar Contato
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST DE NOTIFICAÇÃO -->
-  <div id="toast-notificacao" class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-[16px] shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition">
-    <i class="fa-solid fa-circle-check text-base"></i>
-    <span id="toast-mensagem">Operação realizada com sucesso.</span>
-  </div>
-
-  <script>
-    const listaLivrosBiblia = [
-      { nome: "Gênesis", caps: 50 }, { nome: "Êxodo", caps: 40 }, { nome: "Levítico", caps: 27 },
-      { nome: "Números", caps: 36 }, { nome: "Deuteronômio", caps: 34 }, { nome: "Josué", caps: 24 },
-      { nome: "Juízes", caps: 21 }, { nome: "Rute", caps: 4 }, { nome: "1 Samuel", caps: 31 },
-      { nome: "2 Samuel", caps: 24 }, { nome: "1 Reis", caps: 22 }, { nome: "2 Reis", caps: 25 },
-      { nome: "1 Crônicas", caps: 29 }, { nome: "2 Crônicas", caps: 36 }, { nome: "Esdras", caps: 10 },
-      { nome: "Neemias", caps: 13 }, { nome: "Ester", caps: 10 }, { nome: "Jó", caps: 42 },
-      { nome: "Salmos", caps: 150 }, { nome: "Provérbios", caps: 31 }, { nome: "Eclesiastes", caps: 12 },
-      { nome: "Cantares", caps: 8 }, { nome: "Isaías", caps: 66 }, { nome: "Jeremias", caps: 52 },
-      { nome: "Lamentações", caps: 5 }, { nome: "Ezequiel", caps: 48 }, { nome: "Daniel", caps: 12 },
-      { nome: "Oséias", caps: 14 }, { nome: "Joel", caps: 3 }, { nome: "Amós", caps: 9 },
-      { nome: "Obadias", caps: 1 }, { nome: "Jonas", caps: 4 }, { nome: "Miquéias", caps: 7 },
-      { nome: "Naum", caps: 3 }, { nome: "Habacuque", caps: 3 }, { nome: "Sofonias", caps: 3 },
-      { nome: "Ageu", caps: 2 }, { nome: "Zacarias", caps: 14 }, { nome: "Malaquias", caps: 4 },
-      { nome: "Mateus", caps: 28 }, { nome: "Marcos", caps: 16 }, { nome: "Lucas", caps: 24 },
-      { nome: "João", caps: 21 }, { nome: "Atos", caps: 28 }, { nome: "Romanos", caps: 16 },
-      { nome: "1 Coríntios", caps: 16 }, { nome: "2 Coríntios", caps: 13 }, { nome: "Gálatas", caps: 6 },
-      { nome: "Efésios", caps: 6 }, { nome: "Filipenses", caps: 4 }, { nome: "Colossenses", caps: 4 },
-      { nome: "1 Tessalonicenses", caps: 5 }, { nome: "2 Tessalonicenses", caps: 3 }, { nome: "1 Timóteo", caps: 6 },
-      { nome: "2 Timóteo", caps: 4 }, { nome: "Tito", caps: 3 }, { nome: "Filemom", caps: 1 },
-      { nome: "Hebreus", caps: 13 }, { nome: "Tiago", caps: 5 }, { nome: "1 Pedro", caps: 5 },
-      { nome: "2 Pedro", caps: 3 }, { nome: "1 João", caps: 5 }, { nome: "2 João", caps: 1 },
-      { nome: "3 João", caps: 1 }, { nome: "Judas", caps: 1 }, { nome: "Apocalipse", caps: 22 }
-    ];
-
-    const listaNovoTestamento = listaLivrosBiblia.slice(39);
-
-    // DADOS MOCADOS DO CALENDÁRIO
-    const eventosBancoDeDados = [
-      { id: 1, nome: "Culto JA Especial", data: "2026-08-08", horario: "18:00", local: "Templo Central", categoria: "Espiritual", descricao: "Louvor, comunhão e palavra voltada para a juventude.", pontos: 50 },
-      { id: 2, nome: "Ação Solidária de Inverno", data: "2026-08-15", horario: "08:30", local: "Praça da Cidade", categoria: "Solidário", descricao: "Entrega de agasalhos e sopa para pessoas em situação de rua. #solidariedade", pontos: 100 },
-      { id: 3, nome: "Encontro de PG my Style", data: "2026-08-15", horario: "19:30", local: "Casas dos Líderes", categoria: "Social", descricao: "Momento de comunhão, lanche e estudo da palavra em pequenos grupos.", pontos: 40 },
-      { id: 4, nome: "Treinamento de Líderes JA", data: "2026-08-22", horario: "15:00", local: "Salão Social da Igreja", categoria: "Treinamentos", descricao: "Capacitação para conselheiros, diretores e líderes de ministérios jovens.", pontos: 80 },
-      { id: 5, nome: "Trilha Ecológica dos Jovens", data: "2026-08-29", horario: "07:00", local: "Parque Ecológico", categoria: "Desafios", descricao: "Caminhada ao ar livre, integração e contato com a natureza.", pontos: 90 },
-      { id: 6, nome: "Mutirão de Evangelismo", data: "2026-08-22", horario: "09:00", local: "Bairros Adjacentes", categoria: "Evangelismo", descricao: "Distribuição de livros missionários e convites para a classe bíblica.", pontos: 75 }
-    ];
-
-    let dataAtualCalendario = new Date(2026, 7, 1); // Agosto de 2026
-    let diaSelecionadoCalendario = "2026-08-08"; // Selecionado por padrão
-    let filtroCategoriaAtivo = "todos";
-
-    // NOME DO USUÁRIO LOGADO
-    const usuarioLogadoNome = "Diego Iaene";
-
-    // DADOS MOCADOS DO RANKING
-    const rankingBancoDeDados = [
-      { id: 1, nome: "Diego Iaene", iniciais: "DI", cargo: "Líder de Jovens", pontos: 980 },
-      { id: 2, nome: "Marcos Silva", iniciais: "MS", cargo: "Jovem", pontos: 860 },
-      { id: 3, nome: "Ana Paula Reis", iniciais: "AP", cargo: "Jovem", pontos: 790 },
-      { id: 4, nome: "Larissa Souza", iniciais: "LS", cargo: "Conselheira", pontos: 715 },
-      { id: 5, nome: "Pedro Henrique", iniciais: "PH", cargo: "Jovem", pontos: 690 },
-      { id: 6, nome: "Camila Rocha", iniciais: "CR", cargo: "Jovem", pontos: 640 },
-      { id: 7, nome: "Rafael Costa", iniciais: "RC", cargo: "Jovem", pontos: 600 },
-      { id: 8, nome: "Beatriz Lima", iniciais: "BL", cargo: "Jovem", pontos: 555 }
-    ];
-
-    // DADOS MOCADOS DE DESAFIOS
-    let desafiosBancoDeDados = [
-      { id: 1, titulo: "7 Dias de Oração", descricao: "Ore por 7 dias consecutivos e registre suas orações.", categoria: "Espiritual", pontos: 120, meta: 7, progresso: 4, prazo: "2026-08-10" },
-      { id: 2, titulo: "Convide um Amigo", descricao: "Traga um amigo para o culto jovem deste mês.", categoria: "Evangelismo", pontos: 80, meta: 1, progresso: 0, prazo: "2026-08-31" },
-      { id: 3, titulo: "Leitura Recorde", descricao: "Leia 10 capítulos da Bíblia nesta semana.", categoria: "Espiritual", pontos: 100, meta: 10, progresso: 10, prazo: "2026-08-09" },
-      { id: 4, titulo: "Ação Social do Mês", descricao: "Participe de uma ação solidária este mês.", categoria: "Solidário", pontos: 150, meta: 1, progresso: 0, prazo: "2026-08-31" },
-      { id: 5, titulo: "Semana da Gratidão", descricao: "Complete 7 dias registrando motivos de gratidão.", categoria: "Desafios", pontos: 90, meta: 7, progresso: 2, prazo: "2026-08-15" },
-      { id: 6, titulo: "Presença Total", descricao: "Compareça a todos os cultos e PGs do mês.", categoria: "Social", pontos: 200, meta: 4, progresso: 1, prazo: "2026-08-31" }
-    ];
-
-    // DADOS MOCADOS DE EVANGELISMO
-    let evangelismoBancoDeDados = [
-      { id: 1, nome: "Fernanda Alves", data: "2026-07-28", tipo: "Visita", observacao: "Primeira visita, demonstrou interesse em estudo bíblico.", status: "Em acompanhamento" },
-      { id: 2, nome: "João Pereira", data: "2026-07-30", tipo: "Estudo Bíblico", observacao: "Segundo estudo realizado, tema: batismo.", status: "Em acompanhamento" },
-      { id: 3, nome: "Roberto Nunes", data: "2026-08-01", tipo: "Distribuição", observacao: "Recebeu livro missionário na praça central.", status: "Contato realizado" },
-      { id: 4, nome: "Juliana Martins", data: "2026-08-02", tipo: "Pedido de Oração", observacao: "Pediu oração pela saúde da mãe.", status: "Em oração" }
-    ];
-
-    // DADOS MOCADOS DE NOTIFICAÇÕES
-    let notificacoesBancoDeDados = [
-      { id: 1, tipo: "evento", titulo: "Novo evento cadastrado", mensagem: "Culto JA Especial foi adicionado para 08/08. Confira no calendário!", data: "2026-08-01T10:00:00", lida: false },
-      { id: 2, tipo: "pontos", titulo: "Pontos recebidos!", mensagem: "Você ganhou +50 pontos por concluir a lição da Escola Sabatina.", data: "2026-07-30T20:15:00", lida: false },
-      { id: 3, tipo: "admin", titulo: "Aviso da liderança", mensagem: "Confirme presença na Trilha Ecológica até sexta-feira.", data: "2026-07-29T09:00:00", lida: true },
-      { id: 4, tipo: "desafio", titulo: "Desafio quase concluído!", mensagem: "Faltam 3 dias para completar o desafio \"7 Dias de Oração\".", data: "2026-07-28T18:00:00", lida: true }
-    ];
-
-    document.addEventListener("DOMContentLoaded", () => {
-      inicializarSeletorLivrosBiblia();
-      inicializarSeletorAnoBiblico();
-      carregarTextoBiblia();
-      renderizarCalendario();
-      renderizarProximosEventos();
-      renderizarEventosDoDia();
-      renderizarRanking();
-      renderizarDesafios();
-      renderizarEvangelismo();
-      renderizarNotificacoes();
-    });
-
-    function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao', 'calendario', 'ranking', 'desafios', 'evangelismo', 'notificacoes', 'configuracoes'];
-      telas.forEach(t => {
-        const el = document.getElementById(`sec-${t}`);
-        if(el) el.classList.add('hidden');
-      });
-
-      const alvo = document.getElementById(`sec-${tela}`);
-      if(alvo) alvo.classList.remove('hidden');
-      
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
-      const activeBtn = document.getElementById(`nav-${tela}`);
-      if(activeBtn) activeBtn.classList.add('sidebar-active');
-
-      if (tela === 'ranking') renderizarRanking();
-      if (tela === 'desafios') renderizarDesafios();
-      if (tela === 'evangelismo') renderizarEvangelismo();
-      if (tela === 'notificacoes') renderizarNotificacoes();
-    }
-
-    // FUNÇÕES DO CALENDÁRIO
-    function renderizarCalendario() {
-      const ano = dataAtualCalendario.getFullYear();
-      const mes = dataAtualCalendario.getMonth();
-
-      const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-      document.getElementById('calendar-month-year').innerText = `${mesesNomes[mes]} ${ano}`;
-
-      const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
-      const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
-
-      const grid = document.getElementById('calendar-grid');
-      grid.innerHTML = '';
-
-      for (let i = 0; i < primeiroDiaSemana; i++) {
-        const vazio = document.createElement('div');
-        vazio.className = "h-10 md:h-12 rounded-[16px] bg-transparent";
-        grid.appendChild(vazio);
-      }
-
-      const hojeStr = new Date().toISOString().split('T')[0];
-
-      for (let dia = 1; dia <= ultimoDiaMes; dia++) {
-        const mesStr = String(mes + 1).padStart(2, '0');
-        const diaStr = String(dia).padStart(2, '0');
-        const dataCompleta = `${ano}-${mesStr}-${diaStr}`;
-
-        const temEvento = eventosBancoDeDados.some(e => e.data === dataCompleta);
-        const ehHoje = (dataCompleta === hojeStr);
-        const ehSelecionado = (dataCompleta === diaSelecionadoCalendario);
-
-        const btnDia = document.createElement('button');
-        
-        let classes = "h-10 md:h-12 rounded-[16px] flex flex-col items-center justify-center text-xs font-bold transition relative card-hover ";
-        
-        if (ehSelecionado) {
-          classes += "bg-blue-900 text-white shadow-lg ring-2 ring-blue-950/20 ";
-        } else if (ehHoje) {
-          classes += "bg-blue-50 text-blue-900 border border-blue-200 ";
-        } else {
-          classes += "bg-gray-50 text-gray-700 hover:bg-gray-100 ";
-        }
-
-        btnDia.className = classes;
-        btnDia.onclick = () => selecionarDiaCalendario(dataCompleta);
-
-        let html = `<span>${dia}</span>`;
-        if (temEvento) {
-          html += `<span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1"></span>`;
-        }
-        btnDia.innerHTML = html;
-
-        grid.appendChild(btnDia);
-      }
-    }
-
-    function mudarMesCalendario(direcao) {
-      dataAtualCalendario.setMonth(dataAtualCalendario.getMonth() + direcao);
-      renderizarCalendario();
-    }
-
-    function selecionarDiaCalendario(dataStr) {
-      diaSelecionadoCalendario = dataStr;
-      renderizarCalendario();
-      renderizarEventosDoDia();
-    }
-
-    function selecionarFiltroCategoria(categoria) {
-      filtroCategoriaAtivo = categoria;
-      
-      const botoes = ['todos', 'Espiritual', 'Evangelismo', 'Social', 'Desafios', 'Treinamentos', 'Solidário'];
-      botoes.forEach(b => {
-        const btnEl = document.getElementById(`btn-filtro-${b}`);
-        if(btnEl) {
-          if(b === categoria) {
-            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0";
-          } else {
-            btnEl.className = "px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0";
-          }
-        }
-      });
-
-      renderizarEventosDoDia();
-      renderizarProximosEventos();
-    }
-
-    function filtrarEventosCalendario() {
-      renderizarEventosDoDia();
-      renderizarProximosEventos();
-    }
-
-    function obterCorCategoria(cat) {
-      switch(cat) {
-        case 'Espiritual': return 'bg-amber-50 text-amber-700 border-amber-200';
-        case 'Evangelismo': return 'bg-rose-50 text-rose-700 border-rose-200';
-        case 'Social': return 'bg-blue-50 text-blue-700 border-blue-200';
-        case 'Desafios': return 'bg-purple-50 text-purple-700 border-purple-200';
-        case 'Treinamentos': return 'bg-cyan-50 text-cyan-700 border-cyan-200';
-        case 'Solidário': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-        default: return 'bg-gray-50 text-gray-700 border-gray-200';
-      }
-    }
-
-    function renderizarEventosDoDia() {
-      const container = document.getElementById('container-eventos-dia');
-      const tituloEl = document.getElementById('titulo-eventos-dia');
-      const badgeEl = document.getElementById('badge-total-eventos-dia');
-      const termoBusca = document.getElementById('input-busca-evento').value.toLowerCase();
-
-      tituloEl.innerHTML = `<i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para ${formatarDataLegivel(diaSelecionadoCalendario)}`;
-
-      let filtrados = eventosBancoDeDados.filter(e => e.data === diaSelecionadoCalendario);
-
-      if (filtroCategoriaAtivo !== 'todos') {
-        filtrados = filtrados.filter(e => e.categoria === filtroCategoriaAtivo);
-      }
-
-      if (termoBusca) {
-        filtrados = filtrados.filter(e => e.nome.toLowerCase().includes(termoBusca) || e.descricao.toLowerCase().includes(termoBusca));
-      }
-
-      badgeEl.innerText = `${filtrados.length} evento${filtrados.length !== 1 ? 's' : ''}`;
-
-      if (filtrados.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center space-y-3 shadow-sm">
-            <div class="w-12 h-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto text-lg">
-              <i class="fa-solid fa-calendar-xmark"></i>
-            </div>
-            <p class="text-sm font-bold text-gray-800">Nenhum evento encontrado.</p>
-            <p class="text-xs text-gray-500">Não há eventos cadastrados para esta data com os filtros selecionados.</p>
-          </div>
-        `;
-        return;
-      }
-
-      let html = '';
-      filtrados.forEach(e => {
-        const corCat = obterCorCategoria(e.categoria);
-        html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
-            <div class="space-y-3">
-              <div class="flex justify-between items-start gap-2">
-                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">
-                  ${e.categoria}
-                </span>
-                ${e.pontos ? `<span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${e.pontos} pts</span>` : ''}
-              </div>
-              <div>
-                <h4 class="text-base font-extrabold text-blue-950">${e.nome}</h4>
-                <p class="text-xs text-gray-500 mt-1">${e.descricao}</p>
-              </div>
-            </div>
-            <div class="pt-4 border-t border-gray-100 space-y-2 text-xs text-gray-600 font-medium">
-              <div class="flex items-center gap-2">
-                <i class="fa-regular fa-clock text-blue-900"></i> <span>${e.horario}</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-location-dot text-rose-500"></i> <span>${e.local}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function renderizarProximosEventos() {
-      const container = document.getElementById('proximos-eventos-lista');
-      const termoBusca = document.getElementById('input-busca-evento').value.toLowerCase();
-
-      let ordenados = [...eventosBancoDeDados].sort((a, b) => new Date(a.data) - new Date(b.data));
-
-      if (filtroCategoriaAtivo !== 'todos') {
-        ordenados = ordenados.filter(e => e.categoria === filtroCategoriaAtivo);
-      }
-
-      if (termoBusca) {
-        ordenados = ordenados.filter(e => e.nome.toLowerCase().includes(termoBusca));
-      }
-
-      if (ordenados.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Nenhum evento próximo.</p>`;
-        return;
-      }
-
-      let html = '';
-      ordenados.forEach(e => {
-        html += `
-          <div onclick="selecionarDiaCalendario('${e.data}')" class="bg-gray-50 border border-gray-100 p-3.5 rounded-[16px] hover:bg-gray-100 transition cursor-pointer flex items-center justify-between gap-3">
-            <div class="space-y-0.5">
-              <span class="text-[10px] text-blue-900 font-bold">${formatarDataCurta(e.data)}</span>
-              <h5 class="text-xs font-bold text-blue-950">${e.nome}</h5>
-            </div>
-            <span class="text-[10px] bg-blue-50 text-blue-900 font-bold px-2 py-1 rounded-[16px] shrink-0">${e.horario}</span>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function formatarDataLegivel(dataStr) {
-      const [ano, mes, dia] = dataStr.split('-');
-      const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-      return `${dia} de ${meses[parseInt(mes) - 1]} de ${ano}`;
-    }
-
-    function formatarDataCurta(dataStr) {
-      const [ano, mes, dia] = dataStr.split('-');
-      const mesesAbbr = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-      return `${dia} ${mesesAbbr[parseInt(mes) - 1]}`;
-    }
-
-    function abrirModalNovoEvento() {
-      document.getElementById('modal-novo-evento').classList.remove('hidden');
-      document.getElementById('admin-evento-nome').value = '';
-      document.getElementById('admin-evento-data').value = new Date().toISOString().split('T')[0];
-      document.getElementById('admin-evento-horario').value = '19:00';
-      document.getElementById('admin-evento-local').value = '';
-      document.getElementById('admin-evento-pontos').value = '50';
-      document.getElementById('admin-evento-descricao').value = '';
-    }
-
-    function fecharModalNovoEvento() {
-      document.getElementById('modal-novo-evento').classList.add('hidden');
-    }
-
-    function salvarNovoEventoAdmin() {
-      const nome = document.getElementById('admin-evento-nome').value.trim();
-      const data = document.getElementById('admin-evento-data').value;
-      const horario = document.getElementById('admin-evento-horario').value;
-      const local = document.getElementById('admin-evento-local').value.trim();
-      const categoria = document.getElementById('admin-evento-categoria').value;
-      const pontos = parseInt(document.getElementById('admin-evento-pontos').value) || 0;
-      const descricao = document.getElementById('admin-evento-descricao').value.trim();
-
-      if (!nome || !data || !horario || !local) {
-        alert("Por favor, preencha todos os campos obrigatórios do evento!");
-        return;
-      }
-
-      const novoId = eventosBancoDeDados.length > 0 ? Math.max(...eventosBancoDeDados.map(e => e.id)) + 1 : 1;
-      
-      eventosBancoDeDados.push({
-        id: novoId,
-        nome,
-        data,
-        horario,
-        local,
-        categoria,
-        descricao: descricao || "Sem descrição informada.",
-        pontos
-      });
-
-      fecharModalNovoEvento();
-      diaSelecionadoCalendario = data;
-      renderizarCalendario();
-      renderizarProximosEventos();
-      renderizarEventosDoDia();
-      exhibirToast("Novo evento cadastrado com sucesso pelo Administrador!");
-      if (typeof confetti === "function") confetti({ particleCount: 70, spread: 50, origin: { y: 0.6 } });
-    }
-
-    function inicializarSeletorLivrosBiblia() {
-      const selectLivro = document.getElementById('biblia-livro');
-      if(!selectLivro) return;
-      selectLivro.innerHTML = '';
-      listaLivrosBiblia.forEach((livro, index) => {
-        const opt = document.createElement('option');
-        opt.value = index;
-        opt.innerText = livro.nome;
-        selectLivro.appendChild(opt);
-      });
-      atualizarCapitulosBiblia();
-    }
-
-    function atualizarCapitulosBiblia() {
-      const selectLivro = document.getElementById('biblia-livro');
-      const selectCap = document.getElementById('biblia-capitulo');
-      if(!selectLivro || !selectCap) return;
-      const livroObj = listaLivrosBiblia[selectLivro.value];
-      selectCap.innerHTML = '';
-      for (let i = 1; i <= livroObj.caps; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = `Cap. ${i}`;
-        selectCap.appendChild(opt);
-      }
-    }
-
-    async function carregarTextoBiblia() {
-      const selectLivro = document.getElementById('biblia-livro');
-      const selectCap = document.getElementById('biblia-capitulo');
-      const selectVersao = document.getElementById('select-versao-biblia');
-      if(!selectLivro || !selectCap) return;
-
-      const livroObj = listaLivrosBiblia[selectLivro.value];
-      const capitulo = selectCap.value || 1;
-      const versao = selectVersao ? selectVersao.value : 'almeida';
-
-      const tituloEl = document.getElementById('biblia-titulo-leitura');
-      const conteudoEl = document.getElementById('biblia-conteudo-texto');
-
-      tituloEl.innerText = `${livroObj.nome} ${capitulo}`;
-      conteudoEl.innerHTML = `<p class="text-center text-gray-400">Carregando...</p>`;
-
-      try {
-        const query = `${livroObj.nome} ${capitulo}`;
-        const res = await fetch(`https://bible-api.com/${encodeURIComponent(query)}?translation=${versao}`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-
-        let html = '';
-        data.verses.forEach(v => {
-          html += `<p class="hover:bg-blue-50 p-1 rounded"><strong class="text-blue-950 font-bold mr-1">${v.verse}</strong> ${v.text}</p>`;
-        });
-        conteudoEl.innerHTML = html;
-      } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500 text-xs">Erro ao carregar o texto bíblico online. #biblia</p>`;
-      }
-    }
-
-    function mudarCapituloBiblia(direcao) {
-      const selectCap = document.getElementById('biblia-capitulo');
-      const novoIdx = selectCap.selectedIndex + direcao;
-      if (novoIdx >= 0 && novoIdx < selectCap.options.length) {
-        selectCap.selectedIndex = novoIdx;
-        carregarTextoBiblia();
-      }
-    }
-
-    function inicializarSeletorAnoBiblico() {
-      const selectLivro = document.getElementById('ano-biblico-livro');
-      if(!selectLivro) return;
-      selectLivro.innerHTML = '';
-      listaNovoTestamento.forEach((livro, index) => {
-        const opt = document.createElement('option');
-        opt.value = index;
-        opt.innerText = livro.nome;
-        selectLivro.appendChild(opt);
-      });
-      atualizarCapitulosAnoBiblico();
-    }
-
-    function atualizarCapitulosAnoBiblico() {
-      const selectLivro = document.getElementById('ano-biblico-livro');
-      const selectCap = document.getElementById('ano-biblico-capitulo');
-      if(!selectLivro || !selectCap) return;
-      const livroObj = listaNovoTestamento[selectLivro.value];
-      selectCap.innerHTML = '';
-      for (let i = 1; i <= livroObj.caps; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = `Capítulo ${i}`;
-        selectCap.appendChild(opt);
-      }
-    }
-
-    async function abrirModalLicao() {
-      document.getElementById('modal-licao').classList.remove('hidden');
-      const conteudoEl = document.getElementById('licao-modal-conteudo');
-      try {
-        const hoje = new Date().getDay();
-        const diaMapeado = hoje === 0 ? 1 : hoje + 1;
-        const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${String(diaMapeado).padStart(2, '0')}/read/index.json`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        document.getElementById('licao-modal-titulo').innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title}`;
-        document.getElementById('licao-modal-subtitulo').innerText = `${data.date} #licaoescolasabatina`;
-        conteudoEl.innerHTML = data.content;
-      } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar a lição. #licaoescolasabatina</p>`;
-      }
-    }
-
-    async function abrirModalPG() {
-      document.getElementById('modal-pg').classList.remove('hidden');
-      const conteudoEl = document.getElementById('pg-modal-conteudo');
-      conteudoEl.innerHTML = `<p class="text-center text-gray-400">Carregando estudo de sábado (Comunidade)...</p>`;
-      try {
-        const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/07/read/index.json`);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        document.getElementById('pg-modal-titulo').innerHTML = `<i class="fa-solid fa-people-group text-indigo-300"></i> ${data.title}`;
-        document.getElementById('pg-modal-subtitulo').innerText = `${data.date} #pgmystyle`;
-        conteudoEl.innerHTML = data.content;
-      } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar o conteúdo do PG my Style. #pgmystyle</p>`;
-      }
-    }
-
-    function fecharModalLicao() { document.getElementById('modal-licao').classList.add('hidden'); }
-    function fecharModalPG() { document.getElementById('modal-pg').classList.add('hidden'); }
-    function abrirModalBiblia() { document.getElementById('modal-biblia').classList.remove('hidden'); }
-    function fecharModalBiblia() { document.getElementById('modal-biblia').classList.add('hidden'); }
-    function abrirModalDevocional() { document.getElementById('modal-devocional').classList.remove('hidden'); }
-    function fecharModalDevocional() { document.getElementById('modal-devocional').classList.add('hidden'); }
-
-    function salvarDevocional() {
-      const checkbox = document.getElementById('check-concluido-leitura');
-      if(!checkbox.checked) {
-        alert("Por favor, marque a caixa confirmando que concluiu a leitura!");
-        return;
-      }
-      fecharModalDevocional();
-      exhibirToast("Ano Bíblico registrado com sucesso! +100 pontos. #anobiblico");
-      document.getElementById('texto-reflexao').value = '';
-      checkbox.checked = false;
-      if (typeof confetti === "function") confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-    }
-
-    function confirmarEstudoLicaoAPI() {
-      fecharModalLicao();
-      exhibirToast("Estudo registrado com sucesso! +50 pontos. #licaoescolasabatina");
-    }
-
-    function confirmarEstudoPG() {
-      fecharModalPG();
-      exhibirToast("Estudo do PG my Style registrado! +70 pontos. #pgmystyle");
-      if (typeof confetti === "function") confetti({ particleCount: 70, spread: 50, origin: { y: 0.6 } });
-    }
-
-    function exhibirToast(msg) {
-      const toast = document.getElementById('toast-notificacao');
-      document.getElementById('toast-mensagem').innerText = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 4000);
-    }
-
-    // =====================================================
-    // RANKING
-    // =====================================================
-    function renderizarRanking() {
-      const ordenados = [...rankingBancoDeDados].sort((a, b) => b.pontos - a.pontos);
-      const maiorPontuacao = ordenados[0] ? ordenados[0].pontos : 1;
-
-      const minhaPosicao = ordenados.findIndex(p => p.nome === usuarioLogadoNome) + 1;
-      const badgePosicao = document.getElementById('ranking-minha-posicao');
-      if (badgePosicao) badgePosicao.innerText = minhaPosicao > 0 ? `Sua posição: ${minhaPosicao}º lugar` : 'Sua posição: --';
-
-      const podioEl = document.getElementById('ranking-podio');
-      const top3 = ordenados.slice(0, 3);
-      const ordemVisual = [top3[1], top3[0], top3[2]];
-      const alturaPodio = ['h-28', 'h-36', 'h-20'];
-      const corPodio = ['bg-gray-300', 'bg-amber-400', 'bg-orange-300'];
-      const medalha = ['🥈', '🥇', '🥉'];
-
-      let podioHtml = '';
-      ordemVisual.forEach((pessoa, idx) => {
-        if (!pessoa) { podioHtml += '<div></div>'; return; }
-        podioHtml += `
-          <div class="flex flex-col items-center gap-2">
-            <span class="text-3xl">${medalha[idx]}</span>
-            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-blue-950 text-white flex items-center justify-center font-black text-lg shadow-lg border-4 border-white ring-2 ring-blue-100">
-              ${pessoa.iniciais}
-            </div>
-            <p class="text-xs md:text-sm font-extrabold text-blue-950 text-center leading-tight">${pessoa.nome}</p>
-            <p class="text-[10px] text-amber-600 font-bold">${pessoa.pontos} pts</p>
-            <div class="w-full ${corPodio[idx]} ${alturaPodio[idx]} rounded-t-[16px] shadow-inner"></div>
-          </div>
-        `;
-      });
-      podioEl.innerHTML = podioHtml;
-
-      const listaEl = document.getElementById('ranking-lista');
-      let listaHtml = '';
-      ordenados.forEach((pessoa, index) => {
-        const posicao = index + 1;
-        const percentual = Math.round((pessoa.pontos / maiorPontuacao) * 100);
-        const ehUsuarioLogado = pessoa.nome === usuarioLogadoNome;
-
-        listaHtml += `
-          <div class="p-4 flex items-center justify-between gap-4 transition hover:bg-gray-50 ${ehUsuarioLogado ? 'bg-amber-50/60' : ''}">
+<div class="p-4 flex items-center justify-between gap-4 transition hover:bg-gray-50 ${souEu ? 'bg-amber-50/60 border-l-4 border-amber-500' : ''}">
             <div class="flex items-center gap-3">
-              <span class="font-extrabold text-xs w-6 text-center ${posicao <= 3 ? 'text-amber-500' : 'text-gray-400'}">${posicao}º</span>
+              <span class="w-6 text-center text-xs font-black ${posicao <= 3 ? 'text-amber-500 text-sm' : 'text-gray-400'}">${posicao}º</span>
               <div class="w-10 h-10 rounded-full bg-blue-900 text-white font-bold text-xs flex items-center justify-center shrink-0">
                 ${pessoa.iniciais}
               </div>
               <div>
-                <p class="text-xs font-bold text-blue-950 flex items-center gap-2">
-                  ${pessoa.nome} ${ehUsuarioLogado ? '<span class="text-[9px] bg-amber-500 text-blue-950 px-1.5 py-0.5 rounded font-black">VOCÊ</span>' : ''}
-                </p>
-                <p class="text-[10px] text-gray-500">${pessoa.cargo}</p>
+                <h4 class="text-xs font-extrabold text-blue-950 flex items-center gap-1.5">
+                  ${pessoa.nome}
+                  ${souEu ? '<span class="text-[9px] bg-amber-500 text-blue-950 font-black px-2 py-0.5 rounded-full">VOCÊ</span>' : ''}
+                </h4>
+                <p class="text-[10px] text-gray-500 font-medium">${pessoa.cargo}</p>
               </div>
             </div>
-            <div class="flex items-center gap-4">
-              <div class="w-24 bg-gray-200 h-2 rounded-full overflow-hidden hidden sm:block">
-                <div class="bg-blue-900 h-full rounded-full" style="width: ${percentual}%"></div>
+            
+            <div class="flex items-center gap-4 w-1/3 max-w-[200px]">
+              <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div class="bg-blue-900 h-2 rounded-full transition-all duration-500" style="width: ${percentual}%"></div>
               </div>
-              <span class="text-xs font-extrabold text-blue-950 shrink-0">${pessoa.pontos} pts</span>
+              <span class="text-xs font-extrabold text-blue-950 shrink-0">${pessoa.pontos} <span class="text-[10px] font-normal text-gray-400">pts</span></span>
             </div>
           </div>
         `;
@@ -1382,106 +25,130 @@
       listaEl.innerHTML = listaHtml;
     }
 
-    // FUNÇÕES DE DESAFIOS
+    // =====================================================
+    // DESAFIOS
+    // =====================================================
     function renderizarDesafios() {
-      const gridEl = document.getElementById('desafios-grid');
+      const container = document.getElementById('desafios-grid');
       const resumoEl = document.getElementById('desafios-resumo');
-      
+
       const concluidos = desafiosBancoDeDados.filter(d => d.progresso >= d.meta).length;
-      resumoEl.innerText = `${concluidos} de ${desafiosBancoDeDados.length} concluídos`;
+      if (resumoEl) resumoEl.innerText = `${concluidos} de ${desafiosBancoDeDados.length} concluídos`;
+
+      if (desafiosBancoDeDados.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-xs text-gray-400 py-8">Nenhum desafio ativo no momento.</p>`;
+        return;
+      }
 
       let html = '';
       desafiosBancoDeDados.forEach(d => {
         const percentual = Math.min(100, Math.round((d.progresso / d.meta) * 100));
-        const finalizado = d.progresso >= d.meta;
+        const ehConcluido = d.progresso >= d.meta;
+        const corCat = obterCorCategoria(d.categoria);
 
         html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
+          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4 ${ehConcluido ? 'ring-2 ring-emerald-500/30' : ''}">
             <div class="space-y-3">
-              <div class="flex justify-between items-start">
-                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${obterCorCategoria(d.categoria)}">
+              <div class="flex justify-between items-start gap-2">
+                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">
                   ${d.categoria}
                 </span>
-                <span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">
-                  +${d.pontos} pts
-                </span>
+                <span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${d.pontos} pts</span>
               </div>
               <div>
-                <h4 class="text-base font-extrabold text-blue-950">${d.titulo}</h4>
+                <h4 class="text-base font-extrabold text-blue-950 flex items-center justify-between">
+                  ${d.titulo}
+                  ${ehConcluido ? '<i class="fa-solid fa-circle-check text-emerald-500"></i>' : ''}
+                </h4>
                 <p class="text-xs text-gray-500 mt-1">${d.descricao}</p>
               </div>
             </div>
 
-            <div class="space-y-3 pt-2">
+            <div class="space-y-3 pt-4 border-t border-gray-100">
               <div class="space-y-1">
-                <div class="flex justify-between text-[10px] font-bold text-gray-500">
+                <div class="flex justify-between text-xs font-bold text-gray-600">
                   <span>Progresso</span>
-                  <span>${d.progresso}/${d.meta} (${percentual}%)</span>
+                  <span>${d.progresso} / ${d.meta}</span>
                 </div>
-                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div class="bg-emerald-500 h-full rounded-full transition-all duration-300" style="width: ${percentual}%"></div>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                  <div class="${ehConcluido ? 'bg-emerald-500' : 'bg-blue-900'} h-2.5 rounded-full transition-all duration-300" style="width: ${percentual}%"></div>
                 </div>
               </div>
 
-              ${finalizado ? `
-                <div class="w-full py-2 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-[16px] border border-emerald-200 text-center flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-circle-check"></i> Desafio Concluído
-                </div>
-              ` : `
-                <button onclick="progredirDesafio(${d.id})" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-1.5">
-                  <i class="fa-solid fa-plus"></i> Registrar Progresso
-                </button>
-              `}
+              <div class="flex justify-between items-center text-[10px] text-gray-400 font-medium">
+                <span>Prazo: ${formatarDataCurta(d.prazo)}</span>
+                ${!ehConcluido ? `
+                  <button onclick="avancarDesafio(${d.id})" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-[16px] transition">
+                    Reg. Progresso (+1)
+                  </button>
+                ` : `
+                  <span class="text-emerald-600 font-extrabold uppercase tracking-wider">Concluído!</span>
+                `}
+              </div>
             </div>
           </div>
         `;
       });
-      gridEl.innerHTML = html;
+      container.innerHTML = html;
     }
 
-    function progredirDesafio(id) {
+    function avancarDesafio(id) {
       const desafio = desafiosBancoDeDados.find(d => d.id === id);
       if (desafio && desafio.progresso < desafio.meta) {
         desafio.progresso += 1;
         if (desafio.progresso >= desafio.meta) {
-          exhibirToast(`Parabéns! Você concluiu o desafio "${desafio.titulo}" e ganhou +${desafio.pontos} pts!`);
-          if (typeof confetti === "function") confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+          exhibirToast(`Parabéns! Desafio "${desafio.titulo}" concluído! +${desafio.pontos} pontos!`);
+          if (typeof confetti === "function") confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         } else {
-          exhibirToast(`Progresso atualizado no desafio "${desafio.titulo}"!`);
+          exhibirToast(`Progresso registrado para "${desafio.titulo}"! (${desafio.progresso}/${desafio.meta})`);
         }
         renderizarDesafios();
       }
     }
 
-    // FUNÇÕES DE EVANGELISMO
+    // =====================================================
+    // EVANGELISMO
+    // =====================================================
     function renderizarEvangelismo() {
-      const listaEl = document.getElementById('evangelismo-lista');
-      document.getElementById('evangelismo-total-contatos').innerText = evangelismoBancoDeDados.length;
-      document.getElementById('evangelismo-total-materiais').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Distribuição').length;
-      document.getElementById('evangelismo-total-oracao').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Pedido de Oração').length;
+      const container = document.getElementById('evangelismo-lista');
+      
+      // Atualizar contadores das estatísticas
+      const totalContatos = evangelismoBancoDeDados.length;
+      const totalMateriais = evangelismoBancoDeDados.filter(e => e.tipo === 'Distribuição').length;
+      const totalOracao = evangelismoBancoDeDados.filter(e => e.tipo === 'Pedido de Oração').length;
+
+      document.getElementById('evangelismo-total-contatos').innerText = totalContatos;
+      document.getElementById('evangelismo-total-materiais').innerText = totalMateriais;
+      document.getElementById('evangelismo-total-oracao').innerText = totalOracao;
+
+      if (evangelismoBancoDeDados.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-xs text-gray-400 py-8">Nenhum contato evangelístico registrado ainda.</p>`;
+        return;
+      }
 
       let html = '';
       evangelismoBancoDeDados.forEach(item => {
         html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
+          <div class="bg-white border border-gray-100 p-5 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-3">
             <div class="space-y-2">
-              <div class="flex justify-between items-start">
-                <span class="text-[10px] bg-rose-50 text-rose-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-rose-200">
+              <div class="flex justify-between items-center">
+                <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-[16px] bg-rose-50 text-rose-600 border border-rose-100">
                   ${item.tipo}
                 </span>
-                <span class="text-[10px] text-gray-400 font-bold">${formatarDataCurta(item.data)}</span>
+                <span class="text-[10px] text-gray-400 font-medium">${formatarDataCurta(item.data)}</span>
               </div>
               <h4 class="text-base font-extrabold text-blue-950">${item.nome}</h4>
-              <p class="text-xs text-gray-500">${item.observacao}</p>
+              <p class="text-xs text-gray-600">${item.observacao}</p>
             </div>
             <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-[10px]">
-              <span class="font-bold text-gray-400">Status:</span>
-              <span class="font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-[16px] border border-emerald-100">${item.status}</span>
+              <span class="font-bold text-emerald-600 flex items-center gap-1">
+                <i class="fa-solid fa-circle text-[6px]"></i> ${item.status}
+              </span>
             </div>
           </div>
         `;
       });
-      listaEl.innerHTML = html;
+      container.innerHTML = html;
     }
 
     function abrirModalNovoContato() {
@@ -1501,18 +168,19 @@
       const tipo = document.getElementById('evang-contato-tipo').value;
       const obs = document.getElementById('evang-contato-obs').value.trim();
 
-      if (!nome || !data) {
-        alert("Por favor, preencha pelo menos o nome e a data do contato!");
+      if (!nome) {
+        alert("Por favor, preencha o nome do contato!");
         return;
       }
 
+      const novoId = evangelismoBancoDeDados.length > 0 ? Math.max(...evangelismoBancoDeDados.map(e => e.id)) + 1 : 1;
       evangelismoBancoDeDados.unshift({
-        id: Date.now(),
+        id: novoId,
         nome,
         data,
         tipo,
         observacao: obs || "Sem observações.",
-        status: "Contato realizado"
+        status: "Em acompanhamento"
       });
 
       fecharModalNovoContato();
@@ -1520,27 +188,49 @@
       exhibirToast("Contato de evangelismo registrado com sucesso!");
     }
 
-    // FUNÇÕES DE NOTIFICAÇÕES E CONFIGURAÇÕES
+    // =====================================================
+    // NOTIFICAÇÕES
+    // =====================================================
     function renderizarNotificacoes() {
-      const listaEl = document.getElementById('notificacoes-lista');
+      const container = document.getElementById('notificacoes-lista');
+      
+      if (notificacoesBancoDeDados.length === 0) {
+        container.innerHTML = `<p class="text-center text-xs text-gray-400 py-8">Você não possui notificações no momento.</p>`;
+        return;
+      }
+
       let html = '';
       notificacoesBancoDeDados.forEach(n => {
+        let icone = 'fa-bell text-amber-500';
+        if (n.tipo === 'pontos') icone = 'fa-trophy text-yellow-500';
+        if (n.tipo === 'admin') icone = 'fa-bullhorn text-blue-500';
+        if (n.tipo === 'desafio') icone = 'fa-bullseye text-red-500';
+
         html += `
-          <div class="bg-white border border-gray-100 p-4 rounded-[16px] shadow-sm flex items-start gap-4 transition ${n.lida ? 'opacity-60' : 'border-l-4 border-l-blue-900'}">
-            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-900 flex items-center justify-center shrink-0 text-base">
-              <i class="fa-solid fa-bell"></i>
+          <div onclick="marcarNotificacaoComoLida(${n.id})" class="p-4 rounded-[16px] border border-gray-100 shadow-sm flex items-start gap-3 transition cursor-pointer ${n.lida ? 'bg-white opacity-70' : 'bg-blue-50/50 border-blue-100'}">
+            <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
+              <i class="fa-solid ${icone} text-sm"></i>
             </div>
             <div class="flex-1 space-y-1">
               <div class="flex justify-between items-center">
-                <h5 class="text-xs font-extrabold text-blue-950">${n.titulo}</h5>
-                <span class="text-[9px] text-gray-400 font-bold">${new Date(n.data).toLocaleDateString('pt-BR')}</span>
+                <h4 class="text-xs font-extrabold text-blue-950">${n.titulo}</h4>
+                <span class="text-[10px] text-gray-400">${formatarDataCurta(n.data.split('T')[0])}</span>
               </div>
               <p class="text-xs text-gray-600">${n.mensagem}</p>
             </div>
+            ${!n.lida ? '<span class="w-2 h-2 bg-blue-600 rounded-full shrink-0 self-center"></span>' : ''}
           </div>
         `;
       });
-      listaEl.innerHTML = html;
+      container.innerHTML = html;
+    }
+
+    function marcarNotificacaoComoLida(id) {
+      const item = notificacoesBancoDeDados.find(n => n.id === id);
+      if (item) {
+        item.lida = true;
+        renderizarNotificacoes();
+      }
     }
 
     function marcarTodasNotificacoesLidas() {
@@ -1549,9 +239,86 @@
       exhibirToast("Todas as notificações foram marcadas como lidas.");
     }
 
-    function salvarDadosPessoais() { exhibirToast("Dados pessoais atualizados com sucesso!"); }
-    function alterarSenha() { exhibirToast("Senha alterada com sucesso!"); }
-    function salvarPreferencias() { exhibirToast("Preferências salvas com sucesso!"); }
+    // =====================================================
+    // CONFIGURAÇÕES & FOTO DE PERFIL
+    // =====================================================
+    function salvarDadosPessoais() {
+      const nome = document.getElementById('config-nome').value.trim();
+      if (nome) {
+        document.getElementById('perfil-nome').innerText = nome;
+        document.getElementById('dash-saudacao').innerText = `Bom dia, ${nome.split(' ')[0]}! 👋`;
+      }
+      exhibirToast("Dados pessoais atualizados com sucesso!");
+    }
+
+    function alterarSenha() {
+      const atual = document.getElementById('config-senha-atual').value;
+      const nova = document.getElementById('config-senha-nova').value;
+      const conf = document.getElementById('config-senha-confirmar').value;
+
+      if (!atual || !nova || !conf) {
+        alert("Por favor, preencha todos os campos da senha.");
+        return;
+      }
+      if (nova !== conf) {
+        alert("A nova senha e a confirmação não coincidem.");
+        return;
+      }
+
+      document.getElementById('config-senha-atual').value = '';
+      document.getElementById('config-senha-nova').value = '';
+      document.getElementById('config-senha-confirmar').value = '';
+      exhibirToast("Senha alterada com sucesso!");
+    }
+
+    function salvarPreferencias() {
+      exhibirToast("Preferências salvas com sucesso!");
+    }
+
+    function toggleAvatarMenu(e) {
+      e.stopPropagation();
+      const drop = document.getElementById('avatar-dropdown');
+      if (drop) drop.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', () => {
+      const drop = document.getElementById('avatar-dropdown');
+      if (drop && !drop.classList.contains('hidden')) {
+        drop.classList.add('hidden');
+      }
+    });
+
+    function abrirSeletorFoto() {
+      const input = document.getElementById('input-foto-upload');
+      if (input) input.click();
+    }
+
+    function processarArquivoSelecionado(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById('perfil-avatar');
+          if (img) img.src = e.target.result;
+          exhibirToast("Foto de perfil atualizada!");
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function visualizarFoto() {
+      const img = document.getElementById('perfil-avatar');
+      if (img && img.src) {
+        window.open(img.src, '_blank');
+      }
+    }
+
+    function confirmarRemoverFoto() {
+      if (confirm("Deseja realmente remover a foto de perfil?")) {
+        const img = document.getElementById('perfil-avatar');
+        if (img) img.src = "https://via.placeholder.com/150";
+        exhibirToast("Foto de perfil removida.");
+      }
+    }
   </script>
 </body>
 </html>
