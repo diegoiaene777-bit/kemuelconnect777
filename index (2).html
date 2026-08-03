@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kemuel Connect 777 - Gestão JA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<!-- CROPPER.JS PARA RECORTAR FOTO -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+</link><link href="css/style.css" rel="stylesheet"/></head>
+<body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
+<!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
+<div class="fixed inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-950 z-50 flex items-center justify-center p-4" id="sec-auth">
+<div class="bg-white rounded-[16px] max-w-md w-full p-8 shadow-2xl space-y-6">
+<div class="text-center space-y-2">
+<h1 class="text-2xl font-extrabold text-blue-950">Kemuel Connect 777</h1>
+<p class="text-xs text-gray-500" id="auth-subtitulo">Faça login para acessar sua conta ou cadastre-se.</p>
+</div>
+<!-- ABAS DE NAVEGAÇÃO AUTENTICAÇÃO -->
+<div class="flex border-b border-gray-100 text-xs font-bold">
+<button class="flex-1 pb-3 text-center border-b-2 border-blue-900 text-blue-950 transition" id="tab-login" onclick="alternarAbaAuth('login')">Entrar</button>
+<button class="flex-1 pb-3 text-center border-b-2 border-transparent text-gray-400 transition" id="tab-cadastro" onclick="alternarAbaAuth('cadastro')">Cadastrar</button>
+</div>
+<!-- FORMULÁRIO DE LOGIN -->
+<div class="space-y-4" id="form-login">
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label>
+<input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="login-email" placeholder="seu.email@exemplo.com" type="email"/>
+</div>
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">Senha:</label>
+<input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="login-senha" placeholder="••••••••" type="password"/>
+</div>
+<button class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2" onclick="realizarLogin()">
+<i class="fa-solid fa-right-to-bracket"></i> Entrar na Conta
+        </button>
+</div>
+<!-- FORMULÁRIO DE CADASTRO -->
+<div class="hidden space-y-4" id="form-cadastro">
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">Nome Completo:</label>
+<input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="cad-nome" placeholder="Seu Nome Completo" type="text"/>
+</div>
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label>
+<input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="cad-email" placeholder="seu.email@exemplo.com" type="email"/>
+</div>
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">Senha:</label>
+<input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="cad-senha" placeholder="••••••••" type="password"/>
+</div>
+<div>
+<label class="text-xs font-bold text-gray-700 block mb-1">Cargo / Função:</label>
+<select class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="cad-cargo">
+<option value="Jovem">Jovem</option>
+<option value="Líder de Jovens">Líder de Jovens</option>
+<option value="Conselheiro">Conselheiro</option>
+<option value="Administrador">Administrador</option>
+</select>
+</div>
+<button class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2" onclick="realizarCadastro()">
+<i class="fa-solid fa-user-plus"></i> Criar Minha Conta
+        </button>
+</div>
+</div>
+</div>
+<!-- MENU LATERAL -->
+<aside class="hidden w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl" id="sidebar">
+<div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
+<h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
+<p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes." #kemuelconnect</p>
+<span class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase" id="user-role-badge">Jovem</span>
+</div>
+<nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
+<div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-dashboard" onclick="navegarPara('dashboard')">
+<i class="fa-solid fa-house w-5 text-amber-400 shrink-0"></i> Dashboard
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-perfil" onclick="navegarPara('perfil')">
+<i class="fa-solid fa-user w-5 text-blue-600 shrink-0"></i> Meu Perfil
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-comunhao" onclick="navegarPara('comunhao')">
+<i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active" id="nav-calendario" onclick="navegarPara('calendario')">
+<i class="fa-solid fa-calendar-days w-5 text-purple-400 shrink-0"></i> Calendário
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-ranking" onclick="navegarPara('ranking')">
+<i class="fa-solid fa-trophy w-5 text-yellow-400 shrink-0"></i> Ranking
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-desafios" onclick="navegarPara('desafios')">
+<i class="fa-solid fa-bullseye w-5 text-red-400 shrink-0"></i> Desafios
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-evangelismo" onclick="navegarPara('evangelismo')">
+<i class="fa-solid fa-heart w-5 text-rose-500 shrink-0"></i> Evangelismo
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-notificacoes" onclick="navegarPara('notificacoes')">
+<i class="fa-solid fa-bell w-5 text-yellow-300 shrink-0"></i> Notificações
+      </button>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-configuracoes" onclick="navegarPara('configuracoes')">
+<i class="fa-solid fa-gear w-5 text-gray-400 shrink-0"></i> Configurações
+      </button>
+<!-- MENU ADMINISTRATIVO (VISÍVEL APENAS PARA ADMINS) -->
+<div class="hidden pt-4" id="menu-admin-grupo">
+<div class="text-xs text-amber-400 font-bold uppercase px-3 pt-2 pb-1">Administração</div>
+<button class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover" id="nav-admin" onclick="navegarPara('admin')">
+<i class="fa-solid fa-shield-halved w-5 text-amber-400 shrink-0"></i> Painel Admin
+        </button>
+</div>
+</nav>
+<div class="p-4 border-t border-blue-900">
+<button class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow" onclick="realizarLogout()">
+<i class="fa-solid fa-right-from-bracket shrink-0"></i> Sair
+      </button>
+</div>
+</aside>
+<!-- ÁREA PRINCIPAL -->
+<main class="hidden flex-1 p-6 md:p-10 overflow-y-auto space-y-8 w-full" id="main-content">
+<!-- DASHBOARD -->
+<div class="hidden space-y-6" id="sec-dashboard">
+<div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight" id="dash-saudacao">Bom dia, Diego! 👋</h2>
+<p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia. #kemuelconnect</p>
+</div>
+</div>
+</div>
+<!-- MEU PERFIL -->
+<div class="hidden space-y-6" id="sec-perfil">
+<div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+<div class="relative shrink-0">
+<div class="avatar-container relative w-20 h-20 rounded-full cursor-pointer overflow-hidden border-4 border-amber-400 shadow-lg bg-blue-900 flex items-center justify-center text-white font-extrabold text-xl" onclick="toggleAvatarMenu(event)">
+<span id="perfil-iniciais">DI</span>
+<img alt="Foto do Usuário" class="user-avatar-target hidden w-full h-full object-cover" id="perfil-avatar" src=""/>
+<div class="avatar-overlay absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white text-xs font-bold">
+<i class="fa-solid fa-camera text-base mb-0.5"></i>
+<span class="text-[9px]">Editar</span>
+</div>
+</div>
+<div class="hidden absolute top-22 left-0 w-48 bg-white text-gray-800 rounded-xl shadow-2xl border border-gray-100 z-50 py-1 overflow-hidden" id="avatar-dropdown">
+<button class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition" onclick="abrirSeletorFoto()">
+<i class="fa-solid fa-camera text-blue-600 w-4"></i> Alterar Foto
+              </button>
+<button class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition" onclick="visualizarFoto()">
+<i class="fa-solid fa-eye text-emerald-600 w-4"></i> Visualizar Foto
+              </button>
+<button class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-50 text-red-600 flex items-center gap-2.5 transition border-t border-gray-100" onclick="confirmarRemoverFoto()">
+<i class="fa-solid fa-trash-can w-4"></i> Remover Foto
+              </button>
+</div>
+<input accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden" id="input-foto-upload" onchange="processarArquivoSelecionado(this)" type="file"/>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-3 flex-wrap">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight" id="perfil-nome">Diego Iaene</h2>
+<span class="text-[10px] bg-emerald-500 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider" id="perfil-status">Ativo</span>
+</div>
+<p class="text-sm text-blue-200 font-medium" id="perfil-funcao">Líder de Jovens • Clube Kemuel</p>
+</div>
+</div>
+</div>
+</div>
+<!-- TELA: MINHA COMUNHÃO -->
+<div class="hidden space-y-6" id="sec-comunhao">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
+<i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus." #comunhao #anobiblico</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
+<div class="space-y-4">
+<div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl font-bold shadow-inner">
+<i class="fa-solid fa-book-open"></i>
+</div>
+<div>
+<h3 class="text-lg font-extrabold text-blue-950">Ano Bíblico</h3>
+<p class="text-xs text-gray-500 mt-1">Leitura diária do Novo Testamento, marcação de conclusão e anotação de reflexões. #anobiblico</p>
+</div>
+</div>
+<div class="pt-6 mt-4 border-t border-gray-100">
+<button class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2" onclick="abrirModalDevocional()">
+<i class="fa-solid fa-pen-nib"></i> Acessar Ano Bíblico
+            </button>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
+<div class="space-y-4">
+<div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl font-bold shadow-inner">
+<i class="fa-solid fa-book-bible"></i>
+</div>
+<div>
+<h3 class="text-lg font-extrabold text-blue-950">Bíblia Sagrada</h3>
+<p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada. #biblia</p>
+</div>
+</div>
+<div class="pt-6 mt-4 border-t border-gray-100">
+<button class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2" onclick="abrirModalBiblia()">
+<i class="fa-solid fa-book-open-reader"></i> Abrir Bíblia
+            </button>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
+<div class="space-y-4">
+<div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold shadow-inner">
+<i class="fa-solid fa-book-open-reader"></i>
+</div>
+<div>
+<h3 class="text-lg font-extrabold text-blue-950">Escola Sabatina</h3>
+<p class="text-xs text-gray-500 mt-1">Acompanhe e estude a lição diária da Escola Sabatina #licaoescolasabatina.</p>
+</div>
+</div>
+<div class="pt-6 mt-4 border-t border-gray-100">
+<button class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2" onclick="abrirModalLicao()">
+<i class="fa-solid fa-book-bookmark"></i> Ler Lição de Hoje
+            </button>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
+<div class="space-y-4">
+<div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-xl font-bold shadow-inner">
+<i class="fa-solid fa-people-group"></i>
+</div>
+<div>
+<h3 class="text-lg font-extrabold text-blue-950">PG my Style</h3>
+<p class="text-xs text-gray-500 mt-1">Acompanhe o conteúdo especial de sábado (Comunidade) para o seu Pequeno Grupo. #pgmystyle</p>
+</div>
+</div>
+<div class="pt-6 mt-4 border-t border-gray-100">
+<button class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2" onclick="abrirModalPG()">
+<i class="fa-solid fa-users-rectangle"></i> Acessar PG
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- TELA: CALENDÁRIO -->
+<div class="space-y-8" id="sec-calendario">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+            📅 Calendário
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">"Acompanhe todos os eventos dos Jovens Kemuel." #calendario</p>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
+<div class="relative w-full md:w-64">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+<i class="fa-solid fa-magnifying-glass text-xs"></i>
+</span>
+<input class="w-full bg-white text-gray-800 border border-gray-200 text-xs rounded-[16px] pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition shadow-inner" id="input-busca-evento" oninput="filtrarEventosCalendario()" placeholder="Pesquisar evento..." type="text"/>
+</div>
+<button class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0" onclick="abrirModalNovoEvento()">
+<i class="fa-solid fa-plus"></i> Novo Evento (Admin)
+          </button>
+</div>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0" id="btn-filtro-todos" onclick="selecionarFiltroCategoria('todos')">Todos</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Espiritual" onclick="selecionarFiltroCategoria('Espiritual')">📖 Espiritual</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Evangelismo" onclick="selecionarFiltroCategoria('Evangelismo')">🤝 Evangelismo</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Social" onclick="selecionarFiltroCategoria('Social')">🎉 Social</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Desafios" onclick="selecionarFiltroCategoria('Desafios')">🏆 Desafios</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Treinamentos" onclick="selecionarFiltroCategoria('Treinamentos')">🎓 Treinamentos</button>
+<button class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0" id="btn-filtro-Solidário" onclick="selecionarFiltroCategoria('Solidário')">❤️ Solidário</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="text-lg font-extrabold text-blue-950 capitalize" id="calendar-month-year">Agosto 2026</h3>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition" onclick="mudarMesCalendario(-1)"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+<button class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition" onclick="mudarMesCalendario(1)"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-gray-400 pb-2 border-b border-gray-100">
+<div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+</div>
+<div class="grid grid-cols-7 gap-2" id="calendar-grid"></div>
+</div>
+<div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col space-y-4">
+<h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-2 border-b border-gray-100">
+<i class="fa-solid fa-clock text-blue-900"></i> Próximos Eventos
+          </h3>
+<div class="space-y-3 overflow-y-auto max-h-[380px] pr-1" id="proximos-eventos-lista"></div>
+</div>
+</div>
+<div class="space-y-4 pt-4">
+<div class="flex justify-between items-center">
+<h3 class="text-lg font-extrabold text-blue-950 flex items-center gap-2" id="titulo-eventos-dia">
+<i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para o dia selecionado
+          </h3>
+<span class="text-xs bg-blue-900 text-white px-2.5 py-1 rounded-[16px] font-bold" id="badge-total-eventos-dia">0 eventos</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="container-eventos-dia"></div>
+</div>
+</div>
+<!-- TELA: RANKING -->
+<div class="hidden space-y-8" id="sec-ranking">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-trophy text-yellow-400"></i> Ranking
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">"Corramos com perseverança a carreira que nos é proposta." Hb 12:1 #ranking</p>
+</div>
+<span class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0" id="ranking-minha-posicao">Sua posição: --</span>
+</div>
+<div class="grid grid-cols-3 gap-3 md:gap-6 items-end" id="ranking-podio"></div>
+<div class="bg-white border border-gray-100 rounded-[16px] shadow-md overflow-hidden">
+<div class="p-5 border-b border-gray-100 flex justify-between items-center">
+<h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
+<i class="fa-solid fa-list-ol text-blue-900"></i> Classificação Geral
+          </h3>
+<span class="text-[10px] text-gray-400 font-bold uppercase">Clube Kemuel</span>
+</div>
+<div class="divide-y divide-gray-50" id="ranking-lista"></div>
+</div>
+</div>
+<!-- TELA: DESAFIOS -->
+<div class="hidden space-y-8" id="sec-desafios">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-bullseye text-red-400"></i> Desafios
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">"Prossigo para o alvo, para o prêmio da soberana vocação de Deus." Fp 3:14 #desafios</p>
+</div>
+<span class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0" id="desafios-resumo">0 de 0 concluídos</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="desafios-grid"></div>
+</div>
+<!-- TELA: EVANGELISMO -->
+<div class="hidden space-y-8" id="sec-evangelismo">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-heart text-rose-400"></i> Evangelismo
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">"Ide por todo o mundo e pregai o evangelho a toda criatura." Mc 16:15 #evangelismo</p>
+</div>
+<button class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0" onclick="abrirModalNovoContato()">
+<i class="fa-solid fa-plus"></i> Registrar Contato
+        </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
+<div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500 text-xl shrink-0"><i class="fa-solid fa-people-arrows"></i></div>
+<div><p class="text-2xl font-extrabold text-blue-950" id="evangelismo-total-contatos">0</p><p class="text-xs text-gray-500 font-medium">Contatos registrados</p></div>
+</div>
+<div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
+<div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl shrink-0"><i class="fa-solid fa-book-open"></i></div>
+<div><p class="text-2xl font-extrabold text-blue-950" id="evangelismo-total-materiais">0</p><p class="text-xs text-gray-500 font-medium">Materiais distribuídos</p></div>
+</div>
+<div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
+<div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 text-xl shrink-0"><i class="fa-solid fa-hands-praying"></i></div>
+<div><p class="text-2xl font-extrabold text-blue-950" id="evangelismo-total-oracao">0</p><p class="text-xs text-gray-500 font-medium">Pedidos de oração</p></div>
+</div>
+</div>
+<div class="space-y-4">
+<h3 class="text-lg font-extrabold text-blue-950 flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-blue-900"></i> Meus Contatos de Evangelismo</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="evangelismo-lista"></div>
+</div>
+</div>
+<!-- TELA: NOTIFICAÇÕES -->
+<div class="hidden space-y-8" id="sec-notificacoes">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-bell text-yellow-300"></i> Notificações
+          </h2>
+<p class="text-xs md:text-sm text-blue-200" id="notificacoes-subtitulo">Fique por dentro de tudo o que acontece no Kemuel Connect.</p>
+</div>
+<button class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-[16px] text-xs font-bold shadow transition flex items-center gap-2 shrink-0" onclick="marcarTodasNotificacoesLidas()">
+<i class="fa-solid fa-check-double"></i> Marcar todas como lidas
+        </button>
+</div>
+<div class="space-y-3" id="notificacoes-lista"></div>
+</div>
+<!-- TELA: CONFIGURAÇÕES -->
+<div class="hidden space-y-8" id="sec-configuracoes">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-gear text-gray-300"></i> Configurações
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">Gerencie seus dados, preferências e segurança da conta.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
+<h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100"><i class="fa-solid fa-id-card text-blue-900"></i> Dados Pessoais</h3>
+<div class="space-y-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Nome completo:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-nome" type="text"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-email" type="email"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Telefone:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-telefone" type="tel" value="(11) 99999-0000"/></div>
+</div>
+<button class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2" onclick="salvarDadosPessoais()"><i class="fa-solid fa-check"></i> Salvar Dados Pessoais</button>
+</div>
+<div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
+<h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100"><i class="fa-solid fa-lock text-blue-900"></i> Segurança</h3>
+<div class="space-y-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Senha atual:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-senha-atual" placeholder="••••••••" type="password"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Nova senha:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-senha-nova" placeholder="••••••••" type="password"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Confirmar nova senha:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="config-senha-confirmar" placeholder="••••••••" type="password"/></div>
+</div>
+<button class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2" onclick="alterarSenha()"><i class="fa-solid fa-key"></i> Alterar Senha</button>
+</div>
+</div>
+</div>
+<!-- TELA: PAINEL DO ADMINISTRADOR -->
+<div class="hidden space-y-8" id="sec-admin">
+<div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="space-y-1">
+<h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
+<i class="fa-solid fa-shield-halved text-amber-400"></i> Painel Administrativo
+          </h2>
+<p class="text-xs md:text-sm text-blue-200">Gerencie usuários cadastrados, acessos e permissões da plataforma.</p>
+</div>
+</div>
+<div class="bg-white border border-gray-100 rounded-[16px] shadow-md overflow-hidden">
+<div class="p-5 border-b border-gray-100 flex justify-between items-center">
+<h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
+<i class="fa-solid fa-users text-blue-900"></i> Lista de Usuários Cadastrados
+          </h3>
+<span class="text-xs bg-blue-50 text-blue-900 font-bold px-3 py-1 rounded-[16px]" id="admin-total-usuarios">0 usuários</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="bg-gray-50 border-b border-gray-100 text-gray-500 font-extrabold uppercase">
+<th class="p-4">Nome</th>
+<th class="p-4">E-mail</th>
+<th class="p-4">Cargo</th>
+<th class="p-4 text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-50" id="admin-tabela-usuarios"></tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- MODAL DE ANO BÍBLICO -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-devocional">
+<div class="bg-white rounded-[16px] max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open text-amber-400"></i> Ano Bíblico - Novo Testamento</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalDevocional()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-6">
+<div class="bg-blue-50 border border-blue-100 p-5 rounded-[16px] space-y-4">
+<h4 class="text-sm font-bold text-blue-950 flex items-center gap-2">
+<i class="fa-solid fa-book-bible text-blue-600"></i> Selecione a Leitura do Novo Testamento #anobiblico
+          </h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="text-xs font-bold text-gray-600 block mb-1">Livro:</label>
+<select class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800" id="ano-biblico-livro" onchange="atualizarCapitulosAnoBiblico()"></select>
+</div>
+<div>
+<label class="text-xs font-bold text-gray-600 block mb-1">Capítulo:</label>
+<select class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800" id="ano-biblico-capitulo"></select>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<label class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
+<input class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" id="check-concluido-leitura" type="checkbox"/>
+<span class="text-xs font-bold text-gray-800">Concluí a leitura deste capítulo do Ano Bíblico hoje!</span>
+</label>
+<div class="space-y-2">
+<label class="font-bold text-gray-700 flex items-center gap-2 text-sm" for="texto-reflexao">
+<i class="fa-solid fa-pen text-amber-500"></i> Observação / Reflexão Pessoal
+            </label>
+<textarea class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-4 text-sm text-gray-800 focus:ring-2 focus:ring-blue-600 focus:outline-none" id="texto-reflexao" placeholder="Escreva aqui a sua observação ou reflexão..." rows="5"></textarea>
+</div>
+</div>
+</div>
+<div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
+<button class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm rounded-[16px] transition" onclick="fecharModalDevocional()">Cancelar</button>
+<button class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-[16px] shadow-md transition flex items-center gap-2" onclick="salvarDevocional()">
+<i class="fa-solid fa-check"></i> Concluir Ano Bíblico
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL DA BÍBLIA -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-biblia">
+<div class="bg-white rounded-[16px] max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalBiblia()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-[16px] border">
+<div><label class="font-bold text-xs text-gray-600 block mb-1">Livro:</label><select class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800" id="biblia-livro" onchange="atualizarCapitulosBiblia()"></select></div>
+<div><label class="font-bold text-xs text-gray-600 block mb-1">Capítulo:</label><select class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800" id="biblia-capitulo" onchange="carregarTextoBiblia()"></select></div>
+<div><label class="font-bold text-xs text-gray-600 block mb-1">Versão:</label><select class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800" id="select-versao-biblia" onchange="carregarTextoBiblia()"><option value="almeida">Almeida</option><option value="kjv">King James</option></select></div>
+<div class="flex items-end"><button class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-[16px] text-xs shadow transition" onclick="carregarTextoBiblia()">Ler Texto</button></div>
+</div>
+<div class="border-b pb-3 flex justify-between items-center">
+<h4 class="text-base font-extrabold text-blue-950" id="biblia-titulo-leitura">Mateus 1</h4>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-[16px]" onclick="mudarCapituloBiblia(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+<button class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-[16px]" onclick="mudarCapituloBiblia(1)">Próximo <i class="fa-solid fa-chevron-right"></i></button>
+</div>
+</div>
+<div class="space-y-3 text-sm text-gray-800 leading-relaxed max-h-96 overflow-y-auto pr-2" id="biblia-conteudo-texto"></div>
+</div>
+</div>
+</div>
+<!-- MODAL DA ESCOLA SABATINA -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-licao">
+<div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-cyan-900 to-blue-950 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2" id="licao-modal-titulo"><i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalLicao()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-4">
+<p class="text-xs text-blue-600 font-bold uppercase tracking-wider" id="licao-modal-subtitulo">Estudo Diário</p>
+<div class="text-sm text-gray-700 leading-relaxed space-y-3" id="licao-modal-conteudo"></div>
+</div>
+<div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+<button class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]" onclick="fecharModalLicao()">Fechar</button>
+<button class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-[16px] shadow transition" onclick="confirmarEstudoLicaoAPI()">Marcar como Estudado (+50 pts)</button>
+</div>
+</div>
+</div>
+<!-- MODAL DO PG MY STYLE -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-pg">
+<div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-indigo-900 to-blue-950 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2" id="pg-modal-titulo"><i class="fa-solid fa-people-group text-indigo-300"></i> PG my Style - Comunidade</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalPG()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-4">
+<p class="text-xs text-indigo-600 font-bold uppercase tracking-wider" id="pg-modal-subtitulo">Estudo de Sábado #pgmystyle</p>
+<div class="text-sm text-gray-700 leading-relaxed space-y-3" id="pg-modal-conteudo"></div>
+</div>
+<div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+<button class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]" onclick="fecharModalPG()">Fechar</button>
+<button class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-[16px] shadow transition" onclick="confirmarEstudoPG()">Marcar Presença (+70 pts)</button>
+</div>
+</div>
+</div>
+<!-- MODAL NOVO EVENTO -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-novo-evento">
+<div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-calendar-plus text-amber-400"></i> Inserir Novo Evento</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalNovoEvento()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Nome do Evento:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="admin-evento-nome" type="text"/></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Data:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="admin-evento-data" type="date"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Horário:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="admin-evento-horario" type="time"/></div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Local:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none" id="admin-evento-local" type="text"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Categoria:</label><select class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="admin-evento-categoria"><option value="Espiritual">Espiritual</option><option value="Evangelismo">Evangelismo</option><option value="Social">Social</option><option value="Desafios">Desafios</option><option value="Treinamentos">Treinamentos</option><option value="Solidário">Solidário</option></select></div>
+</div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Pontuação:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="admin-evento-pontos" type="number" value="50"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Descrição:</label><textarea class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="admin-evento-descricao" rows="3"></textarea></div>
+</div>
+<div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
+<button class="px-5 py-2.5 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]" onclick="fecharModalNovoEvento()">Cancelar</button>
+<button class="px-6 py-2.5 bg-blue-900 text-white font-black text-xs rounded-[16px]" onclick="salvarNovoEventoAdmin()">Cadastrar Evento</button>
+</div>
+</div>
+</div>
+<!-- MODAL NOVO CONTATO -->
+<div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm" id="modal-novo-contato">
+<div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+<div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+<h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-heart text-rose-400"></i> Registrar Contato</h3>
+<button class="text-gray-300 hover:text-white transition-colors" onclick="fecharModalNovoContato()"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6 flex-1 overflow-y-auto space-y-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Nome:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="evang-contato-nome" type="text"/></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Data:</label><input class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="evang-contato-data" type="date"/></div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Tipo:</label><select class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="evang-contato-tipo"><option value="Visita">Visita</option><option value="Estudo Bíblico">Estudo Bíblico</option><option value="Distribuição">Distribuição</option><option value="Pedido de Oração">Pedido de Oração</option></select></div>
+</div>
+<div><label class="text-xs font-bold text-gray-700 block mb-1">Observações:</label><textarea class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800" id="evang-contato-obs" rows="3"></textarea></div>
+</div>
+<div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
+<button class="px-5 py-2.5 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]" onclick="fecharModalNovoContato()">Cancelar</button>
+<button class="px-6 py-2.5 bg-rose-500 text-white font-black text-xs rounded-[16px]" onclick="salvarNovoContato()">Salvar</button>
+</div>
+</div>
+</div>
+<!-- TOAST -->
+<div class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-[16px] shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition" id="toast-notificacao">
+<i class="fa-solid fa-circle-check text-base"></i>
+<span id="toast-mensagem">Operação realizada com sucesso.</span>
+</div>
+
+<script src="js/script.js"></script></body>
+</html>
