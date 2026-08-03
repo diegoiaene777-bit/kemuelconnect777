@@ -159,7 +159,7 @@
       <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 id="dash-saudacao" class="text-2xl md:text-3xl font-extrabold tracking-tight">Bom dia, Diego! 👋</h2>
-          <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia.</p>
+          <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia. #kemuelconnect</p>
         </div>
       </div>
     </div>
@@ -696,7 +696,7 @@
       { nome: "2 Timóteo", caps: 4 }, { nome: "Tito", caps: 3 }, { nome: "Filemom", caps: 1 },
       { nome: "Hebreus", caps: 13 }, { nome: "Tiago", caps: 5 }, { nome: "1 Pedro", caps: 5 },
       { nome: "2 Pedro", caps: 3 }, { nome: "1 João", caps: 5 }, { nome: "2 João", caps: 1 },
-      { nome: "3 João", caps: 1 }, { nome: "Judas", caps: 1 }, { nome: "Apocalipse", caps: 22 ]
+      { nome: "3 João", caps: 1 }, { nome: "Judas", caps: 1 }, { nome: "Apocalipse", caps: 22 }
     ];
     const listaNovoTestamento = listaLivrosBiblia.slice(39);
 
@@ -1326,31 +1326,36 @@
       if (desafio && desafio.progresso < desafio.meta) {
         desafio.progresso++;
         renderizarDesafios();
-        exhibirToast(`Progresso registrado para "${desafio.titulo}"! (${desafio.progresso}/${desafio.meta})`);
+        exhibirToast(`Progresso registrado para "${desafio.titulo}"! #desafios`);
       }
     }
 
     function renderizarEvangelismo() {
       const listaEl = document.getElementById('evangelismo-lista');
       document.getElementById('evangelismo-total-contatos').innerText = evangelismoBancoDeDados.length;
-      document.getElementById('evangelismo-total-materiais').innerText = evangelismoBancoDeDados.filter(c => c.tipo === 'Distribuição').length;
-      document.getElementById('evangelismo-total-oracao').innerText = evangelismoBancoDeDados.filter(c => c.tipo === 'Pedido de Oração').length;
+      document.getElementById('evangelismo-total-materiais').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Distribuição').length;
+      document.getElementById('evangelismo-total-oracao').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Pedido de Oração').length;
+
+      if (evangelismoBancoDeDados.length === 0) {
+        listaEl.innerHTML = `<div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center"><p class="text-xs font-bold text-gray-500">Nenhum contato registrado. #evangelismo</p></div>`;
+        return;
+      }
 
       let html = '';
-      evangelismoBancoDeDados.forEach(c => {
-        let badgeCor = 'bg-blue-50 text-blue-700 border-blue-200';
-        if (c.tipo === 'Estudo Bíblico') badgeCor = 'bg-amber-50 text-amber-700 border-amber-200';
-        if (c.tipo === 'Pedido de Oração') badgeCor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
-        if (c.tipo === 'Distribuição') badgeCor = 'bg-purple-50 text-purple-700 border-purple-200';
-
+      evangelismoBancoDeDados.forEach((c, idx) => {
         html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
-            <div class="space-y-3">
-              <div class="flex justify-between items-start"><span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${badgeCor}">${c.tipo}</span><span class="text-[10px] text-gray-400 font-bold">${c.data}</span></div>
-              <div><h4 class="text-base font-extrabold text-blue-950">${c.nome}</h4><p class="text-xs text-gray-500 mt-1">${c.observacao}</p></div>
+          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-4 card-hover">
+            <div class="flex justify-between items-start">
+              <span class="text-[10px] font-bold px-2 py-1 bg-rose-50 text-rose-700 rounded-full">${c.tipo}</span>
+              <span class="text-[10px] text-gray-400 font-semibold">${formatarDataCurta(c.data)}</span>
             </div>
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-emerald-600">
-              <span><i class="fa-solid fa-circle-check mr-1"></i> ${c.status}</span>
+            <div>
+              <h4 class="text-base font-extrabold text-blue-950">${c.nome}</h4>
+              <p class="text-xs text-gray-600 mt-1">${c.observacao || 'Sem observações.'}</p>
+            </div>
+            <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
+              <span class="font-bold text-amber-600">${c.status || 'Ativo'}</span>
+              <button onclick="removerContatoEvangelismo(${idx})" class="text-red-500 hover:text-red-700 font-bold"><i class="fa-solid fa-trash"></i> Excluir</button>
             </div>
           </div>
         `;
@@ -1358,7 +1363,13 @@
       listaEl.innerHTML = html;
     }
 
-    function abrirModalNovoContato() { document.getElementById('modal-novo-contato').classList.remove('hidden'); }
+    function abrirModalNovoContato() {
+      document.getElementById('modal-novo-contato').classList.remove('hidden');
+      document.getElementById('evang-contato-nome').value = '';
+      document.getElementById('evang-contato-data').value = new Date().toISOString().split('T')[0];
+      document.getElementById('evang-contato-obs').value = '';
+    }
+
     function fecharModalNovoContato() { document.getElementById('modal-novo-contato').classList.add('hidden'); }
 
     function salvarNovoContato() {
@@ -1375,24 +1386,48 @@
       evangelismoBancoDeDados.push({ id: evangelismoBancoDeDados.length + 1, nome, data, tipo, observacao, status: 'Em acompanhamento' });
       fecharModalNovoContato();
       renderizarEvangelismo();
-      exhibirToast("Contato de evangelismo registrado com sucesso!");
+      exhibirToast("Contato de evangelismo salvo com sucesso! #evangelismo");
+    }
+
+    function removerContatoEvangelismo(idx) {
+      if (confirm("Deseja realmente remover este contato?")) {
+        evangelismoBancoDeDados.splice(idx, 1);
+        renderizarEvangelismo();
+        exhibirToast("Contato removido.");
+      }
     }
 
     function renderizarNotificacoes() {
       const container = document.getElementById('notificacoes-lista');
+      const naoLidas = notificacoesBancoDeDados.filter(n => !n.lida).length;
+      document.getElementById('notificacoes-subtitulo').innerText = naoLidas > `Você possui ${naoLidas} notificação(ões) não lida(s).` : 'Todas as notificações foram lidas.';
+
+      if (notificacoesBancoDeDados.length === 0) {
+        container.innerHTML = `<div class="bg-white border p-6 rounded-[16px] text-center text-xs text-gray-400">Nenhuma notificação no momento.</div>`;
+        return;
+      }
+
       let html = '';
       notificacoesBancoDeDados.forEach(n => {
         html += `
-          <div class="bg-white border border-gray-100 p-4 rounded-[16px] shadow-sm flex items-start gap-4 ${n.lida ? 'opacity-70' : 'border-l-4 border-l-amber-500'}">
-            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-900 flex items-center justify-center shrink-0"><i class="fa-solid fa-bell"></i></div>
-            <div class="flex-1 space-y-0.5">
-              <h4 class="text-xs font-extrabold text-blue-950">${n.titulo}</h4>
+          <div class="bg-white border border-gray-100 p-4 rounded-[16px] shadow-sm flex items-center justify-between gap-4 ${n.lida ? 'opacity-75' : 'border-l-4 border-l-blue-900'}">
+            <div class="space-y-1">
+              <h5 class="text-xs font-bold text-blue-950">${n.titulo}</h5>
               <p class="text-xs text-gray-600">${n.mensagem}</p>
             </div>
+            ${!n.lida ? `<button onclick="marcarNotificacaoLida(${n.id})" class="px-3 py-1.5 bg-blue-50 text-blue-900 font-bold text-xs rounded-[16px] hover:bg-blue-100 transition shrink-0">Marcar lida</button>` : `<span class="text-[10px] text-gray-400 font-semibold">Lida</span>`}
           </div>
         `;
       });
       container.innerHTML = html;
+    }
+
+    function marcarNotificacaoLida(id) {
+      const notif = notificacoesBancoDeDados.find(n => n.id === id);
+      if (notif) {
+        notif.lida = true;
+        renderizarNotificacoes();
+      }
     }
 
     function marcarTodasNotificacoesLidas() {
@@ -1402,15 +1437,16 @@
     }
 
     function salvarDadosPessoais() {
-      const novoNome = document.getElementById('config-nome').value.trim();
-      const novoEmail = document.getElementById('config-email').value.trim();
-      if (usuarioLogado) {
-        usuarioLogado.nome = novoNome;
-        usuarioLogado.email = novoEmail;
-        document.getElementById('perfil-nome').innerText = novoNome;
-        document.getElementById('dash-saudacao').innerText = `Bom dia, ${novoNome.split(' ')[0]}! 👋`;
+      const nome = document.getElementById('config-nome').value.trim();
+      const email = document.getElementById('config-email').value.trim();
+      if (!nome || !email) {
+        alert("Preencha todos os campos!");
+        return;
       }
-      exhibirToast("Dados pessoais salvos com sucesso!");
+      usuarioLogado.nome = nome;
+      usuarioLogado.email = email;
+      document.getElementById('perfil-nome').innerText = nome;
+      exhibirToast("Dados pessoais atualizados com sucesso!");
     }
 
     function alterarSenha() {
@@ -1422,27 +1458,28 @@
         alert("Preencha todos os campos de senha!");
         return;
       }
+      if (atual !== usuarioLogado.senha) {
+        alert("A senha atual está incorreta!");
+        return;
+      }
       if (nova !== confirmar) {
         alert("A nova senha e a confirmação não coincidem!");
         return;
       }
-      if (usuarioLogado && atual !== usuarioLogado.senha) {
-        alert("A senha atual está incorreta!");
-        return;
-      }
-
-      if (usuarioLogado) usuarioLogado.senha = nova;
-      exhibirToast("Senha alterada com sucesso!");
+      usuarioLogado.senha = nova;
       document.getElementById('config-senha-atual').value = '';
       document.getElementById('config-senha-nova').value = '';
       document.getElementById('config-senha-confirmar').value = '';
+      exhibirToast("Senha alterada com sucesso!");
     }
 
-    function exhibirToast(msg) {
+    function exhibirToast(mensagem) {
       const toast = document.getElementById('toast-notificacao');
-      document.getElementById('toast-mensagem').innerText = msg;
+      document.getElementById('toast-mensagem').innerText = mensagem;
       toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 4000);
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
     }
   </script>
 </body>
