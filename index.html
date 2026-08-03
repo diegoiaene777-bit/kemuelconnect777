@@ -38,7 +38,7 @@
       color: var(--text-main);
     }
 
-    /* ESTILOS DA TELA DE AUTENTICAÇÃO */
+    /* AUTENTICAÇÃO */
     .auth-page {
       display: flex;
       align-items: center;
@@ -57,24 +57,15 @@
       border-radius: 20px;
       padding: 2.5rem 2rem 2rem 2rem;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .header { text-align: center; margin-bottom: 2rem; }
 
     .logo-box {
-      width: 64px;
-      height: 64px;
+      width: 64px; height: 64px;
       background: linear-gradient(135deg, var(--primary), #3b82f6);
       border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center;
       margin-bottom: 1rem;
       box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
     }
@@ -87,9 +78,7 @@
       border-radius: 10px;
       font-size: 0.875rem;
       margin-bottom: 1.5rem;
-      display: none;
-      align-items: center;
-      gap: 0.75rem;
+      display: none; align-items: center; gap: 0.75rem;
       line-height: 1.3;
     }
 
@@ -120,39 +109,24 @@
     }
 
     .toggle-password {
-      position: absolute;
-      right: 0.75rem;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
+      position: absolute; right: 0.75rem;
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
     }
 
     .form-options {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; font-size: 0.85rem;
     }
 
     .checkbox-container { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-muted); }
     .forgot-link { color: var(--primary); text-decoration: none; font-weight: 500; }
-    .forgot-link:hover { text-decoration: underline; }
 
     .btn {
-      width: 100%;
-      padding: 0.85rem;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      border: none;
-      transition: all 0.2s;
+      width: 100%; padding: 0.85rem;
+      border-radius: 10px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 0.5rem; border: none; transition: all 0.2s;
     }
 
     .btn-primary { background: var(--primary); color: #fff; margin-bottom: 0.75rem; }
@@ -160,133 +134,101 @@
     .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); }
 
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 1rem;
-    }
-
-    .modal {
-      background: #1e293b;
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
-      padding: 2rem;
-    }
-
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .close-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; }
-
-    .footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border-color);
-      padding-top: 1.25rem;
-    }
-
-    /* ESTILOS DA ÁREA LOGADA (DASHBOARD) */
-    .dashboard {
-      display: none;
-      min-height: 100vh;
-    }
+    /* DASHBOARD GERAL */
+    .dashboard { display: none; min-height: 100vh; }
 
     .navbar {
       background: rgba(30, 41, 59, 0.9);
       border-bottom: 1px solid var(--border-color);
       padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
     }
 
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 700;
-      font-size: 1.25rem;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; font-size: 1.25rem; }
+    .user-info { display: flex; align-items: center; gap: 0.75rem; }
 
     .btn-switch-view {
-      background: rgba(37, 99, 235, 0.2);
-      color: #60a5fa;
+      background: rgba(37, 99, 235, 0.2); color: #60a5fa;
       border: 1px solid rgba(37, 99, 235, 0.4);
-      padding: 0.5rem 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .btn-switch-view:hover {
-      background: var(--primary);
-      color: #fff;
+      padding: 0.5rem 0.85rem; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 600;
     }
 
     .btn-logout {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.2); color: #fca5a5;
       border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; font-weight: 600;
     }
 
-    .dash-content {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
+    /* NAVEGAÇÃO POR ABAS NA ÁREA DO JOVEM */
+    .tabs-nav {
+      display: flex; gap: 0.5rem;
+      max-width: 1100px; margin: 1.5rem auto 0 auto; padding: 0 1.5rem;
+      overflow-x: auto;
     }
+
+    .tab-btn {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.75rem 1.25rem; border-radius: 12px 12px 0 0;
+      cursor: pointer; font-weight: 600; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: #fff;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .dash-content { max-width: 1100px; margin: 0 auto 2rem auto; padding: 1.5rem; }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
+      border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;
     }
 
-    .card h2 { margin-bottom: 1rem; font-size: 1.25rem; }
+    .card h2 { margin-bottom: 1rem; font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
 
-    /* Tabela Admin */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    th, td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-    }
-
+    /* TABELAS */
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
     th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
+
+    /* RANKING LIST */
+    .ranking-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem; background: rgba(15, 23, 42, 0.4);
+      border-radius: 10px; margin-bottom: 0.75rem; border: 1px solid var(--border-color);
+    }
+    .ranking-pos {
+      font-weight: 800; font-size: 1.2rem; width: 36px; height: 36px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .top-1 { background: #f59e0b; color: #000; }
+    .top-2 { background: #94a3b8; color: #000; }
+    .top-3 { background: #b45309; color: #fff; }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
+    }
+
+    .modal {
+      background: #1e293b; border: 1px solid var(--border-color);
+      border-radius: 16px; width: 100%; max-width: 400px; padding: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -347,7 +289,7 @@
         </button>
       </form>
 
-      <!-- FORMULÁRIO DE CRIAR CONTA (CADASTRO) -->
+      <!-- FORMULÁRIO DE CRIAR CONTA -->
       <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
         <div class="form-group">
           <label for="regName">Nome Completo</label>
@@ -397,15 +339,10 @@
           Já tenho uma conta
         </button>
       </form>
-
-      <div class="footer">
-        <p>&copy; Kemuel Connect. Todos os direitos reservados.</p>
-        <p>Versão 1.0.0</p>
-      </div>
     </div>
   </div>
 
-  <!-- ÁREA DO JOVEM -->
+  <!-- ÁREA DO JOVEM (COM TODAS AS ABAS) -->
   <div id="jovemDashboard" class="dashboard">
     <nav class="navbar">
       <div class="nav-brand">
@@ -414,7 +351,6 @@
       </div>
       <div class="user-info">
         <span id="jovemName">Bem-vindo(a)</span>
-        <!-- Botão visível apenas para administradores alternarem de volta -->
         <button id="btnReturnAdmin" class="btn-switch-view" style="display: none;" onclick="switchView('admin')">
           <i data-lucide="shield" style="width: 16px;"></i> Voltar ao Painel Admin
         </button>
@@ -423,15 +359,115 @@
         </button>
       </div>
     </nav>
-    
+
+    <!-- NAVEGAÇÃO DE ABAS DO JOVEM -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchJovemTab('inicio')">
+        <i data-lucide="home" style="width: 18px;"></i> Início
+      </button>
+      <button class="tab-btn" onclick="switchJovemTab('licao')">
+        <i data-lucide="book-open" style="width: 18px;"></i> Lição da Escola Sabatina
+      </button>
+      <button class="tab-btn" onclick="switchJovemTab('biblia')">
+        <i data-lucide="book" style="width: 18px;"></i> Bíblia
+      </button>
+      <button class="tab-btn" onclick="switchJovemTab('anoBiblico')">
+        <i data-lucide="calendar" style="width: 18px;"></i> Ano Bíblico
+      </button>
+      <button class="tab-btn" onclick="switchJovemTab('ranking')">
+        <i data-lucide="trophy" style="width: 18px;"></i> Ranking & Pontos
+      </button>
+    </div>
+
     <div class="dash-content">
-      <div class="card">
-        <h2>🔥 Próximos Eventos & Cultos</h2>
-        <p style="color: var(--text-muted);">Confira os próximos encontros do grupo de jovens.</p>
+      <!-- ABA INÍCIO -->
+      <div id="tab-inicio" class="tab-pane active">
+        <div class="card">
+          <h2><i data-lucide="calendar" style="color: #2563eb;"></i> Próximos Eventos & Cultos</h2>
+          <p style="color: var(--text-muted);">Confira os próximos encontros e programações do grupo de jovens.</p>
+        </div>
+        <div class="card">
+          <h2><i data-lucide="bell" style="color: #f59e0b;"></i> Avisos Gerais</h2>
+          <p style="color: var(--text-muted);">Nenhum aviso urgente no momento.</p>
+        </div>
       </div>
-      <div class="card">
-        <h2>📢 Avisos Gerais</h2>
-        <p style="color: var(--text-muted);">Nenhum aviso no momento.</p>
+
+      <!-- ABA LIÇÃO -->
+      <div id="tab-licao" class="tab-pane">
+        <div class="card">
+          <h2><i data-lucide="book-open" style="color: #2563eb;"></i> Lição da Escola Sabatina</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">Estude a lição desta semana e responda às questões de estudo.</p>
+          <div style="background: rgba(15, 23, 42, 0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <h3>📘 Trimestre Atual: Fé e Perseverança</h3>
+            <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Acesse os estudos diários da lição dos Jovens.</p>
+            <button class="btn btn-primary" style="width: auto; padding: 0.6rem 1.2rem;">Abrir Lição Diária</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA BÍBLIA -->
+      <div id="tab-biblia" class="tab-pane">
+        <div class="card">
+          <h2><i data-lucide="book" style="color: #2563eb;"></i> Bíblia Sagrada</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">Leitura e consulta da Palavra.</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select style="padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; flex: 1; min-width: 150px;">
+              <option>Gênesis</option>
+              <option>Êxodo</option>
+              <option>Salmos</option>
+              <option>Mateus</option>
+              <option>Apocalipse</option>
+            </select>
+            <select style="padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: #fff; border-radius: 8px; width: 100px;">
+              <option>Cap. 1</option>
+              <option>Cap. 2</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA ANO BÍBLICO -->
+      <div id="tab-anoBiblico" class="tab-pane">
+        <div class="card">
+          <h2><i data-lucide="calendar" style="color: #2563eb;"></i> Plano do Ano Bíblico</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">Marque os capítulos lidos hoje e acumule pontos no ranking!</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.5); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+            <div>
+              <strong>Leitura de Hoje:</strong> Salmos 1 a 5
+            </div>
+            <button class="btn btn-primary" style="width: auto; margin-bottom:0;" onclick="alert('Leitura confirmada! +10 pontos adicionados.')">Marcar como Lido ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA RANKING -->
+      <div id="tab-ranking" class="tab-pane">
+        <div class="card">
+          <h2><i data-lucide="trophy" style="color: #f59e0b;"></i> Ranking de Engajamento</h2>
+          <p style="color: var(--text-muted); margin-bottom: 1rem;">Pontuação obtida com o Ano Bíblico, Lição e presença.</p>
+          
+          <div class="ranking-item">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div class="ranking-pos top-1">1</div>
+              <div><strong>Gabriel Silva</strong><br><small style="color: var(--text-muted);">1200 pts</small></div>
+            </div>
+            <span>👑 Líder</span>
+          </div>
+
+          <div class="ranking-item">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div class="ranking-pos top-2">2</div>
+              <div><strong>Maria Eduarda</strong><br><small style="color: var(--text-muted);">980 pts</small></div>
+            </div>
+          </div>
+
+          <div class="ranking-item">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div class="ranking-pos top-3">3</div>
+              <div><strong>Lucas Santos</strong><br><small style="color: var(--text-muted);">850 pts</small></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -445,7 +481,6 @@
       </div>
       <div class="user-info">
         <span id="adminName">Administrador</span>
-        <!-- Botão para o Admin acessar a Área do Jovem -->
         <button class="btn-switch-view" onclick="switchView('jovem')">
           <i data-lucide="flame" style="width: 16px;"></i> Ver Área do Jovem
         </button>
@@ -482,15 +517,10 @@
   <!-- Modal Esqueci Minha Senha -->
   <div id="forgotModal" class="modal-overlay">
     <div class="modal">
-      <div class="modal-header">
+      <div class="modal-header" style="display:flex; justify-content:space-between; margin-bottom:1rem;">
         <h3>Recuperar Senha</h3>
-        <button class="close-btn" onclick="closeForgotModal()">
-          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
-        </button>
+        <button onclick="closeForgotModal()" style="background:none; border:none; color:#fff; cursor:pointer;">✕</button>
       </div>
-      <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-        Digite seu e-mail cadastrado para receber o link de redefinição de senha.
-      </p>
       <form onsubmit="handleForgotPassword(event)">
         <div class="form-group">
           <div class="input-wrapper">
@@ -506,29 +536,20 @@
   <script>
     lucide.createIcons();
 
-    // CONEXÃO COM O SUPABASE
+    // CONEXÃO SUPABASE
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
-    
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
     let currentUserRole = null;
 
-    // Alternar Telas (Login / Cadastro)
     function toggleView(view) {
       hideAlert();
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-
-      if (view === 'register') {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-      } else {
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
-      }
+      document.getElementById('loginForm').style.display = view === 'register' ? 'none' : 'block';
+      document.getElementById('registerForm').style.display = view === 'register' ? 'block' : 'none';
     }
 
-    // Alternar entre Área do Jovem e Painel Admin (Para Admins)
+    // Alternar visualização (Jovem / Admin)
     function switchView(target) {
       if (target === 'jovem') {
         document.getElementById('adminDashboard').style.display = 'none';
@@ -543,115 +564,69 @@
       lucide.createIcons();
     }
 
-    // Toggle Mostrar/Ocultar Senha
-    function togglePasswordVisibility(inputId, iconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
+    // Alternar Abas da Área do Jovem
+    function switchJovemTab(tabName) {
+      const tabs = document.querySelectorAll('.tab-pane');
+      const buttons = document.querySelectorAll('.tab-btn');
+      
+      tabs.forEach(t => t.classList.remove('active'));
+      buttons.forEach(b => b.classList.remove('active'));
 
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.setAttribute('data-lucide', 'eye-off');
-      } else {
-        input.type = 'password';
-        icon.setAttribute('data-lucide', 'eye');
-      }
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      event.currentTarget.classList.add('active');
       lucide.createIcons();
     }
 
-    // Mensagens de Alerta
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+      icon.setAttribute('data-lucide', input.type === 'password' ? 'eye' : 'eye-off');
+      lucide.createIcons();
+    }
+
     function showAlert(message, type = 'error') {
       const alertBox = document.getElementById('alertBox');
-      const alertText = document.getElementById('alertText');
-      const alertIcon = document.getElementById('alertIcon');
-
+      document.getElementById('alertText').innerText = message;
       alertBox.className = `alert alert-${type}`;
-      alertText.innerText = message;
-
-      let iconName = 'alert-circle';
-      if (type === 'warning') iconName = 'alert-triangle';
-      if (type === 'success') iconName = 'check-circle';
-
-      alertIcon.setAttribute('data-lucide', iconName);
       alertBox.style.display = 'flex';
       lucide.createIcons();
     }
 
-    function hideAlert() {
-      document.getElementById('alertBox').style.display = 'none';
-    }
+    function hideAlert() { document.getElementById('alertBox').style.display = 'none'; }
 
-    // FLUXO 1: CRIAR CONTA (CADASTRO)
     async function handleRegister(e) {
       e.preventDefault();
       hideAlert();
-
       const name = document.getElementById('regName').value;
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
       const role = document.getElementById('regRole').value;
 
-      const btn = document.getElementById('btnRegister');
-      btn.disabled = true;
-      btn.innerText = 'Cadastrando...';
-
       const { data, error } = await _supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: name,
-            role: role,
-            status: 'pendente'
-          }
-        }
+        email, password,
+        options: { data: { full_name: name, role, status: 'pendente' } }
       });
 
-      btn.disabled = false;
-      btn.innerHTML = '<span>Cadastrar</span><i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>';
-      lucide.createIcons();
-
-      if (error) {
-        showAlert(error.message || 'Erro ao conectar com o servidor.', 'error');
-        return;
-      }
-
-      showAlert('Cadastro realizado com sucesso! Seu cadastro está aguardando aprovação do administrador.', 'warning');
+      if (error) { showAlert(error.message, 'error'); return; }
+      showAlert('Cadastro efetuado! Aguarde a aprovação do administrador.', 'warning');
       setTimeout(() => toggleView('login'), 3000);
     }
 
-    // FLUXO 2: LOGIN E DIRECIONAMENTO
     async function handleLogin(e) {
       e.preventDefault();
       hideAlert();
-
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      const btn = document.getElementById('btnLogin');
-      btn.disabled = true;
-      btn.innerText = 'Entrando...';
-
-      const { data, error } = await _supabase.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-      btn.disabled = false;
-      btn.innerHTML = '<span>Entrar</span><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>';
-      lucide.createIcons();
-
-      if (error) {
-        showAlert('E-mail ou senha inválidos.', 'error');
-        return;
-      }
+      const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+      if (error) { showAlert('E-mail ou senha inválidos.', 'error'); return; }
 
       const user = data.user;
       const role = user.user_metadata?.role || 'jovem';
       const userName = user.user_metadata?.full_name || user.email.split('@')[0];
-
       currentUserRole = role;
 
-      // Oculta a área de Login
       document.getElementById('authSection').style.display = 'none';
 
       if (role === 'admin' || role === 'administrador') {
@@ -663,17 +638,14 @@
         document.getElementById('jovemDashboard').style.display = 'block';
         document.getElementById('btnReturnAdmin').style.display = 'none';
       }
-
       lucide.createIcons();
     }
 
-    // Carregar Lista de Usuários no Painel Admin
     async function loadAdminUsers() {
       const tbody = document.getElementById('usersTableBody');
       const { data, error } = await _supabase.from('profiles').select('*');
-
       if (error || !data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum usuário cadastrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum usuário encontrado.</td></tr>`;
         return;
       }
 
@@ -682,12 +654,11 @@
           <td>${u.full_name || 'Sem nome'}</td>
           <td>${u.email || '-'}</td>
           <td><span style="background: rgba(37,99,235,0.2); color:#60a5fa; padding:2px 8px; border-radius:4px; font-size:0.8rem;">${u.role || 'jovem'}</span></td>
-          <td><span style="color: ${u.status === 'aprovado' ? '#10b981' : '#f59e0b'};">${u.status || 'pendente'}</span></td>
+          <td><span style="color: ${u.status === 'aprovado' || u.status === 'ATIVO' ? '#10b981' : '#f59e0b'};">${u.status || 'pendente'}</span></td>
         </tr>
       `).join('');
     }
 
-    // LOGOUT
     async function handleLogout() {
       await _supabase.auth.signOut();
       currentUserRole = null;
@@ -697,7 +668,6 @@
       hideAlert();
     }
 
-    // MODAL RECUPERAÇÃO DE SENHA
     function openForgotModal(e) { e.preventDefault(); document.getElementById('forgotModal').style.display = 'flex'; }
     function closeForgotModal() { document.getElementById('forgotModal').style.display = 'none'; }
     
@@ -707,7 +677,7 @@
       const { error } = await _supabase.auth.resetPasswordForEmail(email);
       closeForgotModal();
       if (error) showAlert(error.message, 'error');
-      else showAlert('Link de recuperação enviado para o seu e-mail!', 'success');
+      else showAlert('Link de recuperação enviado!', 'success');
     }
   </script>
 </body>
