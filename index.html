@@ -23,8 +23,8 @@
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
     .avatar-container:hover .avatar-overlay { opacity: 1; }
 
-    #licao-modal-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-modal-conteudo h3, #licao-modal-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
+    #licao-modal-conteudo p, #pg-modal-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
+    #licao-modal-conteudo h3, #licao-modal-conteudo h4, #pg-modal-conteudo h3, #pg-modal-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
@@ -135,7 +135,7 @@
       </div>
     </div>
 
-    <!-- TELA: MINHA COMUNHÃO (COM OS 3 CARDS INTERNOS) -->
+    <!-- TELA: MINHA COMUNHÃO (COM OS CARDS) -->
     <div id="sec-comunhao" class="space-y-6">
       <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
@@ -146,8 +146,8 @@
         </div>
       </div>
 
-      <!-- GRID COM OS 3 CARDS PRINCIPAIS -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- GRID COM OS CARDS PRINCIPAIS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <!-- CARD 1: ANO BÍBLICO (NOVO TESTAMENTO) -->
         <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
@@ -203,6 +203,24 @@
           </div>
         </div>
 
+        <!-- CARD 4: PG MY STYLE -->
+        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
+          <div class="space-y-4">
+            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-xl font-bold shadow-inner">
+              <i class="fa-solid fa-people-group"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-extrabold text-blue-950">PG my Style</h3>
+              <p class="text-xs text-gray-500 mt-1">Acompanhe o conteúdo especial de sábado (Comunidade) para o seu Pequeno Grupo. #pgmystyle</p>
+            </div>
+          </div>
+          <div class="pt-6 mt-4 border-t border-gray-100">
+            <button onclick="abrirModalPG()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-users-rectangle"></i> Acessar PG
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -233,7 +251,6 @@
           </div>
         </div>
 
-        <!-- QUADRADO PARA MARCAR CONCLUSÃO E REFLEXÃO -->
         <div class="space-y-4">
           <label class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
             <input type="checkbox" id="check-concluido-leitura" class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
@@ -326,6 +343,28 @@
     </div>
   </div>
 
+  <!-- MODAL DO PG MY STYLE (COMUNIDADE - SÁBADO) -->
+  <div id="modal-pg" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 bg-gradient-to-r from-indigo-900 to-blue-950 text-white flex justify-between items-center">
+        <h3 id="pg-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-people-group text-indigo-300"></i> PG my Style - Comunidade</h3>
+        <button onclick="fecharModalPG()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="p-6 flex-1 overflow-y-auto space-y-4">
+        <p id="pg-modal-subtitulo" class="text-xs text-indigo-600 font-bold uppercase tracking-wider">Estudo de Sábado #pgmystyle</p>
+        <div id="pg-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3">
+          <div class="p-8 text-center text-gray-400">Carregando conteúdo de sábado...</div>
+        </div>
+      </div>
+      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+        <button onclick="fecharModalPG()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-xl">Fechar</button>
+        <button onclick="confirmarEstudoPG()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-xl shadow transition">
+          <i class="fa-solid fa-check mr-1"></i> Marcar Presença / Estudo (+70 pts)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST DE NOTIFICAÇÃO -->
   <div id="toast-notificacao" class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition">
     <i class="fa-solid fa-circle-check text-base"></i>
@@ -358,7 +397,6 @@
       { nome: "3 João", caps: 1 }, { nome: "Judas", caps: 1 }, { nome: "Apocalipse", caps: 22 }
     ];
 
-    // Novo Testamento (Mateus até Apocalipse)
     const listaNovoTestamento = listaLivrosBiblia.slice(39);
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -382,7 +420,6 @@
       if(activeBtn) activeBtn.classList.add('sidebar-active');
     }
 
-    // Funções da Bíblia Geral
     function inicializarSeletorLivrosBiblia() {
       const selectLivro = document.getElementById('biblia-livro');
       if(!selectLivro) return;
@@ -451,7 +488,6 @@
       }
     }
 
-    // Funções do Ano Bíblico (Novo Testamento)
     function inicializarSeletorAnoBiblico() {
       const selectLivro = document.getElementById('ano-biblico-livro');
       if(!selectLivro) return;
@@ -479,7 +515,7 @@
       }
     }
 
-    // Funções da Escola Sabatina
+    // Escola Sabatina
     async function abrirModalLicao() {
       document.getElementById('modal-licao').classList.remove('hidden');
       const conteudoEl = document.getElementById('licao-modal-conteudo');
@@ -497,7 +533,26 @@
       }
     }
 
+    // PG my Style (Busca o último dia/Sábado - "Comunidade" na API)
+    async function abrirModalPG() {
+      document.getElementById('modal-pg').classList.remove('hidden');
+      const conteudoEl = document.getElementById('pg-modal-conteudo');
+      conteudoEl.innerHTML = `<p class="text-center text-gray-400">Carregando estudo de sábado (Comunidade)...</p>`;
+      try {
+        // O dia "07" corresponde ao sábado (Comunidade)
+        const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/07/read/index.json`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        document.getElementById('pg-modal-titulo').innerHTML = `<i class="fa-solid fa-people-group text-indigo-300"></i> ${data.title}`;
+        document.getElementById('pg-modal-subtitulo').innerText = `${data.date} #pgmystyle`;
+        conteudoEl.innerHTML = data.content;
+      } catch (e) {
+        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar o conteúdo do PG my Style. #pgmystyle</p>`;
+      }
+    }
+
     function fecharModalLicao() { document.getElementById('modal-licao').classList.add('hidden'); }
+    function fecharModalPG() { document.getElementById('modal-pg').classList.add('hidden'); }
     function abrirModalBiblia() { document.getElementById('modal-biblia').classList.remove('hidden'); }
     function fecharModalBiblia() { document.getElementById('modal-biblia').classList.add('hidden'); }
     function abrirModalDevocional() { document.getElementById('modal-devocional').classList.remove('hidden'); }
@@ -519,6 +574,12 @@
     function confirmarEstudoLicaoAPI() {
       fecharModalLicao();
       exhibirToast("Estudo registrado com sucesso! +50 pontos. #licaoescolasabatina");
+    }
+
+    function confirmarEstudoPG() {
+      fecharModalPG();
+      exhibirToast("Estudo do PG my Style registrado! +70 pontos. #pgmystyle");
+      if (typeof confetti === "function") confetti({ particleCount: 70, spread: 50, origin: { y: 0.6 } });
     }
 
     function exhibirToast(msg) {
