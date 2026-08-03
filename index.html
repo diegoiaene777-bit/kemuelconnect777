@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <!-- Container Principal do Aplicativo (Oculto inicialmente se não logado) -->
+    <!-- Container Principal do Aplicativo -->
     <div id="app-container" class="hidden min-h-screen flex">
         
         <!-- Menu Lateral -->
@@ -54,9 +54,9 @@
                 </nav>
             </div>
 
-            <!-- Botão Sair Corrigido -->
+            <!-- Botão Sair -->
             <div class="pt-4 border-t border-indigo-900">
-                <button id="btn-sair" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition duration-200">
+                <button id="btn-sair" type="button" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition duration-200 cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket"></i> Sair
                 </button>
             </div>
@@ -69,63 +69,67 @@
         </main>
     </div>
 
-    <!-- Script de Inicialização e Lógica de Autenticação / Logout -->
+    <!-- Script Protegido com Carregamento Seguro do DOM -->
     <script>
-        // Substitua pelas suas credenciais reais do Supabase
-        const SUPABASE_URL = ' SUA_SUPABASE_URL ';
-        const SUPABASE_ANON_KEY = ' SUA_SUPABASE_ANON_KEY ';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.addEventListener('DOMContentLoaded', () => {
+            const SUPABASE_URL = 'SUA_SUPABASE_URL';
+            const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY';
+            
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Verifica estado da sessão ao carregar a página
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                document.getElementById('login-container').classList.add('hidden');
-                document.getElementById('app-container').classList.remove('hidden');
-            } else {
-                document.getElementById('login-container').classList.remove('hidden');
-                document.getElementById('app-container').classList.add('hidden');
-            }
-        }
-
-        // Função de Login
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDiv = document.getElementById('login-error');
-
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                errorDiv.textContent = 'Erro ao entrar: ' + error.message;
-                errorDiv.classList.remove('hidden');
-            } else {
-                errorDiv.classList.add('hidden');
-                checkSession();
-            }
-        });
-
-        // Função de Logout (Corrigida e acionada pelo botão)
-        document.getElementById('btn-sair').addEventListener('click', async () => {
-            try {
-                const { error } = await supabase.auth.signOut();
-                if (error) {
-                    console.error('Erro ao sair:', error.message);
+            // Verifica estado da sessão ao carregar a página
+            async function checkSession() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    document.getElementById('login-container').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                } else {
+                    document.getElementById('login-container').classList.remove('hidden');
+                    document.getElementById('app-container').classList.add('hidden');
                 }
-            } catch (err) {
-                console.error('Erro inesperado:', err);
-            } finally {
-                // Força a ocultação do painel e recarregamento limpo para a tela de login
-                document.getElementById('app-container').classList.add('hidden');
-                document.getElementById('login-container').classList.remove('hidden');
-                window.location.reload();
             }
-        });
 
-        // Executa a verificação ao iniciar
-        checkSession();
+            // Função de Login
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const errorDiv = document.getElementById('login-error');
+
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+                    if (error) {
+                        errorDiv.textContent = 'Erro ao entrar: ' + error.message;
+                        errorDiv.classList.remove('hidden');
+                    } else {
+                        errorDiv.classList.add('hidden');
+                        checkSession();
+                    }
+                });
+            }
+
+            // Função de Logout blindada
+            const btnSair = document.getElementById('btn-sair');
+            if (btnSair) {
+                btnSair.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        await supabase.auth.signOut();
+                    } catch (err) {
+                        console.error('Erro ao sair:', err);
+                    } finally {
+                        // Limpa qualquer vestígio de sessão local e recarrega a página limpa
+                        localStorage.clear();
+                        window.location.href = window.location.pathname;
+                    }
+                });
+            }
+
+            // Executa a verificação ao iniciar
+            checkSession();
+        });
     </script>
 </body>
 </html>
