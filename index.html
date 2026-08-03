@@ -283,10 +283,10 @@
             </div>
             
             <div class="menu-container">
-                <div class="menu-section">Área Geral</div>
+                <div class="menu-section">área geral</div>
                 <div class="menu-item active" onclick="mudarAba('calendario', this)">📅 Calendário</div>
                 
-                <div class="menu-section admin-only">Painel Administrativo</div>
+                <div class="menu-section admin-only">painel administrativo</div>
                 <div class="menu-item admin-only" onclick="mudarAba('aprovacoes', this)">👤 Aprovação de Cadastros</div>
                 <div class="menu-item admin-only" onclick="mudarAba('gerenciar-eventos', this)">⚙️ Gerenciar Eventos</div>
             </div>
@@ -322,7 +322,7 @@
             <div class="header-page">
                 <div>
                     <h1>Aprovação de Cadastros</h1>
-                    <p>Gerencie os novos jovens cadastrados na plataforma.</p>
+                    <p>Gerencie os novos jovens cadastrados na plataforma. #aprovacao</p>
                 </div>
             </div>
 
@@ -349,7 +349,7 @@
             <div class="header-page">
                 <div>
                     <h1>Gerenciar Eventos</h1>
-                    <p>Altere datas ou exclua eventos cadastrados.</p>
+                    <p>Altere datas ou exclua eventos cadastrados. #admin</p>
                 </div>
                 <button class="btn-admin" onclick="abrirModalEvento()">+ Novo Evento</button>
             </div>
@@ -404,7 +404,7 @@
     </div>
 
     <script>
-        // Estado inicial simulado de dados
+        // Estado inicial de dados
         let perfilAtual = 'admin'; // 'admin' ou 'jovem'
         
         let cadastrosPendentes = [
@@ -433,7 +433,7 @@
             // Ocultar/Exibir itens de Admin
             const elementosAdmin = document.querySelectorAll('.admin-only');
             elementosAdmin.forEach(el => {
-                el.style.display = perfilAtual === 'admin' ? (el.tagName === 'DIV' && el.classList.contains('menu-section') ? 'block' : 'flex' || 'block') : 'none';
+                el.style.display = perfilAtual === 'admin' ? (el.tagName === 'DIV' && el.classList.contains('menu-section') ? 'block' : 'flex') : 'none';
             });
 
             if(perfilAtual === 'jovem' && document.querySelector('.tab-content.active').id !== 'tab-calendario') {
