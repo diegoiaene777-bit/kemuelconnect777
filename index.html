@@ -205,6 +205,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .nav-brand {
@@ -218,7 +220,27 @@
     .user-info {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
+    }
+
+    .btn-switch-view {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(37, 99, 235, 0.4);
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-switch-view:hover {
+      background: var(--primary);
+      color: #fff;
     }
 
     .btn-logout {
@@ -231,6 +253,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
     }
 
     .dash-content {
@@ -263,18 +287,6 @@
     }
 
     th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
-
-    .action-btn {
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .btn-approve { background: #10b981; color: #fff; margin-right: 0.5rem; }
-    .btn-reject { background: #ef4444; color: #fff; }
   </style>
 </head>
 <body>
@@ -402,6 +414,10 @@
       </div>
       <div class="user-info">
         <span id="jovemName">Bem-vindo(a)</span>
+        <!-- Botão visível apenas para administradores alternarem de volta -->
+        <button id="btnReturnAdmin" class="btn-switch-view" style="display: none;" onclick="switchView('admin')">
+          <i data-lucide="shield" style="width: 16px;"></i> Voltar ao Painel Admin
+        </button>
         <button class="btn-logout" onclick="handleLogout()">
           <i data-lucide="log-out" style="width: 16px;"></i> Sair
         </button>
@@ -429,6 +445,10 @@
       </div>
       <div class="user-info">
         <span id="adminName">Administrador</span>
+        <!-- Botão para o Admin acessar a Área do Jovem -->
+        <button class="btn-switch-view" onclick="switchView('jovem')">
+          <i data-lucide="flame" style="width: 16px;"></i> Ver Área do Jovem
+        </button>
         <button class="btn-logout" onclick="handleLogout()">
           <i data-lucide="log-out" style="width: 16px;"></i> Sair
         </button>
@@ -486,11 +506,12 @@
   <script>
     lucide.createIcons();
 
-    // CONEXÃO COM O SUPABASE REAL
+    // CONEXÃO COM O SUPABASE
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
     
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentUserRole = null;
 
     // Alternar Telas (Login / Cadastro)
     function toggleView(view) {
@@ -505,6 +526,21 @@
         registerForm.style.display = 'none';
         loginForm.style.display = 'block';
       }
+    }
+
+    // Alternar entre Área do Jovem e Painel Admin (Para Admins)
+    function switchView(target) {
+      if (target === 'jovem') {
+        document.getElementById('adminDashboard').style.display = 'none';
+        document.getElementById('jovemDashboard').style.display = 'block';
+        if (currentUserRole === 'admin' || currentUserRole === 'administrador') {
+          document.getElementById('btnReturnAdmin').style.display = 'inline-flex';
+        }
+      } else if (target === 'admin') {
+        document.getElementById('jovemDashboard').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+      }
+      lucide.createIcons();
     }
 
     // Toggle Mostrar/Ocultar Senha
@@ -610,63 +646,68 @@
       }
 
       const user = data.user;
-      const userStatus = user.user_metadata?.status || 'pendente';
-      const userRole = user.user_metadata?.role || 'jovem';
-      const userName = user.user_metadata?.full_name || email;
+      const role = user.user_metadata?.role || 'jovem';
+      const userName = user.user_metadata?.full_name || user.email.split('@')[0];
 
-      // Verificar Regras de Aprovação
-      if (userStatus === 'pendente') {
-        showAlert('Seu cadastro ainda está aguardando aprovação do administrador.', 'warning');
-        await _supabase.auth.signOut();
-        return;
-      }
+      currentUserRole = role;
 
-      if (userStatus === 'recusado') {
-        showAlert('Seu cadastro foi recusado. Entre em contato com a administração.', 'error');
-        await _supabase.auth.signOut();
-        return;
-      }
-
-      // LOGIN SUCESSO - OCULTA AUTENTICAÇÃO E ABRE O DASHBOARD
+      // Oculta a área de Login
       document.getElementById('authSection').style.display = 'none';
 
-      if (userRole === 'admin' || userRole === 'administrador') {
+      if (role === 'admin' || role === 'administrador') {
         document.getElementById('adminName').innerText = userName;
         document.getElementById('adminDashboard').style.display = 'block';
+        loadAdminUsers();
       } else {
         document.getElementById('jovemName').innerText = `Olá, ${userName}`;
         document.getElementById('jovemDashboard').style.display = 'block';
+        document.getElementById('btnReturnAdmin').style.display = 'none';
       }
+
+      lucide.createIcons();
     }
 
-    // SAIR (LOGOUT)
+    // Carregar Lista de Usuários no Painel Admin
+    async function loadAdminUsers() {
+      const tbody = document.getElementById('usersTableBody');
+      const { data, error } = await _supabase.from('profiles').select('*');
+
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum usuário cadastrado.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(u => `
+        <tr>
+          <td>${u.full_name || 'Sem nome'}</td>
+          <td>${u.email || '-'}</td>
+          <td><span style="background: rgba(37,99,235,0.2); color:#60a5fa; padding:2px 8px; border-radius:4px; font-size:0.8rem;">${u.role || 'jovem'}</span></td>
+          <td><span style="color: ${u.status === 'aprovado' ? '#10b981' : '#f59e0b'};">${u.status || 'pendente'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // LOGOUT
     async function handleLogout() {
       await _supabase.auth.signOut();
+      currentUserRole = null;
       document.getElementById('jovemDashboard').style.display = 'none';
       document.getElementById('adminDashboard').style.display = 'none';
       document.getElementById('authSection').style.display = 'flex';
       hideAlert();
     }
 
-    // FLUXO 3: RECUPERAR SENHA
+    // MODAL RECUPERAÇÃO DE SENHA
     function openForgotModal(e) { e.preventDefault(); document.getElementById('forgotModal').style.display = 'flex'; }
     function closeForgotModal() { document.getElementById('forgotModal').style.display = 'none'; }
-
+    
     async function handleForgotPassword(e) {
       e.preventDefault();
       const email = document.getElementById('recoveryEmail').value.trim();
-
-      const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://kemuelconnect777.vercel.app'
-      });
-
+      const { error } = await _supabase.auth.resetPasswordForEmail(email);
       closeForgotModal();
-
-      if (error) {
-        showAlert('Erro ao enviar e-mail.', 'error');
-      } else {
-        showAlert(`E-mail de redefinição enviado para ${email}!`, 'success');
-      }
+      if (error) showAlert(error.message, 'error');
+      else showAlert('Link de recuperação enviado para o seu e-mail!', 'success');
     }
   </script>
 </body>
