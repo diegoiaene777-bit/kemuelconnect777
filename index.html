@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemuel Connect - Autenticação</title>
+  <title>Kemuel Connect</title>
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -35,10 +35,15 @@
     body {
       background: linear-gradient(135deg, #090d16 0%, var(--bg-dark) 50%, #1e1b4b 100%);
       min-height: 100vh;
+      color: var(--text-main);
+    }
+
+    /* ESTILOS DA TELA DE AUTENTICAÇÃO */
+    .auth-page {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-main);
+      min-height: 100vh;
       padding: 1.5rem;
     }
 
@@ -186,118 +191,271 @@
       border-top: 1px solid var(--border-color);
       padding-top: 1.25rem;
     }
+
+    /* ESTILOS DA ÁREA LOGADA (DASHBOARD) */
+    .dashboard {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: rgba(30, 41, 59, 0.9);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dash-content {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card h2 { margin-bottom: 1rem; font-size: 1.25rem; }
+
+    /* Tabela Admin */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th { background: rgba(0,0,0,0.2); color: var(--text-muted); }
+
+    .action-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .btn-approve { background: #10b981; color: #fff; margin-right: 0.5rem; }
+    .btn-reject { background: #ef4444; color: #fff; }
   </style>
 </head>
 <body>
 
-  <div class="login-container">
-    <div class="header">
-      <div class="logo-box">
-        <i data-lucide="flame" style="width: 36px; height: 36px; color: #fff;"></i>
+  <!-- TELA DE AUTENTICAÇÃO -->
+  <div id="authSection" class="auth-page">
+    <div class="login-container">
+      <div class="header">
+        <div class="logo-box">
+          <i data-lucide="flame" style="width: 36px; height: 36px; color: #fff;"></i>
+        </div>
+        <h1>Kemuel Connect</h1>
+        <p>"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
       </div>
-      <h1>Kemuel Connect</h1>
-      <p>"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
+
+      <!-- Alertas -->
+      <div id="alertBox" class="alert">
+        <i id="alertIcon" data-lucide="alert-circle" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
+        <span id="alertText"></span>
+      </div>
+
+      <!-- FORMULÁRIO DE LOGIN -->
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail" class="input-icon"></i>
+            <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock" class="input-icon"></i>
+            <input type="password" id="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon')">
+              <i data-lucide="eye" id="eyeIcon" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-container">
+            <input type="checkbox" id="rememberMe">
+            <span>Lembrar-me</span>
+          </label>
+          <a href="#" class="forgot-link" onclick="openForgotModal(event)">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnLogin">
+          <span>Entrar</span>
+          <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+        </button>
+
+        <button type="button" class="btn btn-secondary" onclick="toggleView('register')">
+          Criar conta
+        </button>
+      </form>
+
+      <!-- FORMULÁRIO DE CRIAR CONTA (CADASTRO) -->
+      <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="regName">Nome Completo</label>
+          <div class="input-wrapper">
+            <i data-lucide="user" class="input-icon"></i>
+            <input type="text" id="regName" placeholder="Seu nome" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">E-mail</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail" class="input-icon"></i>
+            <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regRole">Perfil</label>
+          <div class="input-wrapper">
+            <i data-lucide="shield" class="input-icon"></i>
+            <select id="regRole" required>
+              <option value="jovem">Jovem</option>
+              <option value="secretario">Secretário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Senha</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock" class="input-icon"></i>
+            <input type="password" id="regPassword" placeholder="••••••••" minlength="6" required>
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword', 'regEyeIcon')">
+              <i data-lucide="eye" id="regEyeIcon" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnRegister">
+          <span>Cadastrar</span>
+          <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+        </button>
+
+        <button type="button" class="btn btn-secondary" onclick="toggleView('login')">
+          Já tenho uma conta
+        </button>
+      </form>
+
+      <div class="footer">
+        <p>&copy; Kemuel Connect. Todos os direitos reservados.</p>
+        <p>Versão 1.0.0</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Alertas -->
-    <div id="alertBox" class="alert">
-      <i id="alertIcon" data-lucide="alert-circle" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
-      <span id="alertText"></span>
+  <!-- ÁREA DO JOVEM -->
+  <div id="jovemDashboard" class="dashboard">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <i data-lucide="flame" style="color: #2563eb;"></i>
+        <span>Kemuel Connect - Área do Jovem</span>
+      </div>
+      <div class="user-info">
+        <span id="jovemName">Bem-vindo(a)</span>
+        <button class="btn-logout" onclick="handleLogout()">
+          <i data-lucide="log-out" style="width: 16px;"></i> Sair
+        </button>
+      </div>
+    </nav>
+    
+    <div class="dash-content">
+      <div class="card">
+        <h2>🔥 Próximos Eventos & Cultos</h2>
+        <p style="color: var(--text-muted);">Confira os próximos encontros do grupo de jovens.</p>
+      </div>
+      <div class="card">
+        <h2>📢 Avisos Gerais</h2>
+        <p style="color: var(--text-muted);">Nenhum aviso no momento.</p>
+      </div>
     </div>
+  </div>
 
-    <!-- FORMULÁRIO DE LOGIN -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <div class="input-wrapper">
-          <i data-lucide="mail" class="input-icon"></i>
-          <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
-        </div>
+  <!-- PAINEL DO ADMINISTRADOR -->
+  <div id="adminDashboard" class="dashboard">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <i data-lucide="shield" style="color: #2563eb;"></i>
+        <span>Kemuel Connect - Painel Administrativo</span>
       </div>
-
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <div class="input-wrapper">
-          <i data-lucide="lock" class="input-icon"></i>
-          <input type="password" id="password" placeholder="••••••••" required>
-          <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon')">
-            <i data-lucide="eye" id="eyeIcon" style="width: 18px; height: 18px;"></i>
-          </button>
-        </div>
+      <div class="user-info">
+        <span id="adminName">Administrador</span>
+        <button class="btn-logout" onclick="handleLogout()">
+          <i data-lucide="log-out" style="width: 16px;"></i> Sair
+        </button>
       </div>
-
-      <div class="form-options">
-        <label class="checkbox-container">
-          <input type="checkbox" id="rememberMe">
-          <span>Lembrar-me</span>
-        </label>
-        <a href="#" class="forgot-link" onclick="openForgotModal(event)">Esqueci minha senha</a>
+    </nav>
+    
+    <div class="dash-content">
+      <div class="card">
+        <h2>👥 Gestão e Aprovação de Usuários</h2>
+        <p style="color: var(--text-muted);">Aprove ou recuse novos cadastros pendentes no sistema.</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Perfil</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted);">Buscando usuários...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <button type="submit" class="btn btn-primary" id="btnLogin">
-        <span>Entrar</span>
-        <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-      </button>
-
-      <button type="button" class="btn btn-secondary" onclick="toggleView('register')">
-        Criar conta
-      </button>
-    </form>
-
-    <!-- FORMULÁRIO DE CRIAR CONTA (CADASTRO) -->
-    <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
-      <div class="form-group">
-        <label for="regName">Nome Completo</label>
-        <div class="input-wrapper">
-          <i data-lucide="user" class="input-icon"></i>
-          <input type="text" id="regName" placeholder="Seu nome" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="regEmail">E-mail</label>
-        <div class="input-wrapper">
-          <i data-lucide="mail" class="input-icon"></i>
-          <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="regRole">Perfil</label>
-        <div class="input-wrapper">
-          <i data-lucide="shield" class="input-icon"></i>
-          <select id="regRole" required>
-            <option value="jovem">Jovem</option>
-            <option value="secretario">Secretário</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="regPassword">Senha</label>
-        <div class="input-wrapper">
-          <i data-lucide="lock" class="input-icon"></i>
-          <input type="password" id="regPassword" placeholder="••••••••" minlength="6" required>
-          <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword', 'regEyeIcon')">
-            <i data-lucide="eye" id="regEyeIcon" style="width: 18px; height: 18px;"></i>
-          </button>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary" id="btnRegister">
-        <span>Cadastrar</span>
-        <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
-      </button>
-
-      <button type="button" class="btn btn-secondary" onclick="toggleView('login')">
-        Já tenho uma conta
-      </button>
-    </form>
-
-    <div class="footer">
-      <p>&copy; Kemuel Connect. Todos os direitos reservados.</p>
-      <p>Versão 1.0.0</p>
     </div>
   </div>
 
@@ -400,7 +558,6 @@
       btn.disabled = true;
       btn.innerText = 'Cadastrando...';
 
-      // 1. Criar usuário no Supabase Auth
       const { data, error } = await _supabase.auth.signUp({
         email: email,
         password: password,
@@ -408,7 +565,7 @@
           data: {
             full_name: name,
             role: role,
-            status: 'pendente' // Novo cadastro inicia como Pendente
+            status: 'pendente'
           }
         }
       });
@@ -426,7 +583,7 @@
       setTimeout(() => toggleView('login'), 3000);
     }
 
-    // FLUXO 2: LOGIN
+    // FLUXO 2: LOGIN E DIRECIONAMENTO
     async function handleLogin(e) {
       e.preventDefault();
       hideAlert();
@@ -438,7 +595,6 @@
       btn.disabled = true;
       btn.innerText = 'Entrando...';
 
-      // Autenticar com o Supabase
       const { data, error } = await _supabase.auth.signInWithPassword({
         email: email,
         password: password
@@ -456,6 +612,7 @@
       const user = data.user;
       const userStatus = user.user_metadata?.status || 'pendente';
       const userRole = user.user_metadata?.role || 'jovem';
+      const userName = user.user_metadata?.full_name || email;
 
       // Verificar Regras de Aprovação
       if (userStatus === 'pendente') {
@@ -465,21 +622,30 @@
       }
 
       if (userStatus === 'recusado') {
-        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.', 'error');
+        showAlert('Seu cadastro foi recusado. Entre em contato com a administração.', 'error');
         await _supabase.auth.signOut();
         return;
       }
 
-      showAlert('Login realizado com sucesso!', 'success');
+      // LOGIN SUCESSO - OCULTA AUTENTICAÇÃO E ABRE O DASHBOARD
+      document.getElementById('authSection').style.display = 'none';
 
-      // Redirecionamento por Perfil
-      setTimeout(() => {
-        if (userRole === 'jovem') {
-          alert('Redirecionando para a Área do Jovem...');
-        } else {
-          alert(`Redirecionando para o Painel Administrativo (${userRole})...`);
-        }
-      }, 1000);
+      if (userRole === 'admin' || userRole === 'administrador') {
+        document.getElementById('adminName').innerText = userName;
+        document.getElementById('adminDashboard').style.display = 'block';
+      } else {
+        document.getElementById('jovemName').innerText = `Olá, ${userName}`;
+        document.getElementById('jovemDashboard').style.display = 'block';
+      }
+    }
+
+    // SAIR (LOGOUT)
+    async function handleLogout() {
+      await _supabase.auth.signOut();
+      document.getElementById('jovemDashboard').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'none';
+      document.getElementById('authSection').style.display = 'flex';
+      hideAlert();
     }
 
     // FLUXO 3: RECUPERAR SENHA
@@ -497,9 +663,9 @@
       closeForgotModal();
 
       if (error) {
-        showAlert('Erro ao enviar e-mail. Verifique se o endereço está correto.', 'error');
+        showAlert('Erro ao enviar e-mail.', 'error');
       } else {
-        showAlert(`E-mail de redefinição enviado para ${email}! Verifique sua caixa de entrada/spam.`, 'success');
+        showAlert(`E-mail de redefinição enviado para ${email}!`, 'success');
       }
     }
   </script>
