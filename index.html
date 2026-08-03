@@ -23,9 +23,9 @@
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
     .avatar-container:hover .avatar-overlay { opacity: 1; }
 
-    #licao-conteudo p, #licao-aba-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-conteudo h3, #licao-conteudo h4, #licao-aba-conteudo h3, #licao-aba-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
-    #licao-conteudo blockquote, #licao-aba-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
+    #licao-aba-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
+    #licao-aba-conteudo h3, #licao-aba-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
+    #licao-aba-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
@@ -49,16 +49,8 @@
         <i class="fa-solid fa-user w-5 text-blue-600 shrink-0"></i> Meu Perfil
       </button>
 
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
+      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
         <i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
-      </button>
-      
-      <button onclick="navegarPara('biblia')" id="nav-biblia" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
-        <i class="fa-solid fa-book-bible w-5 text-amber-300 shrink-0"></i> Bíblia
-      </button>
-      
-      <button onclick="navegarPara('licao')" id="nav-licao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-book-open-reader w-5 text-cyan-400 shrink-0"></i> Lição da Escola Sabatina
       </button>
       
       <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
@@ -139,173 +131,187 @@
               <span id="perfil-status" class="text-[10px] bg-emerald-500 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
             </div>
             <p id="perfil-funcao" class="text-sm text-blue-200 font-medium">Líder de Jovens • Clube Kemuel</p>
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-300 pt-1">
-              <span><i class="fa-regular fa-calendar-alt text-amber-400 mr-1 shrink-0"></i> Cadastrado em: <strong class="text-white" id="perfil-data-cadastro">15/01/2026</strong></span>
-            </div>
           </div>
         </div>
       </div>
-
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-        <h3 class="font-bold text-base text-blue-950 border-b pb-2 flex items-center gap-2">
-          <i class="fa-solid fa-address-card text-blue-600"></i> Informações Pessoais
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
-            <span class="text-gray-500 font-bold block">E-mail</span>
-            <p class="text-gray-800 font-semibold text-sm mt-1" id="info-email">diego@kemuel.com</p>
-          </div>
-          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
-            <span class="text-gray-500 font-bold block">Data de Nascimento</span>
-            <p class="text-gray-800 font-semibold text-sm mt-1" id="info-nascimento">20/05/2000</p>
-          </div>
-          <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-1">
-            <label for="input-telefone" class="text-gray-500 font-bold block">Telefone / WhatsApp</label>
-            <input type="text" id="input-telefone" value="(85) 99999-8888" class="w-full bg-white border border-gray-300 rounded-lg px-2.5 py-1 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-600">
-          </div>
-        </div>
-      </section>
     </div>
 
-    <!-- TELA: MINHA COMUNHÃO -->
-    <div id="sec-comunhao" class="hidden space-y-6">
+    <!-- TELA: MINHA COMUNHÃO (COM OS 3 CARDS INTERNOS) -->
+    <div id="sec-comunhao" class="space-y-6">
       <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="space-y-1">
           <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
             <i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
           </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus."</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: BÍBLIA COMPLETA VIA API GRATUITA -->
-    <div id="sec-biblia" class="space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
-            <i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">Acesse todos os livros, capítulos e versículos. #biblia #anobiblico</p>
-        </div>
-        <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl text-xs font-bold border border-white/20">
-          <label for="select-versao-biblia" class="text-blue-200">Versão:</label>
-          <select id="select-versao-biblia" onchange="carregarTextoBiblia()" class="bg-blue-950 text-amber-400 font-bold px-2 py-1 rounded-lg border border-blue-800 focus:outline-none">
-            <option value="almeida">Almeida (Português)</option>
-            <option value="kjv">King James Version (Inglês)</option>
-          </select>
+          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus." #comunhao #anobiblico</p>
         </div>
       </div>
 
-      <!-- PAINEL DE NAVEGAÇÃO E LEITURA COMPLETA -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Seletor de Livros, Capítulos e Versículos -->
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-4 lg:col-span-1">
-          <h3 class="font-bold text-sm text-blue-950 border-b pb-2 flex items-center gap-2">
-            <i class="fa-solid fa-list text-blue-600"></i> Navegação Bíblica
-          </h3>
-
-          <div class="space-y-3 text-xs">
+      <!-- GRID COM OS 3 CARDS PRINCIPAIS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- CARD 1: DEVOCIONAL DIÁRIO -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between card-hover">
+          <div class="space-y-4">
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl font-bold shadow-inner">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
             <div>
-              <label for="biblia-livro" class="font-bold text-gray-600 block mb-1">Livro:</label>
-              <select id="biblia-livro" onchange="atualizarCapitulosBiblia()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
-                <!-- Preenchido via JS -->
-              </select>
+              <h3 class="text-lg font-extrabold text-blue-950">Devocional Diário</h3>
+              <p class="text-xs text-gray-500 mt-1">Plano de leitura diária e anotações pessoais das suas reflexões espirituais.</p>
             </div>
-
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label for="biblia-capitulo" class="font-bold text-gray-600 block mb-1">Capítulo:</label>
-                <select id="biblia-capitulo" onchange="carregarTextoBiblia()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2 font-semibold text-gray-800 focus:ring-2 focus:ring-blue-600">
-                  <!-- Preenchido via JS -->
-                </select>
-              </div>
-              <div class="flex items-end">
-                <button onclick="carregarTextoBiblia()" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-xl transition shadow text-xs">
-                  Ler
-                </button>
-              </div>
-            </div>
+          </div>
+          <div class="pt-6 mt-4 border-t border-gray-100">
+            <button onclick="abrirModalDevocional()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-pen-nib"></i> Iniciar Devocional
+            </button>
           </div>
         </div>
 
-        <!-- Exibição do Texto Bíblico Completo -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 lg:col-span-3 space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+        <!-- CARD 2: BÍBLIA SAGRADA -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between card-hover">
+          <div class="space-y-4">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl font-bold shadow-inner">
+              <i class="fa-solid fa-book-bible"></i>
+            </div>
             <div>
-              <h3 id="biblia-titulo-leitura" class="text-xl font-extrabold text-blue-950">Gênesis 1</h3>
-              <p class="text-xs text-gray-400 mt-0.5">Texto completo via API • Clique em um versículo para interagir</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="mudarCapituloBiblia(-1)" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">
-                <i class="fa-solid fa-chevron-left mr-1"></i> Anterior
-              </button>
-              <button onclick="mudarCapituloBiblia(1)" class="px-3 py-1.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl transition shadow">
-                Próximo <i class="fa-solid fa-chevron-right ml-1"></i>
-              </button>
+              <h3 class="text-lg font-extrabold text-blue-950">Bíblia Sagrada</h3>
+              <p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada.</p>
             </div>
           </div>
+          <div class="pt-6 mt-4 border-t border-gray-100">
+            <button onclick="abrirModalBiblia()" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-book-open-reader"></i> Abrir Bíblia
+            </button>
+          </div>
+        </div>
 
-          <div id="biblia-conteudo-texto" class="space-y-3 text-sm text-gray-800 leading-relaxed">
-            <div class="p-8 text-center text-gray-400 font-medium">
-              <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
-              <p>Carregando texto sagrado completo...</p>
+        <!-- CARD 3: ESCOLA SABATINA -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between card-hover">
+          <div class="space-y-4">
+            <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold shadow-inner">
+              <i class="fa-solid fa-book-open-reader"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-extrabold text-blue-950">Escola Sabatina</h3>
+              <p class="text-xs text-gray-500 mt-1">Acompanhe e estude a lição diária da Escola Sabatina #licaoescolasabatina.</p>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: LIÇÃO DA ESCOLA SABATINA -->
-    <div id="sec-licao" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 id="licao-aba-titulo" class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
-            <i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina
-          </h2>
-          <p id="licao-aba-subtitulo" class="text-xs md:text-sm text-blue-200">Escola Sabatina — Estudo Diário #licaoescolasabatina</p>
-        </div>
-        <button onclick="confirmarEstudoLicaoAPI()" id="btn-concluir-licao-aba" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center gap-2 shrink-0">
-          <i class="fa-solid fa-check"></i> Marcar como Estudado (+50 pts)
-        </button>
-      </div>
-
-      <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-        <div id="licao-aba-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-4">
-          <div class="p-8 text-center text-gray-400 font-medium">
-            <i class="fa-solid fa-spinner fa-spin text-2xl text-cyan-600 mb-2"></i>
-            <p>Carregando lição de hoje...</p>
+          <div class="pt-6 mt-4 border-t border-gray-100">
+            <button onclick="abrirModalLicao()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-book-bookmark"></i> Ler Lição de Hoje
+            </button>
           </div>
         </div>
+
       </div>
     </div>
 
   </main>
 
-  <!-- MODAL DE CORTE DE IMAGEM -->
-  <div id="modal-crop-foto" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-4 bg-blue-950 text-white flex justify-between items-center">
-        <h3 class="font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-crop text-amber-400"></i> Recortar Foto de Perfil</h3>
-        <button onclick="fecharModalCrop()" class="text-gray-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+  <!-- MODAL DE DEVOCIONAL -->
+  <div id="modal-devocional" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open text-amber-400"></i> Devocional Diário</h3>
+        <button onclick="fecharModalDevocional()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
-      <div class="p-4 flex-1 flex justify-center items-center bg-gray-900 overflow-hidden min-h-[280px]">
-        <img id="crop-image-preview" src="" class="max-w-full max-h-[60vh] object-contain">
+      
+      <div class="p-6 flex-1 overflow-y-auto space-y-6">
+        <div class="bg-blue-50 border border-blue-100 p-5 rounded-xl">
+          <h4 class="text-sm font-bold text-blue-950 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-calendar-day text-blue-600"></i> Leitura de Hoje #anobiblico
+          </h4>
+          <div class="flex justify-between items-center bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
+            <div class="flex flex-col">
+              <span class="font-bold text-lg text-gray-800">Gênesis 1 a 3</span>
+              <span class="text-xs text-gray-500">Plano Anual de Leitura</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="space-y-3">
+          <label for="texto-reflexao" class="font-bold text-gray-700 flex items-center gap-2 text-sm">
+            <i class="fa-solid fa-pen text-amber-500"></i> Minhas Anotações & Reflexões
+          </label>
+          <textarea id="texto-reflexao" rows="6" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-4 text-sm text-gray-800 focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="O que Deus falou com você hoje através dessa leitura? Escreva sua reflexão..."></textarea>
+        </div>
       </div>
-      <div class="p-4 bg-gray-50 border-t flex justify-between items-center gap-3">
-        <button onclick="fecharModalCrop()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs rounded-xl transition">Cancelar</button>
-        <button onclick="salvarFotoRecortada()" id="btn-salvar-foto" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Salvar Foto
+      
+      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
+        <button onclick="fecharModalDevocional()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm rounded-xl transition">Cancelar</button>
+        <button onclick="salvarDevocional()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-xl shadow-md transition hover:-translate-y-0.5 flex items-center gap-2">
+          <i class="fa-solid fa-check"></i> Concluir Devocional
         </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL DE VISUALIZAÇÃO DE FOTO -->
-  <div id="modal-view-foto" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
-    <div class="relative max-w-lg w-full flex flex-col items-center">
-      <img id="foto-ampliada" src="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl border-2 border-white/20 object-contain">
-      <p class="text-white text-xs mt-3 opacity-75">Clique em qualquer lugar para fechar</p>
+  <!-- MODAL DA BÍBLIA -->
+  <div id="modal-biblia" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
+        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa</h3>
+        <button onclick="fecharModalBiblia()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="p-6 flex-1 overflow-y-auto space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-xl border">
+          <div>
+            <label class="font-bold text-xs text-gray-600 block mb-1">Livro:</label>
+            <select id="biblia-livro" onchange="atualizarCapitulosBiblia()" class="w-full bg-white border border-gray-300 rounded-lg p-2 font-semibold text-xs text-gray-800">
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-xs text-gray-600 block mb-1">Capítulo:</label>
+            <select id="biblia-capitulo" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-lg p-2 font-semibold text-xs text-gray-800">
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-xs text-gray-600 block mb-1">Versão:</label>
+            <select id="select-versao-biblia" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-lg p-2 font-semibold text-xs text-gray-800">
+              <option value="almeida">Almeida (Português)</option>
+              <option value="kjv">King James (Inglês)</option>
+            </select>
+          </div>
+          <div class="flex items-end">
+            <button onclick="carregarTextoBiblia()" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-lg text-xs shadow transition">Ler Texto</button>
+          </div>
+        </div>
+
+        <div class="border-b pb-3 flex justify-between items-center">
+          <h4 id="biblia-titulo-leitura" class="text-base font-extrabold text-blue-950">Gênesis 1</h4>
+          <div class="flex gap-2">
+            <button onclick="mudarCapituloBiblia(-1)" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-lg"><i class="fa-solid fa-chevron-left"></i></button>
+            <button onclick="mudarCapituloBiblia(1)" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-lg">Próximo <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <div id="biblia-conteudo-texto" class="space-y-3 text-sm text-gray-800 leading-relaxed max-h-96 overflow-y-auto pr-2">
+          <p class="text-center text-gray-400">Selecione um livro e capítulo acima.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DA ESCOLA SABATINA -->
+  <div id="modal-licao" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-5 bg-gradient-to-r from-cyan-900 to-blue-950 text-white flex justify-between items-center">
+        <h3 id="licao-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina</h3>
+        <button onclick="fecharModalLicao()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="p-6 flex-1 overflow-y-auto space-y-4">
+        <p id="licao-modal-subtitulo" class="text-xs text-blue-600 font-bold uppercase tracking-wider">Estudo Diário</p>
+        <div id="licao-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3">
+          <div class="p-8 text-center text-gray-400">Carregando lição de hoje...</div>
+        </div>
+      </div>
+      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
+        <button onclick="fecharModalLicao()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-xl">Fechar</button>
+        <button onclick="confirmarEstudoLicaoAPI()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition">
+          <i class="fa-solid fa-check mr-1"></i> Marcar como Estudado (+50 pts)
+        </button>
+      </div>
     </div>
   </div>
 
@@ -316,14 +322,8 @@
   </div>
 
   <script>
-    let cropper = null;
-    let currentUser = {
-      id: "usr-123456",
-      nome: "Diego Iaene",
-      fotoUrl: null
-    };
+    let currentUser = { nome: "Diego Iaene", fotoUrl: null };
 
-    // Lista completa dos 66 livros da Bíblia com quantidade exata de capítulos
     const listaLivrosBiblia = [
       { nome: "Gênesis", caps: 50 }, { nome: "Êxodo", caps: 40 }, { nome: "Levítico", caps: 27 },
       { nome: "Números", caps: 36 }, { nome: "Deuteronômio", caps: 34 }, { nome: "Josué", caps: 24 },
@@ -350,13 +350,12 @@
     ];
 
     document.addEventListener("DOMContentLoaded", () => {
-      atualizarFotosInterface();
       inicializarSeletorLivrosBiblia();
       carregarTextoBiblia();
     });
 
     function navegarPara(tela) {
-      const telas = ['dashboard', 'perfil', 'comunhao', 'biblia', 'licao'];
+      const telas = ['dashboard', 'perfil', 'comunhao'];
       telas.forEach(t => {
         const el = document.getElementById(`sec-${t}`);
         if(el) el.classList.add('hidden');
@@ -368,33 +367,28 @@
       document.querySelectorAll('nav button').forEach(b => b.classList.remove('sidebar-active'));
       const activeBtn = document.getElementById(`nav-${tela}`);
       if(activeBtn) activeBtn.classList.add('sidebar-active');
-
-      if (tela === 'licao') {
-        carregarLicaoNaAba();
-      }
     }
 
-    // Funções da Aba Bíblia com API Bible-API Completa
+    // Funções da Bíblia
     function inicializarSeletorLivrosBiblia() {
       const selectLivro = document.getElementById('biblia-livro');
+      if(!selectLivro) return;
       selectLivro.innerHTML = '';
-
       listaLivrosBiblia.forEach((livro, index) => {
         const opt = document.createElement('option');
         opt.value = index;
         opt.innerText = livro.nome;
         selectLivro.appendChild(opt);
       });
-
       atualizarCapitulosBiblia();
     }
 
     function atualizarCapitulosBiblia() {
-      const idxLivro = document.getElementById('biblia-livro').value;
-      const livroObj = listaLivrosBiblia[idxLivro];
+      const selectLivro = document.getElementById('biblia-livro');
       const selectCap = document.getElementById('biblia-capitulo');
+      if(!selectLivro || !selectCap) return;
+      const livroObj = listaLivrosBiblia[selectLivro.value];
       selectCap.innerHTML = '';
-
       for (let i = 1; i <= livroObj.caps; i++) {
         const opt = document.createElement('option');
         opt.value = i;
@@ -404,130 +398,82 @@
     }
 
     async function carregarTextoBiblia() {
-      const idxLivro = document.getElementById('biblia-livro').value;
-      const livroObj = listaLivrosBiblia[idxLivro];
-      const capitulo = document.getElementById('biblia-capitulo').value || 1;
-      const versao = document.getElementById('select-versao-biblia').value;
+      const selectLivro = document.getElementById('biblia-livro');
+      const selectCap = document.getElementById('biblia-capitulo');
+      const selectVersao = document.getElementById('select-versao-biblia');
+      if(!selectLivro || !selectCap) return;
+
+      const livroObj = listaLivrosBiblia[selectLivro.value];
+      const capitulo = selectCap.value || 1;
+      const versao = selectVersao ? selectVersao.value : 'almeida';
 
       const tituloEl = document.getElementById('biblia-titulo-leitura');
       const conteudoEl = document.getElementById('biblia-conteudo-texto');
 
       tituloEl.innerText = `${livroObj.nome} ${capitulo}`;
-      conteudoEl.innerHTML = `
-        <div class="p-8 text-center text-gray-400 font-medium">
-          <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
-          <p>Carregando ${livroObj.nome} ${capitulo} (${versao.toUpperCase()})...</p>
-        </div>
-      `;
+      conteudoEl.innerHTML = `<p class="text-center text-gray-400">Carregando...</p>`;
 
       try {
         const query = `${livroObj.nome} ${capitulo}`;
-        const url = `https://bible-api.com/${encodeURIComponent(query)}?translation=${versao}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Erro ao buscar versículos");
+        const res = await fetch(`https://bible-api.com/${encodeURIComponent(query)}?translation=${versao}`);
+        if (!res.ok) throw new Error();
         const data = await res.json();
 
-        let htmlVersiculos = '';
-        if (data.verses && data.verses.length > 0) {
-          data.verses.forEach(v => {
-            htmlVersiculos += `
-              <p class="hover:bg-blue-50/60 p-1.5 rounded-lg transition cursor-pointer" onclick="selecionarVersiculoBiblia(${v.verse}, '${v.text.replace(/'/g, "\\'")}')">
-                <strong class="text-blue-950 font-bold mr-1.5 select-none">${v.verse}</strong> ${v.text}
-              </p>
-            `;
-          });
-        } else {
-          htmlVersiculos = `<p class="text-gray-500 italic">Texto não retornado pela API para esta seleção.</p>`;
-        }
-
-        conteudoEl.innerHTML = htmlVersiculos;
-      } catch (err) {
-        conteudoEl.innerHTML = `
-          <div class="p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs space-y-2">
-            <p class="font-bold">Não foi possível carregar o texto online no momento.</p>
-            <p>Verifique sua conexão com a internet. #biblia</p>
-          </div>
-        `;
+        let html = '';
+        data.verses.forEach(v => {
+          html += `<p class="hover:bg-blue-50 p-1 rounded"><strong class="text-blue-950 font-bold mr-1">${v.verse}</strong> ${v.text}</p>`;
+        });
+        conteudoEl.innerHTML = html;
+      } catch (e) {
+        conteudoEl.innerHTML = `<p class="text-red-500 text-xs">Erro ao carregar o texto bíblico online. #biblia</p>`;
       }
     }
 
     function mudarCapituloBiblia(direcao) {
       const selectCap = document.getElementById('biblia-capitulo');
-      const idxAtual = selectCap.selectedIndex;
-      const novoIdx = idxAtual + direcao;
-
+      const novoIdx = selectCap.selectedIndex + direcao;
       if (novoIdx >= 0 && novoIdx < selectCap.options.length) {
         selectCap.selectedIndex = novoIdx;
         carregarTextoBiblia();
       }
     }
 
-    function selecionarVersiculoBiblia(num, texto) {
-      const livroObj = listaLivrosBiblia[document.getElementById('biblia-livro').value];
-      const cap = document.getElementById('biblia-capitulo').value;
-      const referencia = `${livroObj.nome} ${cap}:${num}`;
-      
-      exhibirToast(`Versículo selecionado: ${referencia}`);
-    }
-
-    // Funções auxiliares da Escola Sabatina
-    function obterUrlLicaoDoDia() {
-      const hoje = new Date().getDay();
-      const diaMapeado = hoje === 0 ? 1 : hoje + 1;
-      const diaString = String(diaMapeado).padStart(2, '0');
-      return `https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${diaString}/read/index.json`;
-    }
-
-    async function carregarLicaoNaAba() {
-      const tituloEl = document.getElementById('licao-aba-titulo');
-      const subtituloEl = document.getElementById('licao-aba-subtitulo');
-      const conteudoEl = document.getElementById('licao-aba-conteudo');
-
+    // Funções da Escola Sabatina
+    async function abrirModalLicao() {
+      document.getElementById('modal-licao').classList.remove('hidden');
+      const conteudoEl = document.getElementById('licao-modal-conteudo');
       try {
-        const response = await fetch(obterUrlLicaoDoDia());
-        if (!response.ok) throw new Error("Erro");
-        const data = await response.json();
-        tituloEl.innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title || "Lição da Escola Sabatina"}`;
-        subtituloEl.innerText = `${data.date || "Estudo Diário"} #licaoescolasabatina`;
+        const hoje = new Date().getDay();
+        const diaMapeado = hoje === 0 ? 1 : hoje + 1;
+        const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/${String(diaMapeado).padStart(2, '0')}/read/index.json`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        document.getElementById('licao-modal-titulo').innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title}`;
+        document.getElementById('licao-modal-subtitulo').innerText = `${data.date} #licaoescolasabatina`;
         conteudoEl.innerHTML = data.content;
       } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-600">Erro ao carregar a lição.</p>`;
+        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar a lição. #licaoescolasabatina</p>`;
       }
     }
 
+    function fecharModalLicao() { document.getElementById('modal-licao').classList.add('hidden'); }
+    function abrirModalBiblia() { document.getElementById('modal-biblia').classList.remove('hidden'); }
+    function fecharModalBiblia() { document.getElementById('modal-biblia').classList.add('hidden'); }
+    function abrirModalDevocional() { document.getElementById('modal-devocional').classList.remove('hidden'); }
+    function fecharModalDevocional() { document.getElementById('modal-devocional').classList.add('hidden'); }
+
+    function salvarDevocional() {
+      fecharModalDevocional();
+      exhibirToast("Devocional salvo com sucesso! +100 pontos. #anobiblico");
+      document.getElementById('texto-reflexao').value = '';
+      if (typeof confetti === "function") confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+    }
+
     function confirmarEstudoLicaoAPI() {
-      exhibirToast("Estudo da Lição registrado! +50 pontos.");
+      fecharModalLicao();
+      exhibirToast("Estudo registrado com sucesso! +50 pontos. #licaoescolasabatina");
     }
 
-    function toggleAvatarMenu(e) {
-      e.stopPropagation();
-      document.getElementById('avatar-dropdown').classList.toggle('hidden');
-    }
-
-    function gerarAvatarPadrao(nome) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 200;
-      canvas.height = 200;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, 200, 200);
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = 'bold 80px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(nome.charAt(0).toUpperCase(), 100, 105);
-      return canvas.toDataURL('image/png');
-    }
-
-    function atualizarFotosInterface() {
-      const fotoUrlFinal = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome);
-      document.querySelectorAll('.user-avatar-target').forEach(img => img.src = fotoUrlFinal);
-    }
-
-    function abrirSeletorFoto() { document.getElementById('input-foto-upload').click(); }
-    function fecharModalCrop() { document.getElementById('modal-crop-foto').classList.add('hidden'); if(cropper) cropper.destroy(); }
-    function visualizarFoto() { document.getElementById('foto-ampliada').src = currentUser.fotoUrl || gerarAvatarPadrao(currentUser.nome); document.getElementById('modal-view-foto').classList.remove('hidden'); }
-    
     function exhibirToast(msg) {
       const toast = document.getElementById('toast-notificacao');
       document.getElementById('toast-mensagem').innerText = msg;
