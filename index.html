@@ -1257,7 +1257,9 @@
             <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-blue-950 text-white flex items-center justify-center font-black text-lg shadow-lg border-4 border-white ring-2 ring-blue-100">${pessoa.iniciais}</div>
             <p class="text-xs md:text-sm font-extrabold text-blue-950 text-center leading-tight">${pessoa.nome}</p>
             <p class="text-[10px] text-amber-600 font-bold">${pessoa.pontos} pts</p>
-            <div class="w-full ${corPodio[idx]} ${alturaPodio[idx]} rounded-t-[16px] shadow-inner"></div>
+            <div class="w-full ${corPodio[idx]} ${alturaPodio[idx]} rounded-t-[16px] shadow-inner flex items-center justify-center text-blue-950 font-black text-base">
+              ${idx === 0 ? '2º' : idx === 1 ? '1º' : '3º'}
+            </div>
           </div>
         `;
       });
@@ -1265,22 +1267,23 @@
 
       const listaEl = document.getElementById('ranking-lista');
       let listaHtml = '';
-      ordenados.forEach((pessoa, index) => {
-        const posicao = index + 1;
-        const percentual = Math.round((pessoa.pontos / maiorPontuacao) * 100);
-        const souEu = usuarioLogado && pessoa.nome === usuarioLogado.nome;
+      ordenados.forEach((pessoa, idx) => {
+        const larguraBarra = Math.max(10, Math.round((pessoa.pontos / maiorPontuacao) * 100));
         listaHtml += `
-          <div class="p-4 flex items-center gap-4 ${souEu ? 'bg-amber-50' : 'hover:bg-gray-50'} transition">
-            <span class="w-7 text-center text-sm font-black ${posicao <= 3 ? 'text-amber-500' : 'text-gray-400'}">${posicao}º</span>
-            <div class="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow">${pessoa.iniciais}</div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-extrabold text-blue-950 truncate">${pessoa.nome} ${souEu ? '<span class="text-[10px] bg-amber-500 text-blue-950 px-2 py-0.5 rounded-full font-black ml-1">VOCÊ</span>' : ''}</span>
-                <span class="text-xs font-black text-blue-900">${pessoa.pontos} pts</span>
+          <div class="p-4 flex items-center justify-between gap-4 hover:bg-gray-50 transition">
+            <div class="flex items-center gap-4">
+              <span class="w-6 text-center font-extrabold text-xs text-gray-400">${idx + 1}º</span>
+              <div class="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-black text-xs shrink-0">${pessoa.iniciais}</div>
+              <div class="space-y-0.5">
+                <h4 class="text-xs font-extrabold text-blue-950">${pessoa.nome}</h4>
+                <p class="text-[10px] text-gray-400 font-bold">${pessoa.cargo}</p>
               </div>
+            </div>
+            <div class="flex items-center gap-3 w-1/3 max-w-[200px]">
               <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-blue-900 h-full rounded-full transition-all duration-500" style="width: ${percentual}%"></div>
+                <div class="bg-blue-900 h-full rounded-full" style="width: ${larguraBarra}%"></div>
               </div>
+              <span class="text-xs font-black text-blue-950 shrink-0">${pessoa.pontos} pts</span>
             </div>
           </div>
         `;
@@ -1291,29 +1294,33 @@
     function renderizarDesafios() {
       const grid = document.getElementById('desafios-grid');
       const resumoEl = document.getElementById('desafios-resumo');
-      const concluidos = desafiosBancoDeDados.filter(d => d.progresso >= d.meta).length;
+      let concluidos = desafiosBancoDeDados.filter(d => d.progresso >= d.meta).length;
       resumoEl.innerText = `${concluidos} de ${desafiosBancoDeDados.length} concluídos`;
 
       let html = '';
       desafiosBancoDeDados.forEach(d => {
-        const completo = d.progresso >= d.meta;
-        const pct = Math.min(100, Math.round((d.progresso / d.meta) * 100));
-        const corCat = obterCorCategoria(d.categoria);
+        const percentual = Math.min(100, Math.round((d.progresso / d.meta) * 100));
+        const concluido = d.progresso >= d.meta;
         html += `
           <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
             <div class="space-y-3">
-              <div class="flex justify-between items-start">
-                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">${d.categoria}</span>
+              <div class="flex justify-between items-start gap-2">
+                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] bg-purple-50 text-purple-700 border border-purple-200">${d.categoria}</span>
                 <span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${d.pontos} pts</span>
               </div>
               <div><h4 class="text-base font-extrabold text-blue-950">${d.titulo}</h4><p class="text-xs text-gray-500 mt-1">${d.descricao}</p></div>
             </div>
-            <div class="space-y-3 pt-4 border-t border-gray-100">
-              <div class="space-y-1">
-                <div class="flex justify-between text-xs font-bold"><span class="text-gray-500">Progresso</span><span class="text-blue-950">${d.progresso} / ${d.meta}</span></div>
-                <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden"><div class="${completo ? 'bg-emerald-500' : 'bg-blue-900'} h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div></div>
+            <div class="space-y-3 pt-2">
+              <div class="flex justify-between items-center text-xs font-bold">
+                <span class="text-gray-400">Progresso</span>
+                <span class="${concluido ? 'text-emerald-600 font-black' : 'text-blue-950'}">${d.progresso} / ${d.meta} (${percentual}%)</span>
               </div>
-              ${completo ? `<div class="py-2.5 bg-emerald-50 text-emerald-700 rounded-[16px] font-extrabold text-xs flex items-center justify-center gap-2 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-500"></i> Desafio Concluído!</div>` : `<button onclick="avancarDesafio(${d.id})" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Registrar Progresso</button>`}
+              <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+                <div class="${concluido ? 'bg-emerald-500' : 'bg-blue-900'} h-full rounded-full transition-all duration-500" style="width: ${percentual}%"></div>
+              </div>
+              <button onclick="avancarDesafio(${d.id})" class="w-full py-2.5 ${concluido ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-900 hover:bg-blue-950'} text-white font-bold text-xs rounded-[16px] transition shadow">
+                ${concluido ? '<i class="fa-solid fa-check"></i> Desafio Concluído' : 'Registrar Progresso'}
+              </button>
             </div>
           </div>
         `;
@@ -1322,11 +1329,19 @@
     }
 
     function avancarDesafio(id) {
-      const desafio = desafiosBancoDeDados.find(d => d.id === id);
-      if (desafio && desafio.progresso < desafio.meta) {
-        desafio.progresso++;
-        renderizarDesafios();
-        exhibirToast(`Progresso registrado para "${desafio.titulo}"! #desafios`);
+      const d = desafiosBancoDeDados.find(item => item.id === id);
+      if(d) {
+        if(d.progresso < d.meta) {
+          d.progresso++;
+          renderizarDesafios();
+          exhibirToast("Progresso atualizado com sucesso! #desafios");
+          if(d.progresso >= d.meta) {
+            if(typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            exhibirToast(`Parabéns! Desafio concluído! +${d.pontos} pontos!`);
+          }
+        } else {
+          exhibirToast("Este desafio já foi concluído!");
+        }
       }
     }
 
@@ -1337,7 +1352,7 @@
       document.getElementById('evangelismo-total-oracao').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Pedido de Oração').length;
 
       if (evangelismoBancoDeDados.length === 0) {
-        listaEl.innerHTML = `<div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center"><p class="text-xs font-bold text-gray-500">Nenhum contato registrado. #evangelismo</p></div>`;
+        listaEl.innerHTML = `<div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center"><p class="text-xs font-bold text-gray-500">Nenhum contato cadastrado.</p></div>`;
         return;
       }
 
@@ -1346,16 +1361,13 @@
         html += `
           <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-4 card-hover">
             <div class="flex justify-between items-start">
-              <span class="text-[10px] font-bold px-2 py-1 bg-rose-50 text-rose-700 rounded-full">${c.tipo}</span>
-              <span class="text-[10px] text-gray-400 font-semibold">${formatarDataCurta(c.data)}</span>
+              <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] bg-rose-50 text-rose-700 border border-rose-200">${c.tipo}</span>
+              <button onclick="removerContato(${idx})" class="text-gray-400 hover:text-red-600 text-xs transition"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <div>
-              <h4 class="text-base font-extrabold text-blue-950">${c.nome}</h4>
-              <p class="text-xs text-gray-600 mt-1">${c.observacao || 'Sem observações.'}</p>
-            </div>
-            <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
-              <span class="font-bold text-amber-600">${c.status || 'Ativo'}</span>
-              <button onclick="removerContatoEvangelismo(${idx})" class="text-red-500 hover:text-red-700 font-bold"><i class="fa-solid fa-trash"></i> Excluir</button>
+            <div><h4 class="text-base font-extrabold text-blue-950">${c.nome}</h4><p class="text-xs text-gray-500 mt-1">${c.observacao || 'Sem observações.'}</p></div>
+            <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400 font-bold">
+              <span>Data: ${formatarDataCurta(c.data)}</span>
+              <span class="text-emerald-600">${c.status}</span>
             </div>
           </div>
         `;
@@ -1378,19 +1390,19 @@
       const tipo = document.getElementById('evang-contato-tipo').value;
       const observacao = document.getElementById('evang-contato-obs').value.trim();
 
-      if (!nome || !data) {
-        alert("Preencha o nome e a data do contato!");
+      if(!nome || !data) {
+        alert("Preencha o nome e a data!");
         return;
       }
 
-      evangelismoBancoDeDados.push({ id: evangelismoBancoDeDados.length + 1, nome, data, tipo, observacao, status: 'Em acompanhamento' });
+      evangelismoBancoDeDados.push({ id: evangelismoBancoDeDados.length + 1, nome, data, tipo, observacao, status: "Em acompanhamento" });
       fecharModalNovoContato();
       renderizarEvangelismo();
       exhibirToast("Contato de evangelismo salvo com sucesso! #evangelismo");
     }
 
-    function removerContatoEvangelismo(idx) {
-      if (confirm("Deseja realmente remover este contato?")) {
+    function removerContato(idx) {
+      if(confirm("Deseja remover este contato?")) {
         evangelismoBancoDeDados.splice(idx, 1);
         renderizarEvangelismo();
         exhibirToast("Contato removido.");
@@ -1398,36 +1410,33 @@
     }
 
     function renderizarNotificacoes() {
-      const container = document.getElementById('notificacoes-lista');
+      const listaEl = document.getElementById('notificacoes-lista');
       const naoLidas = notificacoesBancoDeDados.filter(n => !n.lida).length;
-      document.getElementById('notificacoes-subtitulo').innerText = naoLidas > `Você possui ${naoLidas} notificação(ões) não lida(s).` : 'Todas as notificações foram lidas.';
+      document.getElementById('notificacoes-subtitulo').innerText = naoLidas > 0 ? `Você tem ${naolidas = naoLidas} notificação(ões) não lida(s).` : 'Todas as notificações foram lidas.';
 
       if (notificacoesBancoDeDados.length === 0) {
-        container.innerHTML = `<div class="bg-white border p-6 rounded-[16px] text-center text-xs text-gray-400">Nenhuma notificação no momento.</div>`;
+        listaEl.innerHTML = `<div class="bg-white border border-gray-100 p-8 rounded-[16px] text-center"><p class="text-xs text-gray-400">Nenhuma notificação no momento.</p></div>`;
         return;
       }
 
       let html = '';
       notificacoesBancoDeDados.forEach(n => {
         html += `
-          <div class="bg-white border border-gray-100 p-4 rounded-[16px] shadow-sm flex items-center justify-between gap-4 ${n.lida ? 'opacity-75' : 'border-l-4 border-l-blue-900'}">
-            <div class="space-y-1">
-              <h5 class="text-xs font-bold text-blue-950">${n.titulo}</h5>
-              <p class="text-xs text-gray-600">${n.mensagem}</p>
+          <div class="bg-white border ${n.lida ? 'border-gray-100 opacity-70' : 'border-blue-200 bg-blue-50/20'} p-4 rounded-[16px] shadow-sm flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full ${n.lida ? 'bg-gray-200 text-gray-600' : 'bg-blue-900 text-white'} flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-bell"></i></div>
+              <div class="space-y-0.5"><h4 class="text-xs font-bold text-blue-950">${n.titulo}</h4><p class="text-xs text-gray-600">${n.mensagem}</p></div>
             </div>
-            ${!n.lida ? `<button onclick="marcarNotificacaoLida(${n.id})" class="px-3 py-1.5 bg-blue-50 text-blue-900 font-bold text-xs rounded-[16px] hover:bg-blue-100 transition shrink-0">Marcar lida</button>` : `<span class="text-[10px] text-gray-400 font-semibold">Lida</span>`}
+            ${!n.lida ? `<button onclick="marcarNotificacaoLida(${n.id})" class="text-[10px] bg-blue-900 text-white px-3 py-1.5 rounded-[16px] font-bold shrink-0">Marcar lida</button>` : '<span class="text-[10px] text-gray-400 font-bold shrink-0">Lida</span>'}
           </div>
         `;
       });
-      container.innerHTML = html;
+      listaEl.innerHTML = html;
     }
 
     function marcarNotificacaoLida(id) {
-      const notif = notificacoesBancoDeDados.find(n => n.id === id);
-      if (notif) {
-        notif.lida = true;
-        renderizarNotificacoes();
-      }
+      const n = notificacoesBancoDeDados.find(item => item.id === id);
+      if(n) { n.lida = true; renderizarNotificacoes(); }
     }
 
     function marcarTodasNotificacoesLidas() {
@@ -1439,14 +1448,15 @@
     function salvarDadosPessoais() {
       const nome = document.getElementById('config-nome').value.trim();
       const email = document.getElementById('config-email').value.trim();
-      if (!nome || !email) {
+      if(!nome || !email) {
         alert("Preencha todos os campos!");
         return;
       }
       usuarioLogado.nome = nome;
       usuarioLogado.email = email;
       document.getElementById('perfil-nome').innerText = nome;
-      exhibirToast("Dados pessoais atualizados com sucesso!");
+      document.getElementById('dash-saudacao').innerText = `Bom dia, ${nome.split(' ')[0]}! 👋`;
+      exhibirToast("Dados pessoais salvos com sucesso!");
     }
 
     function alterarSenha() {
@@ -1454,18 +1464,19 @@
       const nova = document.getElementById('config-senha-nova').value;
       const confirmar = document.getElementById('config-senha-confirmar').value;
 
-      if (!atual || !nova || !confirmar) {
+      if(!atual || !nova || !confirmar) {
         alert("Preencha todos os campos de senha!");
         return;
       }
-      if (atual !== usuarioLogado.senha) {
-        alert("A senha atual está incorreta!");
+      if(atual !== usuarioLogado.senha) {
+        alert("Senha atual incorreta!");
         return;
       }
-      if (nova !== confirmar) {
+      if(nova !== confirmar) {
         alert("A nova senha e a confirmação não coincidem!");
         return;
       }
+
       usuarioLogado.senha = nova;
       document.getElementById('config-senha-atual').value = '';
       document.getElementById('config-senha-nova').value = '';
@@ -1473,13 +1484,73 @@
       exhibirToast("Senha alterada com sucesso!");
     }
 
-    function exhibirToast(mensagem) {
+    // SUPORTE A FOTO DE PERFIL
+    function toggleAvatarMenu(e) {
+      e.stopPropagation();
+      const dropdown = document.getElementById('avatar-dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', () => {
+      const dropdown = document.getElementById('avatar-dropdown');
+      if (dropdown && !dropdown.classList.contains('hidden')) dropdown.classList.add('hidden');
+    });
+
+    function abrirSeletorFoto() {
+      document.getElementById('input-foto-upload').click();
+    }
+
+    function processarArquivoSelecionado(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgUrl = e.target.result;
+          const iniciaisEl = document.getElementById('perfil-iniciais');
+          const avatarImg = document.getElementById('perfil-avatar');
+          
+          if(iniciaisEl) iniciaisEl.classList.add('hidden');
+          if(avatarImg) {
+            avatarImg.src = imgUrl;
+            avatarImg.classList.remove('hidden');
+          }
+          exhibirToast("Foto de perfil atualizada com sucesso!");
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function visualizarFoto() {
+      const avatarImg = document.getElementById('perfil-avatar');
+      if (avatarImg && !avatarImg.classList.contains('hidden')) {
+        const w = window.open("");
+        w.document.write(`<img src="${avatarImg.src}" style="max-width:100%; height:auto; display:block; margin:auto;">`);
+      } else {
+        alert("Nenhuma foto de perfil cadastrada.");
+      }
+    }
+
+    function confirmarRemoverFoto() {
+      if(confirm("Deseja remover sua foto de perfil?")) {
+        const iniciaisEl = document.getElementById('perfil-iniciais');
+        const avatarImg = document.getElementById('perfil-avatar');
+        if(iniciaisEl) iniciaisEl.classList.remove('hidden');
+        if(avatarImg) {
+          avatarImg.src = '';
+          avatarImg.classList.add('hidden');
+        }
+        document.getElementById('input-foto-upload').value = '';
+        exhibirToast("Foto de perfil removida.");
+      }
+    }
+
+    function exhibirToast(msg) {
       const toast = document.getElementById('toast-notificacao');
-      document.getElementById('toast-mensagem').innerText = mensagem;
+      const spanMsg = document.getElementById('toast-mensagem');
+      spanMsg.innerText = msg;
       toast.classList.remove('hidden');
       setTimeout(() => {
         toast.classList.add('hidden');
-      }, 3500);
+      }, 4000);
     }
   </script>
 </body>
