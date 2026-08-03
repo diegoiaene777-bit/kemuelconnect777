@@ -328,9 +328,9 @@
   <script>
     lucide.createIcons();
 
-    // CONEXÃO COM O SUPABASE REAL
+    // CREDENCIAIS DO SUPABASE
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodW9vYW94d2pzYmdzbHJ4enRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNzIxNTksImV4cCI6MjA1Njk0ODE1OX0.qX3s-b2C2_c7Q4gX4b0s0E3_eZ-X9O8I9G_H7Z6X5Y4';
+    const SUPABASE_ANON_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
     
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -400,7 +400,7 @@
       btn.disabled = true;
       btn.innerText = 'Cadastrando...';
 
-      // 1. Criar usuário no Supabase Auth
+      // Criar usuário no Supabase Auth com metadados
       const { data, error } = await _supabase.auth.signUp({
         email: email,
         password: password,
@@ -408,7 +408,7 @@
           data: {
             full_name: name,
             role: role,
-            status: 'pendente' // Novo cadastro inicia como Pendente
+            status: 'pendente' // Novo cadastro inicia pendente
           }
         }
       });
@@ -457,7 +457,7 @@
       const userStatus = user.user_metadata?.status || 'pendente';
       const userRole = user.user_metadata?.role || 'jovem';
 
-      // Verificar Regras de Aprovação
+      // Regras de Status do Cadastro
       if (userStatus === 'pendente') {
         showAlert('Seu cadastro ainda está aguardando aprovação do administrador.', 'warning');
         await _supabase.auth.signOut();
@@ -465,14 +465,13 @@
       }
 
       if (userStatus === 'recusado') {
-        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.', 'error');
+        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja.', 'error');
         await _supabase.auth.signOut();
         return;
       }
 
       showAlert('Login realizado com sucesso!', 'success');
 
-      // Redirecionamento por Perfil
       setTimeout(() => {
         if (userRole === 'jovem') {
           alert('Redirecionando para a Área do Jovem...');
