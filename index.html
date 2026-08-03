@@ -23,9 +23,8 @@
     .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
     .avatar-container:hover .avatar-overlay { opacity: 1; }
 
-    #licao-aba-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-aba-conteudo h3, #licao-aba-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
-    #licao-aba-conteudo blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; background-color: #f8fafc; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1rem 0; }
+    #licao-modal-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
+    #licao-modal-conteudo h3, #licao-modal-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
   </style>
 </head>
 <body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
@@ -158,7 +157,7 @@
             </div>
             <div>
               <h3 class="text-lg font-extrabold text-blue-950">Devocional Diário</h3>
-              <p class="text-xs text-gray-500 mt-1">Plano de leitura diária e anotações pessoais das suas reflexões espirituais.</p>
+              <p class="text-xs text-gray-500 mt-1">Plano de leitura diária e anotações pessoais das suas reflexões espirituais. #anobiblico</p>
             </div>
           </div>
           <div class="pt-6 mt-4 border-t border-gray-100">
@@ -176,7 +175,7 @@
             </div>
             <div>
               <h3 class="text-lg font-extrabold text-blue-950">Bíblia Sagrada</h3>
-              <p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada.</p>
+              <p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada. #biblia</p>
             </div>
           </div>
           <div class="pt-6 mt-4 border-t border-gray-100">
@@ -322,8 +321,6 @@
   </div>
 
   <script>
-    let currentUser = { nome: "Diego Iaene", fotoUrl: null };
-
     const listaLivrosBiblia = [
       { nome: "Gênesis", caps: 50 }, { nome: "Êxodo", caps: 40 }, { nome: "Levítico", caps: 27 },
       { nome: "Números", caps: 36 }, { nome: "Deuteronômio", caps: 34 }, { nome: "Josué", caps: 24 },
