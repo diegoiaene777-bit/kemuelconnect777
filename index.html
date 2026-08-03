@@ -404,7 +404,6 @@
     </div>
 
     <script>
-        // Estado inicial de dados
         let perfilAtual = 'admin'; // 'admin' ou 'jovem'
         
         let cadastrosPendentes = [
@@ -430,7 +429,6 @@
             const badge = document.getElementById('badgePerfil');
             badge.innerText = perfilAtual.toUpperCase();
             
-            // Ocultar/Exibir itens de Admin
             const elementosAdmin = document.querySelectorAll('.admin-only');
             elementosAdmin.forEach(el => {
                 el.style.display = perfilAtual === 'admin' ? (el.tagName === 'DIV' && el.classList.contains('menu-section') ? 'block' : 'flex') : 'none';
@@ -443,7 +441,6 @@
         }
 
         function renderizarTudo() {
-            // Renderizar Aprovações
             const tbodyAprov = document.getElementById('tabela-aprovacoes');
             tbodyAprov.innerHTML = cadastrosPendentes.map(j => `
                 <tr>
@@ -457,7 +454,6 @@
                 </tr>
             `).join('') || `<tr><td colspan="4" style="text-align:center; color:#94a3b8;">Nenhum cadastro pendente.</td></tr>`;
 
-            // Renderizar Gerenciamento de Eventos (Admin)
             const tbodyGerenciar = document.getElementById('tabela-gerenciar-eventos');
             tbodyGerenciar.innerHTML = eventos.map(e => `
                 <tr>
@@ -471,7 +467,6 @@
                 </tr>
             `).join('');
 
-            // Renderizar Lista Pública no Calendário
             const listaPub = document.getElementById('lista-eventos-publica');
             listaPub.innerHTML = eventos.map(e => `
                 <div style="background:#1e293b; padding:12px 15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
@@ -523,11 +518,9 @@
             const categoria = document.getElementById('evento-categoria').value;
 
             if (id) {
-                // Editar
                 eventos = eventos.map(ev => ev.id == id ? { id: Number(id), nome, data, categoria } : ev);
                 alert('Evento alterado com sucesso!');
             } else {
-                // Criar novo
                 const novoId = eventos.length ? Math.max(...eventos.map(e => e.id)) + 1 : 1;
                 eventos.push({ id: novoId, nome, data, categoria });
                 alert('Evento cadastrado com sucesso!');
@@ -549,7 +542,6 @@
             }
         }
 
-        // Inicialização
         renderizarTudo();
     </script>
 </body>
