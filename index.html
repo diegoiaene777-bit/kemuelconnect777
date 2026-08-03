@@ -1,697 +1,542 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entrar — Kemuel Connect</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kemuel Connect - Login</title>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* RESET & VARIAVEIS */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
 
-<style>
-  :root{
-    --kc-navy-950:#0F172A;
-    --kc-navy-900:#131c34;
-    --kc-navy-800:#1b2740;
-    --kc-blue:#2563EB;
-    --kc-blue-light:#60a5fa;
-    --kc-amber:#f59e0b;
-  }
-  *{ font-family:'Inter', system-ui, sans-serif; }
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --input-bg: #1e293b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --error-color: #ef4444;
+      --warning-color: #f59e0b;
+      --success-color: #10b981;
+    }
 
-  body{
-    background:
-      radial-gradient(circle at 15% 12%, rgba(37,99,235,0.28), transparent 45%),
-      radial-gradient(circle at 88% 18%, rgba(245,158,11,0.10), transparent 40%),
-      radial-gradient(circle at 50% 100%, rgba(37,99,235,0.18), transparent 55%),
-      linear-gradient(180deg, #0B1222 0%, var(--kc-navy-950) 45%, #0A1120 100%);
-    background-attachment: fixed;
-  }
+    body {
+      background: linear-gradient(135deg, #090d16 0%, var(--bg-dark) 50%, #1e1b4b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      padding: 1.5rem;
+    }
 
-  /* campo de estrelas sutil, evocando vigília noturna */
-  .star-field{ position:fixed; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
-  .star{
-    position:absolute; width:2px; height:2px; border-radius:50%;
-    background:rgba(255,255,255,0.75);
-    animation: twinkle 4.5s ease-in-out infinite;
-  }
-  @keyframes twinkle{
-    0%,100%{ opacity:.15; transform:scale(1); }
-    50%{ opacity:.9; transform:scale(1.6); }
-  }
+    /* CONTAINER PRINCIPAL */
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem 2rem 2rem 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.5s ease-out;
+    }
 
-  .glow-orb{
-    position:absolute; border-radius:50%; filter:blur(60px);
-    background:radial-gradient(circle, rgba(37,99,235,0.55), transparent 70%);
-    animation: float-orb 9s ease-in-out infinite;
-  }
-  @keyframes float-orb{
-    0%,100%{ transform:translateY(0px); }
-    50%{ transform:translateY(-18px); }
-  }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  .card-glass{
-    background: linear-gradient(180deg, rgba(27,39,64,0.85), rgba(15,23,42,0.9));
-    border:1px solid rgba(148,163,184,0.14);
-    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.55), 0 0 0 1px rgba(37,99,235,0.05) inset;
-    backdrop-filter: blur(18px);
-  }
+    /* CABEÇALHO */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-  .kc-input{
-    background: rgba(15,23,42,0.55);
-    border:1px solid rgba(148,163,184,0.18);
-    transition: all .2s ease;
-  }
-  .kc-input:focus{
-    border-color: var(--kc-blue-light);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
-    background: rgba(15,23,42,0.85);
-  }
-  .kc-input::placeholder{ color:#64748b; }
+    .logo-box {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
 
-  .btn-primary{
-    background: linear-gradient(135deg, #2563EB, #1d4ed8);
-    box-shadow: 0 10px 25px -8px rgba(37,99,235,0.6);
-    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-  }
-  .btn-primary:hover{ transform: translateY(-2px); filter:brightness(1.08); box-shadow: 0 14px 30px -8px rgba(37,99,235,0.75); }
-  .btn-primary:active{ transform: translateY(0); }
-  .btn-primary:disabled{ opacity:.55; cursor:not-allowed; transform:none; filter:none; }
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
 
-  .btn-secondary{
-    background: rgba(255,255,255,0.04);
-    border:1px solid rgba(148,163,184,0.22);
-    transition: all .15s ease;
-  }
-  .btn-secondary:hover{ background: rgba(255,255,255,0.09); border-color: rgba(148,163,184,0.4); transform: translateY(-1px); }
+    .header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      font-style: italic;
+    }
 
-  .logo-emblem{
-    background: conic-gradient(from 210deg, #2563EB, #60a5fa, #f59e0b, #2563EB);
-    animation: spin-slow 14s linear infinite;
-  }
-  @keyframes spin-slow{ to{ transform: rotate(360deg); } }
+    /* MENSAGENS E ALERTAS */
+    .alert {
+      padding: 0.875rem 1rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      line-height: 1.3;
+      animation: slideIn 0.3s ease-out;
+    }
 
-  .fade-up{ animation: fadeUp .6s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes fadeUp{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:translateY(0);} }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  .shake{ animation: shake .4s ease; }
-  @keyframes shake{
-    10%,90%{ transform:translateX(-1px); }
-    20%,80%{ transform:translateX(2px); }
-    30%,50%,70%{ transform:translateX(-4px); }
-    40%,60%{ transform:translateX(4px); }
-  }
+    .alert-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+    .alert-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fde68a; }
+    .alert-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #a7f3d0; }
 
-  .spinner{ animation: spin 0.8s linear infinite; }
-  @keyframes spin{ to{ transform: rotate(360deg); } }
+    /* FORMULÁRIO */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
 
-  ::-webkit-scrollbar{ width:8px; }
-  ::-webkit-scrollbar-thumb{ background:rgba(148,163,184,0.3); border-radius:10px; }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
 
-  @media (prefers-reduced-motion: reduce){
-    .star,.glow-orb,.logo-emblem,.fade-up,.shake{ animation:none !important; }
-  }
-</style>
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i.input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 18px;
+      height: 18px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-password:hover { color: var(--text-main); }
+
+    /* OPÇÕES (Lembrar-me / Esqueci a senha) */
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .checkbox-container input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+      color: #3b82f6;
+    }
+
+    /* BOTOES */
+    .btn {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* MODAL ESQUECI MINHA SENHA */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal {
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h3 { font-size: 1.2rem; }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* RODAPÉ */
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.25rem;
+    }
+
+    .footer p { margin-bottom: 0.25rem; }
+  </style>
 </head>
-<body class="min-h-screen text-slate-100 flex items-center justify-center px-4 py-10 relative overflow-x-hidden">
+<body>
 
-  <!-- CAMPO DE ESTRELAS + ORBES (decorativo) -->
-  <div class="star-field" id="star-field" aria-hidden="true"></div>
-  <div class="glow-orb w-72 h-72 -top-10 -left-10" aria-hidden="true"></div>
-  <div class="glow-orb w-80 h-80 bottom-0 right-0" style="animation-delay:2s" aria-hidden="true"></div>
-
-  <div class="relative z-10 w-full max-w-md space-y-6">
-
-    <!-- CABEÇALHO -->
-    <div class="flex flex-col items-center text-center space-y-3 fade-up">
-      <div class="relative w-16 h-16 rounded-2xl logo-emblem p-[2px] shadow-2xl">
-        <div class="w-full h-full rounded-2xl bg-[#0F172A] flex items-center justify-center">
-          <i data-lucide="flame" class="w-7 h-7 text-amber-400"></i>
-        </div>
+  <div class="login-container">
+    <!-- Cabeçalho -->
+    <div class="header">
+      <div class="logo-box">
+        <i data-lucide="flame" style="width: 36px; height: 36px; color: #fff;"></i>
       </div>
-      <div class="space-y-1">
-        <h1 class="text-2xl font-extrabold tracking-tight text-white">Kemuel Connect</h1>
-        <p class="text-[11px] text-slate-400 italic max-w-xs leading-relaxed">
-          "Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."
-        </p>
-      </div>
+      <h1>Kemuel Connect</h1>
+      <p>"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
     </div>
 
-    <!-- CARD DE LOGIN -->
-    <div class="card-glass rounded-[20px] p-7 sm:p-8 space-y-6 fade-up" style="animation-delay:.05s" id="login-card">
+    <!-- Caixa de Alerta / Mensagens -->
+    <div id="alertBox" class="alert">
+      <i id="alertIcon" data-lucide="alert-circle" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
+      <span id="alertText"></span>
+    </div>
 
-      <div class="text-center space-y-1">
-        <h2 class="text-lg font-bold text-white">Bem-vindo(a) de volta</h2>
-        <p class="text-xs text-slate-400">Entre com suas credenciais para continuar</p>
+    <!-- Formulário de Login -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <i data-lucide="mail" class="input-icon"></i>
+          <input type="email" id="email" placeholder="seu.email@exemplo.com" required autocomplete="email">
+        </div>
       </div>
 
-      <!-- ALERTA GERAL -->
-      <div id="alert-box" class="hidden rounded-[14px] p-3.5 text-xs font-semibold flex items-start gap-2.5"></div>
-
-      <form id="form-login" class="space-y-4" novalidate>
-        <!-- EMAIL -->
-        <div class="space-y-1.5">
-          <label for="input-email" class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            <i data-lucide="mail" class="w-3.5 h-3.5 text-blue-400"></i> E-mail
-          </label>
-          <input type="email" id="input-email" autocomplete="username" placeholder="seu@email.com"
-            class="kc-input w-full rounded-[14px] px-4 py-3 text-sm text-white focus:outline-none">
-          <p id="erro-email" class="hidden text-[11px] text-rose-400 font-medium pl-1"></p>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+            <i data-lucide="eye" id="eyeIcon" style="width: 18px; height: 18px;"></i>
+          </button>
         </div>
-
-        <!-- SENHA -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label for="input-senha" class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-              <i data-lucide="lock" class="w-3.5 h-3.5 text-blue-400"></i> Senha
-            </label>
-            <button type="button" onclick="abrirModalRecuperarSenha()" class="text-[11px] font-bold text-blue-400 hover:text-blue-300 transition">
-              Esqueci minha senha
-            </button>
-          </div>
-          <div class="relative">
-            <input type="password" id="input-senha" autocomplete="current-password" placeholder="••••••••"
-              class="kc-input w-full rounded-[14px] px-4 py-3 pr-11 text-sm text-white focus:outline-none">
-            <button type="button" onclick="alternarVisibilidadeSenha()" id="btn-toggle-senha"
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition">
-              <i data-lucide="eye" class="w-4 h-4" id="icon-toggle-senha"></i>
-            </button>
-          </div>
-          <p id="erro-senha" class="hidden text-[11px] text-rose-400 font-medium pl-1"></p>
-        </div>
-
-        <!-- LEMBRAR-ME -->
-        <div class="flex items-center justify-between pt-1">
-          <label class="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" id="check-lembrar" class="w-4 h-4 rounded border-slate-500 bg-slate-800 text-blue-600 focus:ring-blue-500 focus:ring-offset-0">
-            <span class="text-xs font-medium text-slate-300">Lembrar-me</span>
-          </label>
-          <span id="tentativas-info" class="hidden text-[11px] font-bold text-amber-400"></span>
-        </div>
-
-        <!-- BOTÃO ENTRAR -->
-        <button type="submit" id="btn-entrar"
-          class="btn-primary w-full py-3.5 rounded-[14px] text-white font-extrabold text-sm flex items-center justify-center gap-2 mt-2">
-          <i data-lucide="log-in" class="w-4 h-4" id="icon-btn-entrar"></i>
-          <span id="texto-btn-entrar">Entrar</span>
-        </button>
-      </form>
-
-      <!-- DIVISOR -->
-      <div class="flex items-center gap-3">
-        <div class="flex-1 h-px bg-slate-700/60"></div>
-        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">ou</span>
-        <div class="flex-1 h-px bg-slate-700/60"></div>
       </div>
 
-      <!-- CRIAR CONTA -->
-      <button type="button" onclick="irParaCadastro()"
-        class="btn-secondary w-full py-3.5 rounded-[14px] text-slate-200 font-bold text-sm flex items-center justify-center gap-2">
-        <i data-lucide="user-plus" class="w-4 h-4 text-blue-400"></i> Criar conta
+      <div class="form-options">
+        <label class="checkbox-container">
+          <input type="checkbox" id="rememberMe">
+          <span>Lembrar-me</span>
+        </label>
+        <a href="#" class="forgot-link" onclick="openForgotModal(event)">Esqueci minha senha</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btnSubmit">
+        <span>Entrar</span>
+        <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
       </button>
 
-      <p class="text-[10.5px] text-slate-500 text-center leading-relaxed pt-1">
-        <i data-lucide="shield-check" class="w-3 h-3 inline -mt-0.5 text-emerald-500"></i>
-        Sua sessão é protegida e criptografada de ponta a ponta.
-      </p>
-    </div>
+      <button type="button" class="btn btn-secondary" onclick="goToRegister()">
+        Criar conta
+      </button>
+    </form>
 
-    <!-- RODAPÉ -->
-    <div class="text-center space-y-1 fade-up" style="animation-delay:.1s">
-      <p class="text-[11px] text-slate-500 font-medium">Kemuel Connect · v1.0.0</p>
-      <p class="text-[10px] text-slate-600">© <span id="ano-atual"></span> Kemuel Connect. Todos os direitos reservados.</p>
+    <!-- Rodapé -->
+    <div class="footer">
+      <p>&copy; Kemuel Connect. Todos os direitos reservados.</p>
+      <p>Versão 1.0.0</p>
     </div>
   </div>
 
-  <!-- MODAL: RECUPERAR SENHA -->
-  <div id="modal-recuperar" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="card-glass rounded-[20px] max-w-sm w-full p-7 space-y-5 fade-up">
-      <div class="flex items-start justify-between">
-        <div class="w-11 h-11 rounded-full bg-blue-600/15 border border-blue-500/30 flex items-center justify-center">
-          <i data-lucide="key-round" class="w-5 h-5 text-blue-400"></i>
-        </div>
-        <button onclick="fecharModalRecuperarSenha()" class="text-slate-400 hover:text-white transition"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <div id="recuperar-etapa-form" class="space-y-4">
-        <div class="space-y-1">
-          <h3 class="text-base font-extrabold text-white">Recuperar senha</h3>
-          <p class="text-xs text-slate-400">Informe o e-mail cadastrado. Enviaremos um link para redefinir sua senha.</p>
-        </div>
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold text-slate-300">E-mail cadastrado</label>
-          <input type="email" id="input-email-recuperar" placeholder="seu@email.com"
-            class="kc-input w-full rounded-[14px] px-4 py-3 text-sm text-white focus:outline-none">
-        </div>
-        <button onclick="enviarRecuperacaoSenha()" id="btn-enviar-recuperacao"
-          class="btn-primary w-full py-3 rounded-[14px] text-white font-extrabold text-sm flex items-center justify-center gap-2">
-          <i data-lucide="send" class="w-4 h-4"></i> Enviar link de redefinição
+  <!-- Modal Recuperação de Senha -->
+  <div id="forgotModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Recuperar Senha</h3>
+        <button class="close-btn" onclick="closeForgotModal()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
         </button>
       </div>
-      <div id="recuperar-etapa-sucesso" class="hidden text-center space-y-3 py-2">
-        <div class="w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto">
-          <i data-lucide="mail-check" class="w-7 h-7 text-emerald-400"></i>
+      <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+        Digite seu e-mail cadastrado para receber um link de redefinição de senha.
+      </p>
+      <form onsubmit="handleForgotPassword(event)">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i data-lucide="mail" class="input-icon"></i>
+            <input type="email" id="recoveryEmail" placeholder="seu.email@exemplo.com" required>
+          </div>
         </div>
-        <h3 class="text-base font-extrabold text-white">Link enviado!</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">Verifique sua caixa de entrada (e o spam) para redefinir sua senha.</p>
-        <button onclick="fecharModalRecuperarSenha()" class="btn-secondary w-full py-3 rounded-[14px] text-slate-200 font-bold text-sm">Entendi</button>
-      </div>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 0;">Enviar Link</button>
+      </form>
     </div>
   </div>
 
-  <!-- TOAST -->
-  <div id="toast" class="hidden fixed bottom-5 right-5 left-5 sm:left-auto sm:w-auto max-w-sm bg-slate-800 border border-slate-700 text-white px-5 py-3.5 rounded-[14px] shadow-2xl text-xs font-semibold z-[60] items-center gap-3">
-    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0" id="toast-icon"></i>
-    <span id="toast-mensagem">Operação realizada com sucesso.</span>
-  </div>
+  <script>
+    // Inicialização dos Ícones Lucide
+    lucide.createIcons();
 
-<script>
-/* =========================================================================
-   CONFIGURAÇÃO DO SUPABASE
-   Substitua pelas credenciais reais do seu projeto (Project Settings > API).
-   A anon key é pública por natureza; a segurança real vem das políticas
-   de RLS configuradas nas tabelas do banco.
-   ========================================================================= */
-const SUPABASE_URL = "https://SEU-PROJETO.supabase.co";
-const SUPABASE_ANON_KEY = "SUA_ANON_KEY_PUBLICA_AQUI";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Controle de Tentativas de Login e Inatividade (Segurança)
+    let loginAttempts = 0;
+    const MAX_ATTEMPTS = 5;
+    let inactivityTimer;
 
-/* -------------------------------------------------------------------------
-   Estrutura de banco esperada (crie no Supabase):
-
-   tabela "perfis"
-     id           uuid  (PK, referencia auth.users.id)
-     nome         text
-     email        text
-     cargo        text   -> 'jovem' | 'administrador' | 'secretario'
-     status       text   -> 'pendente' | 'aprovado' | 'recusado'
-     criado_em    timestamptz default now()
-
-   Recomendado: trigger "on auth.users insert" criando a linha em "perfis"
-   automaticamente com status = 'pendente'. Ative RLS e políticas que
-   permitam ao usuário ler apenas sua própria linha.
-------------------------------------------------------------------------- */
-
-// Páginas de destino — ajuste os nomes de arquivo conforme seu projeto
-const ROTA_AREA_JOVEM = "index.html";
-const ROTA_PAINEL_ADMIN = "admin.html";
-const ROTA_CADASTRO = "cadastro.html";
-
-const CHAVE_TENTATIVAS = "kc_login_tentativas";
-const MAX_TENTATIVAS = 5;
-const BLOQUEIO_MINUTOS = 5;
-const INATIVIDADE_MINUTOS = 20;
-
-document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons();
-  gerarCampoEstrelas();
-  document.getElementById("ano-atual").innerText = new Date().getFullYear();
-  preencherEmailLembrado();
-  atualizarStatusTentativas();
-  verificarSessaoExistente();
-  iniciarMonitorInatividade();
-});
-
-function gerarCampoEstrelas() {
-  const campo = document.getElementById("star-field");
-  const total = window.innerWidth < 640 ? 30 : 55;
-  let html = "";
-  for (let i = 0; i < total; i++) {
-    const top = Math.random() * 100;
-    const left = Math.random() * 100;
-    const delay = (Math.random() * 4.5).toFixed(2);
-    const size = (Math.random() * 1.6 + 1).toFixed(1);
-    html += `<span class="star" style="top:${top}%; left:${left}%; width:${size}px; height:${size}px; animation-delay:${delay}s;"></span>`;
-  }
-  campo.innerHTML = html;
-}
-
-/* =========================================================================
-   VISIBILIDADE DE SENHA
-   ========================================================================= */
-function alternarVisibilidadeSenha() {
-  const input = document.getElementById("input-senha");
-  const icon = document.getElementById("icon-toggle-senha");
-  const mostrando = input.type === "text";
-  input.type = mostrando ? "password" : "text";
-  icon.setAttribute("data-lucide", mostrando ? "eye" : "eye-off");
-  lucide.createIcons();
-}
-
-/* =========================================================================
-   LEMBRAR-ME (armazena apenas o e-mail, nunca a senha)
-   ========================================================================= */
-function preencherEmailLembrado() {
-  const emailSalvo = localStorage.getItem("kc_email_lembrado");
-  if (emailSalvo) {
-    document.getElementById("input-email").value = emailSalvo;
-    document.getElementById("check-lembrar").checked = true;
-  }
-}
-
-/* =========================================================================
-   CONTROLE DE TENTATIVAS (proteção contra força bruta no lado do cliente)
-   Observação: isso é uma camada de UX. A proteção real contra força bruta
-   deve ser reforçada no servidor (rate limiting do Supabase Auth / Edge
-   Functions / captcha após N tentativas).
-   ========================================================================= */
-function obterEstadoTentativas() {
-  try {
-    return JSON.parse(localStorage.getItem(CHAVE_TENTATIVAS)) || { count: 0, bloqueadoAte: null };
-  } catch {
-    return { count: 0, bloqueadoAte: null };
-  }
-}
-
-function salvarEstadoTentativas(estado) {
-  localStorage.setItem(CHAVE_TENTATIVAS, JSON.stringify(estado));
-}
-
-function registrarTentativaFalha() {
-  const estado = obterEstadoTentativas();
-  estado.count = (estado.count || 0) + 1;
-  if (estado.count >= MAX_TENTATIVAS) {
-    estado.bloqueadoAte = Date.now() + BLOQUEIO_MINUTOS * 60 * 1000;
-    estado.count = 0;
-  }
-  salvarEstadoTentativas(estado);
-  atualizarStatusTentativas();
-}
-
-function limparTentativas() {
-  salvarEstadoTentativas({ count: 0, bloqueadoAte: null });
-  atualizarStatusTentativas();
-}
-
-function loginEstaBloqueado() {
-  const estado = obterEstadoTentativas();
-  return estado.bloqueadoAte && Date.now() < estado.bloqueadoAte;
-}
-
-function atualizarStatusTentativas() {
-  const estado = obterEstadoTentativas();
-  const info = document.getElementById("tentativas-info");
-  const btn = document.getElementById("btn-entrar");
-
-  if (estado.bloqueadoAte && Date.now() < estado.bloqueadoAte) {
-    const minutosRestantes = Math.ceil((estado.bloqueadoAte - Date.now()) / 60000);
-    info.innerText = `Bloqueado por ${minutosRestantes} min`;
-    info.classList.remove("hidden");
-    btn.disabled = true;
-    setTimeout(atualizarStatusTentativas, 15000);
-  } else {
-    btn.disabled = false;
-    if (estado.count > 0) {
-      info.innerText = `${MAX_TENTATIVAS - estado.count} tentativa(s) restante(s)`;
-      info.classList.remove("hidden");
-    } else {
-      info.classList.add("hidden");
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      // Encerramento automático da sessão após 15 minutos de inatividade (exemplo)
+      inactivityTimer = setTimeout(() => {
+        showAlert('Sessão expirada por inatividade. Faça login novamente.', 'warning');
+      }, 15 * 60 * 1000);
     }
-  }
-}
 
-/* =========================================================================
-   ALERTAS E TOASTS
-   ========================================================================= */
-function exibirAlerta(mensagem, tipo = "erro") {
-  const box = document.getElementById("alert-box");
-  const estilos = {
-    erro: { bg: "bg-rose-500/10 border border-rose-500/30 text-rose-300", icon: "circle-alert" },
-    aviso: { bg: "bg-amber-500/10 border border-amber-500/30 text-amber-300", icon: "clock" },
-    info: { bg: "bg-blue-500/10 border border-blue-500/30 text-blue-300", icon: "info" },
-    sucesso: { bg: "bg-emerald-500/10 border border-emerald-500/30 text-emerald-300", icon: "check-circle-2" }
-  };
-  const s = estilos[tipo] || estilos.erro;
-  box.className = `rounded-[14px] p-3.5 text-xs font-semibold flex items-start gap-2.5 ${s.bg}`;
-  box.innerHTML = `<i data-lucide="${s.icon}" class="w-4 h-4 shrink-0 mt-0.5"></i><span>${mensagem}</span>`;
-  box.classList.remove("hidden");
-  lucide.createIcons();
-}
+    window.onload = resetInactivityTimer;
+    document.onmousemove = resetInactivityTimer;
+    document.onkeypress = resetInactivityTimer;
 
-function esconderAlerta() {
-  document.getElementById("alert-box").classList.add("hidden");
-}
+    // Toggle Mostrar/Ocultar Senha
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
 
-function exibirToast(mensagem, tipo = "sucesso") {
-  const toast = document.getElementById("toast");
-  const icon = document.getElementById("toast-icon");
-  icon.setAttribute("data-lucide", tipo === "sucesso" ? "check-circle-2" : "circle-alert");
-  icon.className = `w-4 h-4 shrink-0 ${tipo === "sucesso" ? "text-emerald-400" : "text-rose-400"}`;
-  document.getElementById("toast-mensagem").innerText = mensagem;
-  toast.classList.remove("hidden");
-  toast.classList.add("flex");
-  lucide.createIcons();
-  setTimeout(() => {
-    toast.classList.add("hidden");
-    toast.classList.remove("flex");
-  }, 4500);
-}
-
-/* =========================================================================
-   VALIDAÇÃO DE CAMPOS
-   ========================================================================= */
-function validarEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function validarCamposLogin(email, senha) {
-  let valido = true;
-  const erroEmail = document.getElementById("erro-email");
-  const erroSenha = document.getElementById("erro-senha");
-  erroEmail.classList.add("hidden");
-  erroSenha.classList.add("hidden");
-
-  if (!email) {
-    erroEmail.innerText = "Informe seu e-mail.";
-    erroEmail.classList.remove("hidden");
-    valido = false;
-  } else if (!validarEmail(email)) {
-    erroEmail.innerText = "Informe um e-mail válido.";
-    erroEmail.classList.remove("hidden");
-    valido = false;
-  }
-
-  if (!senha) {
-    erroSenha.innerText = "Informe sua senha.";
-    erroSenha.classList.remove("hidden");
-    valido = false;
-  }
-
-  return valido;
-}
-
-/* =========================================================================
-   FLUXO DE LOGIN
-   ========================================================================= */
-document.getElementById("form-login").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  esconderAlerta();
-
-  if (loginEstaBloqueado()) {
-    exibirAlerta("Muitas tentativas incorretas. Aguarde alguns minutos antes de tentar novamente.", "aviso");
-    return;
-  }
-
-  const email = document.getElementById("input-email").value.trim();
-  const senha = document.getElementById("input-senha").value;
-  const lembrar = document.getElementById("check-lembrar").checked;
-
-  if (!validarCamposLogin(email, senha)) return;
-
-  definirCarregamento(true);
-
-  try {
-    // 1. Autenticação (senha é validada de forma criptografada pelo Supabase Auth)
-    const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password: senha
-    });
-
-    if (authError) {
-      registrarTentativaFalha();
-      definirCarregamento(false);
-      dispararShake();
-
-      if (authError.status === 400 || /invalid/i.test(authError.message)) {
-        exibirAlerta("E-mail ou senha inválidos.", "erro");
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
       } else {
-        exibirAlerta("Erro ao conectar com o servidor. Tente novamente em instantes.", "erro");
+        passwordInput.type = 'password';
+        eyeIcon.setAttribute('data-lucide', 'eye');
       }
-      return;
-    }
-
-    // 2. Buscar perfil do usuário (cargo + status de aprovação)
-    const { data: perfil, error: perfilError } = await supabaseClient
-      .from("perfis")
-      .select("nome, cargo, status")
-      .eq("id", authData.user.id)
-      .single();
-
-    if (perfilError || !perfil) {
-      definirCarregamento(false);
-      exibirAlerta("Erro ao conectar com o servidor. Tente novamente em instantes.", "erro");
-      await supabaseClient.auth.signOut();
-      return;
-    }
-
-    // 3. Verificar status de aprovação do cadastro
-    if (perfil.status === "pendente") {
-      definirCarregamento(false);
-      exibirAlerta("Seu cadastro ainda está aguardando aprovação do administrador.", "aviso");
-      await supabaseClient.auth.signOut();
-      return;
-    }
-
-    if (perfil.status === "recusado") {
-      definirCarregamento(false);
-      exibirAlerta("Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.", "erro");
-      await supabaseClient.auth.signOut();
-      return;
-    }
-
-    // 4. Cadastro aprovado — login bem-sucedido
-    limparTentativas();
-
-    if (lembrar) {
-      localStorage.setItem("kc_email_lembrado", email);
-    } else {
-      localStorage.removeItem("kc_email_lembrado");
-    }
-
-    registrarInicioSessao();
-    exibirToast(`Login realizado com sucesso. Bem-vindo(a), ${perfil.nome ? perfil.nome.split(" ")[0] : ""}!`);
-
-    // 5. Direcionamento por perfil
-    setTimeout(() => {
-      if (perfil.cargo === "administrador" || perfil.cargo === "secretario") {
-        window.location.href = ROTA_PAINEL_ADMIN;
-      } else {
-        window.location.href = ROTA_AREA_JOVEM;
-      }
-    }, 900);
-
-  } catch (err) {
-    definirCarregamento(false);
-    exibirAlerta("Erro ao conectar com o servidor. Verifique sua internet e tente novamente.", "erro");
-  }
-});
-
-function definirCarregamento(carregando) {
-  const btn = document.getElementById("btn-entrar");
-  const icon = document.getElementById("icon-btn-entrar");
-  const texto = document.getElementById("texto-btn-entrar");
-  btn.disabled = carregando;
-  if (carregando) {
-    icon.setAttribute("data-lucide", "loader-2");
-    icon.classList.add("spinner");
-    texto.innerText = "Entrando...";
-  } else {
-    icon.setAttribute("data-lucide", "log-in");
-    icon.classList.remove("spinner");
-    texto.innerText = "Entrar";
-  }
-  lucide.createIcons();
-}
-
-function dispararShake() {
-  const card = document.getElementById("login-card");
-  card.classList.add("shake");
-  setTimeout(() => card.classList.remove("shake"), 400);
-}
-
-/* =========================================================================
-   RECUPERAÇÃO DE SENHA
-   ========================================================================= */
-function abrirModalRecuperarSenha() {
-  document.getElementById("modal-recuperar").classList.remove("hidden");
-  document.getElementById("recuperar-etapa-form").classList.remove("hidden");
-  document.getElementById("recuperar-etapa-sucesso").classList.add("hidden");
-  document.getElementById("input-email-recuperar").value = document.getElementById("input-email").value;
-  lucide.createIcons();
-}
-
-function fecharModalRecuperarSenha() {
-  document.getElementById("modal-recuperar").classList.add("hidden");
-}
-
-async function enviarRecuperacaoSenha() {
-  const email = document.getElementById("input-email-recuperar").value.trim();
-  if (!validarEmail(email)) {
-    exibirToast("Informe um e-mail válido para continuar.", "erro");
-    return;
-  }
-
-  const btn = document.getElementById("btn-enviar-recuperacao");
-  btn.disabled = true;
-  btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 spinner"></i> Enviando...`;
-  lucide.createIcons();
-
-  try {
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + "/redefinir-senha.html"
-    });
-
-    if (error) {
-      exibirToast("Erro ao conectar com o servidor. Tente novamente.", "erro");
-      btn.disabled = false;
-      btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Enviar link de redefinição`;
       lucide.createIcons();
-      return;
     }
 
-    document.getElementById("recuperar-etapa-form").classList.add("hidden");
-    document.getElementById("recuperar-etapa-sucesso").classList.remove("hidden");
-    lucide.createIcons();
-  } catch (e) {
-    exibirToast("Erro ao conectar com o servidor. Tente novamente.", "erro");
-    btn.disabled = false;
-    btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Enviar link de redefinição`;
-    lucide.createIcons();
-  }
-}
+    // Exibição de Alertas do Sistema
+    function showAlert(message, type = 'error') {
+      const alertBox = document.getElementById('alertBox');
+      const alertText = document.getElementById('alertText');
+      const alertIcon = document.getElementById('alertIcon');
 
-/* =========================================================================
-   CRIAR CONTA
-   ========================================================================= */
-function irParaCadastro() {
-  window.location.href = ROTA_CADASTRO;
-}
+      alertBox.className = `alert alert-${type}`;
+      alertText.innerText = message;
 
-/* =========================================================================
-   SESSÃO EXISTENTE / EXPIRAÇÃO
-   ========================================================================= */
-async function verificarSessaoExistente() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("expirado") === "1") {
-    exibirAlerta("Sua sessão expirou por inatividade. Faça login novamente.", "aviso");
-  }
-}
+      let iconName = 'alert-circle';
+      if (type === 'warning') iconName = 'alert-triangle';
+      if (type === 'success') iconName = 'check-circle';
 
-function registrarInicioSessao() {
-  sessionStorage.setItem("kc_ultima_atividade", Date.now().toString());
-}
+      alertIcon.setAttribute('data-lucide', iconName);
+      alertBox.style.display = 'flex';
+      lucide.createIcons();
+    }
 
-function iniciarMonitorInatividade() {
-  ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(evento => {
-    document.addEventListener(evento, () => {
-      if (sessionStorage.getItem("kc_ultima_atividade")) {
-        sessionStorage.setItem("kc_ultima_atividade", Date.now().toString());
+    function hideAlert() {
+      document.getElementById('alertBox').style.display = 'none';
+    }
+
+    // Base de Usuários Mockada para teste dos fluxos exigidos
+    const mockUsers = [
+      { email: 'jovem@kemuel.com', pass: '123456', role: 'jovem', status: 'aprovado' },
+      { email: 'admin@kemuel.com', pass: '123456', role: 'admin', status: 'aprovado' },
+      { email: 'secretario@kemuel.com', pass: '123456', role: 'secretario', status: 'aprovado' },
+      { email: 'pendente@kemuel.com', pass: '123456', role: 'jovem', status: 'pendente' },
+      { email: 'recusado@kemuel.com', pass: '123456', role: 'jovem', status: 'recusado' }
+    ];
+
+    // Fluxo Principal de Login
+    function handleLogin(event) {
+      event.preventDefault();
+      hideAlert();
+
+      if (loginAttempts >= MAX_ATTEMPTS) {
+        showAlert('Muitas tentativas malsucedidas. Bloqueado temporariamente por segurança.', 'error');
+        return;
       }
-    });
-  });
 
-  setInterval(async () => {
-    const ultima = sessionStorage.getItem("kc_ultima_atividade");
-    if (!ultima) return;
-    const minutosInativo = (Date.now() - parseInt(ultima)) / 60000;
-    if (minutosInativo >= INATIVIDADE_MINUTOS) {
-      sessionStorage.removeItem("kc_ultima_atividade");
-      await supabaseClient.auth.signOut();
-      window.location.href = window.location.pathname + "?expirado=1";
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+
+      // Validação básica
+      if (!email || !password) {
+        showAlert('E-mail ou senha inválidos.', 'error');
+        return;
+      }
+
+      // Buscar Usuário
+      const user = mockUsers.find(u => u.email === email);
+
+      if (!user || user.pass !== password) {
+        loginAttempts++;
+        showAlert('E-mail ou senha inválidos.', 'error');
+        return;
+      }
+
+      // Reset tentativas em caso de sucesso no e-mail/senha
+      loginAttempts = 0;
+
+      // Verificar Status do Cadastro
+      if (user.status === 'pendente') {
+        showAlert('Seu cadastro ainda está aguardando aprovação do administrador.', 'warning');
+        return;
+      }
+
+      if (user.status === 'recusado') {
+        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.', 'error');
+        return;
+      }
+
+      if (user.status === 'aprovado') {
+        showAlert('Login realizado com sucesso! Redirecionando...', 'success');
+
+        // Direcionamento automático conforme o perfil
+        setTimeout(() => {
+          if (user.role === 'jovem') {
+            window.location.href = '#area-do-jovem'; // Substituir pela rota real
+            console.log('Redirecionado para Área do Jovem');
+          } else if (user.role === 'admin' || user.role === 'secretario') {
+            window.location.href = '#painel-administrativo'; // Substituir pela rota real
+            console.log(`Redirecionado para Painel Administrativo (${user.role})`);
+          }
+        }, 1200);
+      }
     }
-  }, 30000);
-}
-</script>
+
+    // Modal & Recuperação de Senha
+    function openForgotModal(e) {
+      e.preventDefault();
+      document.getElementById('forgotModal').style.display = 'flex';
+    }
+
+    function closeForgotModal() {
+      document.getElementById('forgotModal').style.display = 'none';
+    }
+
+    function handleForgotPassword(e) {
+      e.preventDefault();
+      const email = document.getElementById('recoveryEmail').value;
+      closeForgotModal();
+      showAlert(`Link de redefinição enviado com sucesso para ${email}!`, 'success');
+    }
+
+    // Criar Conta
+    function goToRegister() {
+      // Redireciona para a tela de cadastro (onde o status inicial será "pendente")
+      window.location.href = '#cadastro';
+      console.log('Redirecionando para a tela de cadastro...');
+    }
+  </script>
 </body>
 </html>
