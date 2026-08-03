@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema</title>
+  <!-- Link para o CSS externo -->
+  <link rel="stylesheet" href="style.css">
+  <!-- FontAwesome e Tailwind podem ser incluídos aqui -->
+</head>
+<body>
+
+  <!-- Exemplo dos modais e containers manipulados pelo script -->
+  <div id="toast-notificacao" class="hidden">
+    <span id="toast-mensagem"></span>
+  </div>
+
+  <div id="modal-novo-evento" class="hidden">
+    <input type="text" id="admin-evento-nome">
+    <input type="date" id="admin-evento-data">
+    <input type="time" id="admin-evento-horario">
+    <input type="text" id="admin-evento-local">
+    <select id="admin-evento-categoria"></select>
+    <input type="number" id="admin-evento-pontos">
+    <textarea id="admin-evento-descricao"></textarea>
+    <button onclick="salvarNovoEventoAdmin()">Salvar</button>
+    <button onclick="fecharModalNovoEvento()">Fechar</button>
+  </div>
+
+  <!-- Outros elementos da interface... -->
+
+  <!-- Link para o JavaScript externo -->
+  <script src="script.js"></script>
+</body>
+</html>
