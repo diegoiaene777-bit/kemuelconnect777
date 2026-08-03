@@ -328,7 +328,7 @@
   <script>
     lucide.createIcons();
 
-    // CREDENCIAIS DO SUPABASE
+    // CONEXÃO COM O SUPABASE REAL
     const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_iDqCZ6v4D0DHA2qlwAphfA_llKwhSTV';
     
@@ -400,7 +400,7 @@
       btn.disabled = true;
       btn.innerText = 'Cadastrando...';
 
-      // Criar usuário no Supabase Auth com metadados
+      // 1. Criar usuário no Supabase Auth
       const { data, error } = await _supabase.auth.signUp({
         email: email,
         password: password,
@@ -408,7 +408,7 @@
           data: {
             full_name: name,
             role: role,
-            status: 'pendente' // Novo cadastro inicia pendente
+            status: 'pendente' // Novo cadastro inicia como Pendente
           }
         }
       });
@@ -457,7 +457,7 @@
       const userStatus = user.user_metadata?.status || 'pendente';
       const userRole = user.user_metadata?.role || 'jovem';
 
-      // Regras de Status do Cadastro
+      // Verificar Regras de Aprovação
       if (userStatus === 'pendente') {
         showAlert('Seu cadastro ainda está aguardando aprovação do administrador.', 'warning');
         await _supabase.auth.signOut();
@@ -465,13 +465,14 @@
       }
 
       if (userStatus === 'recusado') {
-        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja.', 'error');
+        showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.', 'error');
         await _supabase.auth.signOut();
         return;
       }
 
       showAlert('Login realizado com sucesso!', 'success');
 
+      // Redirecionamento por Perfil
       setTimeout(() => {
         if (userRole === 'jovem') {
           alert('Redirecionando para a Área do Jovem...');
