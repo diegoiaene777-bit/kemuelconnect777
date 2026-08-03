@@ -1,680 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemuel Connect 777 - Gestão JA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  
-  <!-- CROPPER.JS PARA RECORTAR FOTO -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-  <style>
-    .sidebar-active { background-color: #1e40af; border-left: 4px solid #f59e0b; font-weight: bold; }
-    .card-hover { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15); }
-    
-    .avatar-container { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .avatar-container:hover { transform: scale(1.03); }
-    .avatar-overlay { opacity: 0; transition: opacity 0.25s ease; }
-    .avatar-container:hover .avatar-overlay { opacity: 1; }
-
-    #licao-modal-conteudo p, #pg-modal-conteudo p { margin-bottom: 0.85rem; line-height: 1.6; color: #334155; }
-    #licao-modal-conteudo h3, #licao-modal-conteudo h4, #pg-modal-conteudo h3, #pg-modal-conteudo h4 { font-weight: 700; color: #1e293b; margin-top: 1rem; margin-bottom: 0.5rem; }
-  </style>
-</head>
-<body class="bg-[#F8FAFC] text-gray-800 font-sans min-h-screen flex flex-col md:flex-row">
-
-  <!-- TELA DE AUTENTICAÇÃO (LOGIN / CADASTRO) -->
-  <div id="sec-auth" class="fixed inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-950 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[16px] max-w-md w-full p-8 shadow-2xl space-y-6">
-      <div class="text-center space-y-2">
-        <h1 class="text-2xl font-extrabold text-blue-950">Kemuel Connect 777</h1>
-        <p id="auth-subtitulo" class="text-xs text-gray-500">Faça login para acessar sua conta ou cadastre-se.</p>
-      </div>
-
-      <!-- ABAS DE NAVEGAÇÃO AUTENTICAÇÃO -->
-      <div class="flex border-b border-gray-100 text-xs font-bold">
-        <button onclick="alternarAbaAuth('login')" id="tab-login" class="flex-1 pb-3 text-center border-b-2 border-blue-900 text-blue-950 transition">Entrar</button>
-        <button onclick="alternarAbaAuth('cadastro')" id="tab-cadastro" class="flex-1 pb-3 text-center border-b-2 border-transparent text-gray-400 transition">Cadastrar</button>
-      </div>
-
-      <!-- FORMULÁRIO DE LOGIN -->
-      <div id="form-login" class="space-y-4">
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label>
-          <input type="email" id="login-email" placeholder="seu.email@exemplo.com" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Senha:</label>
-          <input type="password" id="login-senha" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <button onclick="realizarLogin()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-to-bracket"></i> Entrar na Conta
-        </button>
-      </div>
-
-      <!-- FORMULÁRIO DE CADASTRO -->
-      <div id="form-cadastro" class="hidden space-y-4">
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Nome Completo:</label>
-          <input type="text" id="cad-nome" placeholder="Seu Nome Completo" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label>
-          <input type="email" id="cad-email" placeholder="seu.email@exemplo.com" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Senha:</label>
-          <input type="password" id="cad-senha" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-700 block mb-1">Cargo / Função:</label>
-          <select id="cad-cargo" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none">
-            <option value="Jovem">Jovem</option>
-            <option value="Líder de Jovens">Líder de Jovens</option>
-            <option value="Conselheiro">Conselheiro</option>
-            <option value="Administrador">Administrador</option>
-          </select>
-        </div>
-        <button onclick="realizarCadastro()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2">
-          <i class="fa-solid fa-user-plus"></i> Criar Minha Conta
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MENU LATERAL -->
-  <aside id="sidebar" class="hidden w-full md:w-64 bg-blue-950 text-white flex-shrink-0 flex flex-col min-h-screen shadow-xl">
-    <div class="p-5 border-b border-blue-900 flex flex-col items-center text-center">
-      <h1 class="font-extrabold text-xl tracking-wider text-white">Kemuel Connect</h1>
-      <p class="text-[10px] text-blue-300 italic mt-1">"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes." #kemuelconnect</p>
-      <span id="user-role-badge" class="mt-3 text-xs bg-amber-500 text-blue-950 px-2.5 py-0.5 rounded-full font-extrabold uppercase">Jovem</span>
-    </div>
-
-    <nav class="p-3 space-y-1 text-sm font-medium overflow-y-auto flex-1 max-h-[calc(100vh-180px)]">
-      <div class="text-xs text-blue-400 font-bold uppercase px-3 pt-2 pb-1">Área do Jovem</div>
-      
-      <button onclick="navegarPara('dashboard')" id="nav-dashboard" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-house w-5 text-amber-400 shrink-0"></i> Dashboard
-      </button>
-      
-      <button onclick="navegarPara('perfil')" id="nav-perfil" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-user w-5 text-blue-600 shrink-0"></i> Meu Perfil
-      </button>
-
-      <button onclick="navegarPara('comunhao')" id="nav-comunhao" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-hands-praying w-5 text-emerald-400 shrink-0"></i> Minha Comunhão
-      </button>
-      
-      <button onclick="navegarPara('calendario')" id="nav-calendario" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover sidebar-active">
-        <i class="fa-solid fa-calendar-days w-5 text-purple-400 shrink-0"></i> Calendário
-      </button>
-      
-      <button onclick="navegarPara('ranking')" id="nav-ranking" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-trophy w-5 text-yellow-400 shrink-0"></i> Ranking
-      </button>
-      
-      <button onclick="navegarPara('desafios')" id="nav-desafios" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bullseye w-5 text-red-400 shrink-0"></i> Desafios
-      </button>
-      
-      <button onclick="navegarPara('evangelismo')" id="nav-evangelismo" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-heart w-5 text-rose-500 shrink-0"></i> Evangelismo
-      </button>
-      
-      <button onclick="navegarPara('notificacoes')" id="nav-notificacoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-bell w-5 text-yellow-300 shrink-0"></i> Notificações
-      </button>
-      
-      <button onclick="navegarPara('configuracoes')" id="nav-configuracoes" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-        <i class="fa-solid fa-gear w-5 text-gray-400 shrink-0"></i> Configurações
-      </button>
-
-      <!-- MENU ADMINISTRATIVO (VISÍVEL APENAS PARA ADMINS) -->
-      <div id="menu-admin-grupo" class="hidden pt-4">
-        <div class="text-xs text-amber-400 font-bold uppercase px-3 pt-2 pb-1">Administração</div>
-        <button onclick="navegarPara('admin')" id="nav-admin" class="w-full text-left py-2.5 px-3 rounded-lg hover:bg-blue-900 flex items-center gap-3 transition card-hover">
-          <i class="fa-solid fa-shield-halved w-5 text-amber-400 shrink-0"></i> Painel Admin
-        </button>
-      </div>
-    </nav>
-
-    <div class="p-4 border-t border-blue-900">
-      <button onclick="realizarLogout()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition shadow">
-        <i class="fa-solid fa-right-from-bracket shrink-0"></i> Sair
-      </button>
-    </div>
-  </aside>
-
-  <!-- ÁREA PRINCIPAL -->
-  <main id="main-content" class="hidden flex-1 p-6 md:p-10 overflow-y-auto space-y-8 w-full">
-    
-    <!-- DASHBOARD -->
-    <div id="sec-dashboard" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 id="dash-saudacao" class="text-2xl md:text-3xl font-extrabold tracking-tight">Bom dia, Diego! 👋</h2>
-          <p class="text-xs md:text-sm text-blue-200">Que Deus abençoe grandemente o seu dia. #kemuelconnect</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- MEU PERFIL -->
-    <div id="sec-perfil" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          <div class="relative shrink-0">
-            <div onclick="toggleAvatarMenu(event)" class="avatar-container relative w-20 h-20 rounded-full cursor-pointer overflow-hidden border-4 border-amber-400 shadow-lg bg-blue-900 flex items-center justify-center text-white font-extrabold text-xl">
-              <span id="perfil-iniciais">DI</span>
-              <img id="perfil-avatar" src="" class="user-avatar-target hidden w-full h-full object-cover" alt="Foto do Usuário">
-              <div class="avatar-overlay absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white text-xs font-bold">
-                <i class="fa-solid fa-camera text-base mb-0.5"></i>
-                <span class="text-[9px]">Editar</span>
-              </div>
-            </div>
-
-            <div id="avatar-dropdown" class="hidden absolute top-22 left-0 w-48 bg-white text-gray-800 rounded-xl shadow-2xl border border-gray-100 z-50 py-1 overflow-hidden">
-              <button onclick="abrirSeletorFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition">
-                <i class="fa-solid fa-camera text-blue-600 w-4"></i> Alterar Foto
-              </button>
-              <button onclick="visualizarFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 flex items-center gap-2.5 transition">
-                <i class="fa-solid fa-eye text-emerald-600 w-4"></i> Visualizar Foto
-              </button>
-              <button onclick="confirmarRemoverFoto()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-50 text-red-600 flex items-center gap-2.5 transition border-t border-gray-100">
-                <i class="fa-solid fa-trash-can w-4"></i> Remover Foto
-              </button>
-            </div>
-            <input type="file" id="input-foto-upload" accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden" onchange="processarArquivoSelecionado(this)">
-          </div>
-
-          <div class="space-y-1">
-            <div class="flex items-center gap-3 flex-wrap">
-              <h2 id="perfil-nome" class="text-2xl md:text-3xl font-extrabold tracking-tight">Diego Iaene</h2>
-              <span id="perfil-status" class="text-[10px] bg-emerald-500 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
-            </div>
-            <p id="perfil-funcao" class="text-sm text-blue-200 font-medium">Líder de Jovens • Clube Kemuel</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: MINHA COMUNHÃO -->
-    <div id="sec-comunhao" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-2">
-            <i class="fa-solid fa-hands-praying text-amber-400"></i> Minha Comunhão
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Reserve um momento do seu dia para estar mais perto de Deus." #comunhao #anobiblico</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-open"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Ano Bíblico</h3>
-              <p class="text-xs text-gray-500 mt-1">Leitura diária do Novo Testamento, marcação de conclusão e anotação de reflexões. #anobiblico</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalDevocional()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-pen-nib"></i> Acessar Ano Bíblico
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-bible"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Bíblia Sagrada</h3>
-              <p class="text-xs text-gray-500 mt-1">Estude todos os livros, capítulos e versículos completos via API integrada. #biblia</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalBiblia()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-book-open-reader"></i> Abrir Bíblia
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-book-open-reader"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">Escola Sabatina</h3>
-              <p class="text-xs text-gray-500 mt-1">Acompanhe e estude a lição diária da Escola Sabatina #licaoescolasabatina.</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalLicao()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-book-bookmark"></i> Ler Lição de Hoje
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100 flex flex-col justify-between card-hover min-h-[260px]">
-          <div class="space-y-4">
-            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-xl font-bold shadow-inner">
-              <i class="fa-solid fa-people-group"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-extrabold text-blue-950">PG my Style</h3>
-              <p class="text-xs text-gray-500 mt-1">Acompanhe o conteúdo especial de sábado (Comunidade) para o seu Pequeno Grupo. #pgmystyle</p>
-            </div>
-          </div>
-          <div class="pt-6 mt-4 border-t border-gray-100">
-            <button onclick="abrirModalPG()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-users-rectangle"></i> Acessar PG
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: CALENDÁRIO -->
-    <div id="sec-calendario" class="space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            📅 Calendário
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Acompanhe todos os eventos dos Jovens Kemuel." #calendario</p>
-        </div>
-        <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
-          <div class="relative w-full md:w-64">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-              <i class="fa-solid fa-magnifying-glass text-xs"></i>
-            </span>
-            <input type="text" id="input-busca-evento" oninput="filtrarEventosCalendario()" placeholder="Pesquisar evento..." class="w-full bg-white text-gray-800 border border-gray-200 text-xs rounded-[16px] pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-900 transition shadow-inner">
-          </div>
-          <button onclick="abrirModalNovoEvento()" class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0">
-            <i class="fa-solid fa-plus"></i> Novo Evento (Admin)
-          </button>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        <button onclick="selecionarFiltroCategoria('todos')" id="btn-filtro-todos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-blue-900 text-white shadow transition shrink-0">Todos</button>
-        <button onclick="selecionarFiltroCategoria('Espiritual')" id="btn-filtro-Espiritual" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">📖 Espiritual</button>
-        <button onclick="selecionarFiltroCategoria('Evangelismo')" id="btn-filtro-Evangelismo" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🤝 Evangelismo</button>
-        <button onclick="selecionarFiltroCategoria('Social')" id="btn-filtro-Social" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎉 Social</button>
-        <button onclick="selecionarFiltroCategoria('Desafios')" id="btn-filtro-Desafios" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🏆 Desafios</button>
-        <button onclick="selecionarFiltroCategoria('Treinamentos')" id="btn-filtro-Treinamentos" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">🎓 Treinamentos</button>
-        <button onclick="selecionarFiltroCategoria('Solidário')" id="btn-filtro-Solidário" class="px-4 py-2 rounded-[16px] text-xs font-bold bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition shrink-0">❤️ Solidário</button>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-6">
-          <div class="flex justify-between items-center">
-            <h3 id="calendar-month-year" class="text-lg font-extrabold text-blue-950 capitalize">Agosto 2026</h3>
-            <div class="flex gap-2">
-              <button onclick="mudarMesCalendario(-1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-left text-xs"></i></button>
-              <button onclick="mudarMesCalendario(1)" class="w-8 h-8 rounded-[16px] bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition"><i class="fa-solid fa-chevron-right text-xs"></i></button>
-            </div>
-          </div>
-          <div class="grid grid-cols-7 gap-2 text-center text-xs font-extrabold text-gray-400 pb-2 border-b border-gray-100">
-            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
-          </div>
-          <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
-        </div>
-
-        <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col space-y-4">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-2 border-b border-gray-100">
-            <i class="fa-solid fa-clock text-blue-900"></i> Próximos Eventos
-          </h3>
-          <div id="proximos-eventos-lista" class="space-y-3 overflow-y-auto max-h-[380px] pr-1"></div>
-        </div>
-      </div>
-
-      <div class="space-y-4 pt-4">
-        <div class="flex justify-between items-center">
-          <h3 id="titulo-eventos-dia" class="text-lg font-extrabold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para o dia selecionado
-          </h3>
-          <span id="badge-total-eventos-dia" class="text-xs bg-blue-900 text-white px-2.5 py-1 rounded-[16px] font-bold">0 eventos</span>
-        </div>
-        <div id="container-eventos-dia" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-    </div>
-
-    <!-- TELA: RANKING -->
-    <div id="sec-ranking" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-trophy text-yellow-400"></i> Ranking
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Corramos com perseverança a carreira que nos é proposta." Hb 12:1 #ranking</p>
-        </div>
-        <span id="ranking-minha-posicao" class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0">Sua posição: --</span>
-      </div>
-
-      <div id="ranking-podio" class="grid grid-cols-3 gap-3 md:gap-6 items-end"></div>
-
-      <div class="bg-white border border-gray-100 rounded-[16px] shadow-md overflow-hidden">
-        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-list-ol text-blue-900"></i> Classificação Geral
-          </h3>
-          <span class="text-[10px] text-gray-400 font-bold uppercase">Clube Kemuel</span>
-        </div>
-        <div id="ranking-lista" class="divide-y divide-gray-50"></div>
-      </div>
-    </div>
-
-    <!-- TELA: DESAFIOS -->
-    <div id="sec-desafios" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-bullseye text-red-400"></i> Desafios
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Prossigo para o alvo, para o prêmio da soberana vocação de Deus." Fp 3:14 #desafios</p>
-        </div>
-        <span id="desafios-resumo" class="bg-amber-500 text-blue-950 px-4 py-2 rounded-[16px] text-xs font-black shadow shrink-0">0 de 0 concluídos</span>
-      </div>
-      <div id="desafios-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </div>
-
-    <!-- TELA: EVANGELISMO -->
-    <div id="sec-evangelismo" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-heart text-rose-400"></i> Evangelismo
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">"Ide por todo o mundo e pregai o evangelho a toda criatura." Mc 16:15 #evangelismo</p>
-        </div>
-        <button onclick="abrirModalNovoContato()" class="bg-amber-500 hover:bg-amber-400 text-blue-950 px-4 py-2.5 rounded-[16px] text-xs font-black shadow transition flex items-center gap-2 shrink-0">
-          <i class="fa-solid fa-plus"></i> Registrar Contato
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-500 text-xl shrink-0"><i class="fa-solid fa-people-arrows"></i></div>
-          <div><p id="evangelismo-total-contatos" class="text-2xl font-extrabold text-blue-950">0</p><p class="text-xs text-gray-500 font-medium">Contatos registrados</p></div>
-        </div>
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 text-xl shrink-0"><i class="fa-solid fa-book-open"></i></div>
-          <div><p id="evangelismo-total-materiais" class="text-2xl font-extrabold text-blue-950">0</p><p class="text-xs text-gray-500 font-medium">Materiais distribuídos</p></div>
-        </div>
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 flex items-center gap-4 card-hover">
-          <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 text-xl shrink-0"><i class="fa-solid fa-hands-praying"></i></div>
-          <div><p id="evangelismo-total-oracao" class="text-2xl font-extrabold text-blue-950">0</p><p class="text-xs text-gray-500 font-medium">Pedidos de oração</p></div>
-        </div>
-      </div>
-
-      <div class="space-y-4">
-        <h3 class="text-lg font-extrabold text-blue-950 flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-blue-900"></i> Meus Contatos de Evangelismo</h3>
-        <div id="evangelismo-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-    </div>
-
-    <!-- TELA: NOTIFICAÇÕES -->
-    <div id="sec-notificacoes" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-bell text-yellow-300"></i> Notificações
-          </h2>
-          <p id="notificacoes-subtitulo" class="text-xs md:text-sm text-blue-200">Fique por dentro de tudo o que acontece no Kemuel Connect.</p>
-        </div>
-        <button onclick="marcarTodasNotificacoesLidas()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2.5 rounded-[16px] text-xs font-bold shadow transition flex items-center gap-2 shrink-0">
-          <i class="fa-solid fa-check-double"></i> Marcar todas como lidas
-        </button>
-      </div>
-      <div id="notificacoes-lista" class="space-y-3"></div>
-    </div>
-
-    <!-- TELA: CONFIGURAÇÕES -->
-    <div id="sec-configuracoes" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-gear text-gray-300"></i> Configurações
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">Gerencie seus dados, preferências e segurança da conta.</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100"><i class="fa-solid fa-id-card text-blue-900"></i> Dados Pessoais</h3>
-          <div class="space-y-4">
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">Nome completo:</label><input type="text" id="config-nome" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">E-mail:</label><input type="email" id="config-email" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">Telefone:</label><input type="tel" id="config-telefone" value="(11) 99999-0000" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-          </div>
-          <button onclick="salvarDadosPessoais()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2"><i class="fa-solid fa-check"></i> Salvar Dados Pessoais</button>
-        </div>
-
-        <div class="bg-white p-6 rounded-[16px] shadow-md border border-gray-100 space-y-5">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2 pb-3 border-b border-gray-100"><i class="fa-solid fa-lock text-blue-900"></i> Segurança</h3>
-          <div class="space-y-4">
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">Senha atual:</label><input type="password" id="config-senha-atual" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">Nova senha:</label><input type="password" id="config-senha-nova" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-            <div><label class="text-xs font-bold text-gray-700 block mb-1">Confirmar nova senha:</label><input type="password" id="config-senha-confirmar" placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-          </div>
-          <button onclick="alterarSenha()" class="w-full py-3 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2"><i class="fa-solid fa-key"></i> Alterar Senha</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- TELA: PAINEL DO ADMINISTRADOR -->
-    <div id="sec-admin" class="hidden space-y-8">
-      <div class="bg-gradient-to-r from-blue-950 via-[#1E3A8A] to-indigo-950 text-white p-8 rounded-[16px] shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="space-y-1">
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fa-solid fa-shield-halved text-amber-400"></i> Painel Administrativo
-          </h2>
-          <p class="text-xs md:text-sm text-blue-200">Gerencie usuários cadastrados, acessos e permissões da plataforma.</p>
-        </div>
-      </div>
-
-      <div class="bg-white border border-gray-100 rounded-[16px] shadow-md overflow-hidden">
-        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-          <h3 class="text-base font-extrabold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-users text-blue-900"></i> Lista de Usuários Cadastrados
-          </h3>
-          <span id="admin-total-usuarios" class="text-xs bg-blue-50 text-blue-900 font-bold px-3 py-1 rounded-[16px]">0 usuários</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 font-extrabold uppercase">
-                <th class="p-4">Nome</th>
-                <th class="p-4">E-mail</th>
-                <th class="p-4">Cargo</th>
-                <th class="p-4 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody id="admin-tabela-usuarios" class="divide-y divide-gray-50"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- MODAL DE ANO BÍBLICO -->
-  <div id="modal-devocional" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open text-amber-400"></i> Ano Bíblico - Novo Testamento</h3>
-        <button onclick="fecharModalDevocional()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-6">
-        <div class="bg-blue-50 border border-blue-100 p-5 rounded-[16px] space-y-4">
-          <h4 class="text-sm font-bold text-blue-950 flex items-center gap-2">
-            <i class="fa-solid fa-book-bible text-blue-600"></i> Selecione a Leitura do Novo Testamento #anobiblico
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-gray-600 block mb-1">Livro:</label>
-              <select id="ano-biblico-livro" onchange="atualizarCapitulosAnoBiblico()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select>
-            </div>
-            <div>
-              <label class="text-xs font-bold text-gray-600 block mb-1">Capítulo:</label>
-              <select id="ano-biblico-capitulo" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select>
-            </div>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <label class="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-[16px] cursor-pointer hover:bg-gray-100 transition">
-            <input type="checkbox" id="check-concluido-leitura" class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-            <span class="text-xs font-bold text-gray-800">Concluí a leitura deste capítulo do Ano Bíblico hoje!</span>
-          </label>
-          <div class="space-y-2">
-            <label for="texto-reflexao" class="font-bold text-gray-700 flex items-center gap-2 text-sm">
-              <i class="fa-solid fa-pen text-amber-500"></i> Observação / Reflexão Pessoal
-            </label>
-            <textarea id="texto-reflexao" rows="5" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-4 text-sm text-gray-800 focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Escreva aqui a sua observação ou reflexão..."></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalDevocional()" class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm rounded-[16px] transition">Cancelar</button>
-        <button onclick="salvarDevocional()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm rounded-[16px] shadow-md transition flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Concluir Ano Bíblico
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DA BÍBLIA -->
-  <div id="modal-biblia" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-bible text-amber-300"></i> Bíblia Sagrada Completa</h3>
-        <button onclick="fecharModalBiblia()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-[16px] border">
-          <div><label class="font-bold text-xs text-gray-600 block mb-1">Livro:</label><select id="biblia-livro" onchange="atualizarCapitulosBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select></div>
-          <div><label class="font-bold text-xs text-gray-600 block mb-1">Capítulo:</label><select id="biblia-capitulo" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"></select></div>
-          <div><label class="font-bold text-xs text-gray-600 block mb-1">Versão:</label><select id="select-versao-biblia" onchange="carregarTextoBiblia()" class="w-full bg-white border border-gray-300 rounded-[16px] p-2 font-semibold text-xs text-gray-800"><option value="almeida">Almeida</option><option value="kjv">King James</option></select></div>
-          <div class="flex items-end"><button onclick="carregarTextoBiblia()" class="w-full py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold rounded-[16px] text-xs shadow transition">Ler Texto</button></div>
-        </div>
-        <div class="border-b pb-3 flex justify-between items-center">
-          <h4 id="biblia-titulo-leitura" class="text-base font-extrabold text-blue-950">Mateus 1</h4>
-          <div class="flex gap-2">
-            <button onclick="mudarCapituloBiblia(-1)" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs font-bold rounded-[16px]"><i class="fa-solid fa-chevron-left"></i></button>
-            <button onclick="mudarCapituloBiblia(1)" class="px-3 py-1 bg-blue-900 text-white text-xs font-bold rounded-[16px]">Próximo <i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-        </div>
-        <div id="biblia-conteudo-texto" class="space-y-3 text-sm text-gray-800 leading-relaxed max-h-96 overflow-y-auto pr-2"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DA ESCOLA SABATINA -->
-  <div id="modal-licao" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-cyan-900 to-blue-950 text-white flex justify-between items-center">
-        <h3 id="licao-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-book-open-reader text-cyan-400"></i> Lição da Escola Sabatina</h3>
-        <button onclick="fecharModalLicao()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <p id="licao-modal-subtitulo" class="text-xs text-blue-600 font-bold uppercase tracking-wider">Estudo Diário</p>
-        <div id="licao-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
-      </div>
-      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
-        <button onclick="fecharModalLicao()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Fechar</button>
-        <button onclick="confirmarEstudoLicaoAPI()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-blue-950 font-black text-xs rounded-[16px] shadow transition">Marcar como Estudado (+50 pts)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DO PG MY STYLE -->
-  <div id="modal-pg" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-3xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-indigo-900 to-blue-950 text-white flex justify-between items-center">
-        <h3 id="pg-modal-titulo" class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-people-group text-indigo-300"></i> PG my Style - Comunidade</h3>
-        <button onclick="fecharModalPG()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <p id="pg-modal-subtitulo" class="text-xs text-indigo-600 font-bold uppercase tracking-wider">Estudo de Sábado #pgmystyle</p>
-        <div id="pg-modal-conteudo" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
-      </div>
-      <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
-        <button onclick="fecharModalPG()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Fechar</button>
-        <button onclick="confirmarEstudoPG()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-[16px] shadow transition">Marcar Presença (+70 pts)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL NOVO EVENTO -->
-  <div id="modal-novo-evento" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-calendar-plus text-amber-400"></i> Inserir Novo Evento</h3>
-        <button onclick="fecharModalNovoEvento()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <div><label class="text-xs font-bold text-gray-700 block mb-1">Nome do Evento:</label><input type="text" id="admin-evento-nome" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Data:</label><input type="date" id="admin-evento-data" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Horário:</label><input type="time" id="admin-evento-horario" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Local:</label><input type="text" id="admin-evento-local" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800 focus:ring-2 focus:ring-blue-900 focus:outline-none"></div>
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Categoria:</label><select id="admin-evento-categoria" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"><option value="Espiritual">Espiritual</option><option value="Evangelismo">Evangelismo</option><option value="Social">Social</option><option value="Desafios">Desafios</option><option value="Treinamentos">Treinamentos</option><option value="Solidário">Solidário</option></select></div>
-        </div>
-        <div><label class="text-xs font-bold text-gray-700 block mb-1">Pontuação:</label><input type="number" id="admin-evento-pontos" value="50" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"></div>
-        <div><label class="text-xs font-bold text-gray-700 block mb-1">Descrição:</label><textarea id="admin-evento-descricao" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"></textarea></div>
-      </div>
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalNovoEvento()" class="px-5 py-2.5 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Cancelar</button>
-        <button onclick="salvarNovoEventoAdmin()" class="px-6 py-2.5 bg-blue-900 text-white font-black text-xs rounded-[16px]">Cadastrar Evento</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL NOVO CONTATO -->
-  <div id="modal-novo-contato" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white rounded-[16px] max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-      <div class="p-5 bg-gradient-to-r from-blue-950 to-indigo-900 text-white flex justify-between items-center">
-        <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-heart text-rose-400"></i> Registrar Contato</h3>
-        <button onclick="fecharModalNovoContato()" class="text-gray-300 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-      <div class="p-6 flex-1 overflow-y-auto space-y-4">
-        <div><label class="text-xs font-bold text-gray-700 block mb-1">Nome:</label><input type="text" id="evang-contato-nome" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"></div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Data:</label><input type="date" id="evang-contato-data" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"></div>
-          <div><label class="text-xs font-bold text-gray-700 block mb-1">Tipo:</label><select id="evang-contato-tipo" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"><option value="Visita">Visita</option><option value="Estudo Bíblico">Estudo Bíblico</option><option value="Distribuição">Distribuição</option><option value="Pedido de Oração">Pedido de Oração</option></select></div>
-        </div>
-        <div><label class="text-xs font-bold text-gray-700 block mb-1">Observações:</label><textarea id="evang-contato-obs" rows="3" class="w-full bg-gray-50 border border-gray-300 rounded-[16px] p-3 text-xs text-gray-800"></textarea></div>
-      </div>
-      <div class="p-5 bg-gray-50 border-t flex justify-end gap-3">
-        <button onclick="fecharModalNovoContato()" class="px-5 py-2.5 bg-gray-200 text-gray-700 font-bold text-xs rounded-[16px]">Cancelar</button>
-        <button onclick="salvarNovoContato()" class="px-6 py-2.5 bg-rose-500 text-white font-black text-xs rounded-[16px]">Salvar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast-notificacao" class="hidden fixed bottom-5 right-5 bg-emerald-600 text-white px-5 py-3 rounded-[16px] shadow-2xl text-xs font-bold z-50 flex items-center gap-3 transition">
-    <i class="fa-solid fa-circle-check text-base"></i>
-    <span id="toast-mensagem">Operação realizada com sucesso.</span>
-  </div>
-
-  <script>
-    const listaLivrosBiblia = [
+const listaLivrosBiblia = [
       { nome: "Gênesis", caps: 50 }, { nome: "Êxodo", caps: 40 }, { nome: "Levítico", caps: 27 },
       { nome: "Números", caps: 36 }, { nome: "Deuteronômio", caps: 34 }, { nome: "Josué", caps: 24 },
       { nome: "Juízes", caps: 21 }, { nome: "Rute", caps: 4 }, { nome: "1 Samuel", caps: 31 },
@@ -740,7 +64,6 @@
       carregarTextoBiblia();
     });
 
-    // SISTEMA DE AUTH (LOGIN / CADASTRO)
     function alternarAbaAuth(aba) {
       if (aba === 'login') {
         document.getElementById('form-login').classList.remove('hidden');
@@ -803,7 +126,6 @@
       document.getElementById('sidebar').classList.remove('hidden');
       document.getElementById('main-content').classList.remove('hidden');
 
-      // Atualizar dados na interface
       document.getElementById('perfil-nome').innerText = usuarioLogado.nome;
       document.getElementById('config-nome').value = usuarioLogado.nome;
       document.getElementById('config-email').value = usuarioLogado.email;
@@ -812,7 +134,6 @@
       document.getElementById('perfil-iniciais').innerText = usuarioLogado.iniciais;
       document.getElementById('dash-saudacao').innerText = `Bom dia, ${usuarioLogado.nome.split(' ')[0]}! 👋`;
 
-      // Gerenciar visibilidade do painel Admin
       const adminGrupo = document.getElementById('menu-admin-grupo');
       if (usuarioLogado.cargo === 'Administrador' || usuarioLogado.cargo === 'Líder de Jovens') {
         adminGrupo.classList.remove('hidden');
@@ -848,16 +169,7 @@
 
       let html = '';
       usuariosCadastrados.forEach((u, idx) => {
-        html += `
-          <tr class="hover:bg-gray-50 transition">
-            <td class="p-4 font-bold text-blue-950">${u.nome}</td>
-            <td class="p-4 text-gray-600">${u.email}</td>
-            <td class="p-4"><span class="px-2 py-1 bg-amber-50 text-amber-800 font-bold rounded-full">${u.cargo}</span></td>
-            <td class="p-4 text-right">
-              <button onclick="removerUsuarioAdmin(${idx})" class="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-[16px] transition"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
+        html += `x`;
       });
       tabela.innerHTML = html;
     }
@@ -895,7 +207,6 @@
       if (tela === 'admin') renderizarPainelAdmin();
     }
 
-    // FUNÇÕES DO CALENDÁRIO
     function renderizarCalendario() {
       const ano = dataAtualCalendario.getFullYear();
       const mes = dataAtualCalendario.getMonth();
@@ -987,7 +298,7 @@
       const badgeEl = document.getElementById('badge-total-eventos-dia');
       const termoBusca = document.getElementById('input-busca-evento').value.toLowerCase();
 
-      tituloEl.innerHTML = `<i class="fa-solid fa-calendar-day text-blue-900"></i> Eventos para ${formatarDataLegivel(diaSelecionadoCalendario)}`;
+      tituloEl.innerHTML = `x`;
       let filtrados = eventosBancoDeDados.filter(e => e.data === diaSelecionadoCalendario);
 
       if (filtroCategoriaAtivo !== 'todos') filtrados = filtrados.filter(e => e.categoria === filtroCategoriaAtivo);
@@ -996,28 +307,14 @@
       badgeEl.innerText = `${filtrados.length} evento${filtrados.length !== 1 ? 's' : ''}`;
 
       if (filtrados.length === 0) {
-        container.innerHTML = `<div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center space-y-3 shadow-sm"><p class="text-sm font-bold text-gray-800">Nenhum evento encontrado.</p></div>`;
+        container.innerHTML = `x`;
         return;
       }
 
       let html = '';
       filtrados.forEach(e => {
         const corCat = obterCorCategoria(e.categoria);
-        html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
-            <div class="space-y-3">
-              <div class="flex justify-between items-start gap-2">
-                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">${e.categoria}</span>
-                ${e.pontos ? `<span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${e.pontos} pts</span>` : ''}
-              </div>
-              <div><h4 class="text-base font-extrabold text-blue-950">${e.nome}</h4><p class="text-xs text-gray-500 mt-1">${e.descricao}</p></div>
-            </div>
-            <div class="pt-4 border-t border-gray-100 space-y-2 text-xs text-gray-600 font-medium">
-              <div class="flex items-center gap-2"><i class="fa-regular fa-clock text-blue-900"></i> <span>${e.horario}</span></div>
-              <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-rose-500"></i> <span>${e.local}</span></div>
-            </div>
-          </div>
-        `;
+        html += `x`;
       });
       container.innerHTML = html;
     }
@@ -1028,18 +325,13 @@
       if (filtroCategoriaAtivo !== 'todos') ordenados = ordenados.filter(e => e.categoria === filtroCategoriaAtivo);
 
       if (ordenados.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Nenhum evento próximo.</p>`;
+        container.innerHTML = `x`;
         return;
       }
 
       let html = '';
       ordenados.forEach(e => {
-        html += `
-          <div onclick="selecionarDiaCalendario('${e.data}')" class="bg-gray-50 border border-gray-100 p-3.5 rounded-[16px] hover:bg-gray-100 transition cursor-pointer flex items-center justify-between gap-3">
-            <div class="space-y-0.5"><span class="text-[10px] text-blue-900 font-bold">${formatarDataCurta(e.data)}</span><h5 class="text-xs font-bold text-blue-950">${e.nome}</h5></div>
-            <span class="text-[10px] bg-blue-50 text-blue-900 font-bold px-2 py-1 rounded-[16px] shrink-0">${e.horario}</span>
-          </div>
-        `;
+        html += `x`;
       });
       container.innerHTML = html;
     }
@@ -1129,19 +421,19 @@
       const conteudoEl = document.getElementById('biblia-conteudo-texto');
 
       tituloEl.innerText = `${livroObj.nome} ${capitulo}`;
-      conteudoEl.innerHTML = `<p class="text-center text-gray-400">Carregando...</p>`;
+      conteudoEl.innerHTML = `x`;
 
       try {
-        const res = await fetch(`https://bible-api.com/${encodeURIComponent(`${livroObj.nome} ${capitulo}`)}?translation=${versao}`);
+        const res = await fetch(`https://bible-api.com/x?translation=${versao}`);
         if (!res.ok) throw new Error();
         const data = await res.json();
         let html = '';
         data.verses.forEach(v => {
-          html += `<p class="hover:bg-blue-50 p-1 rounded"><strong class="text-blue-950 font-bold mr-1">${v.verse}</strong> ${v.text}</p>`;
+          html += `x`;
         });
         conteudoEl.innerHTML = html;
       } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500 text-xs">Erro ao carregar o texto bíblico online. #biblia</p>`;
+        conteudoEl.innerHTML = `x`;
       }
     }
 
@@ -1188,11 +480,11 @@
         const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/01/read/index.json`);
         if (!res.ok) throw new Error();
         const data = await res.json();
-        document.getElementById('licao-modal-titulo').innerHTML = `<i class="fa-solid fa-book-open-reader text-cyan-400"></i> ${data.title}`;
-        document.getElementById('licao-modal-subtitulo').innerText = `${data.date} #licaoescolasabatina`;
+        document.getElementById('licao-modal-titulo').innerHTML = `x`;
+        document.getElementById('licao-modal-subtitulo').innerText = `x`;
         conteudoEl.innerHTML = data.content;
       } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar a lição. #licaoescolasabatina</p>`;
+        conteudoEl.innerHTML = `x`;
       }
     }
 
@@ -1203,11 +495,11 @@
         const res = await fetch(`https://sabbath-school.adventech.io/api/v2/pt/quarterlies/2026-03-cq/lessons/06/days/07/read/index.json`);
         if (!res.ok) throw new Error();
         const data = await res.json();
-        document.getElementById('pg-modal-titulo').innerHTML = `<i class="fa-solid fa-people-group text-indigo-300"></i> ${data.title}`;
-        document.getElementById('pg-modal-subtitulo').innerText = `${data.date} #pgmystyle`;
+        document.getElementById('pg-modal-titulo').innerHTML = `x`;
+        document.getElementById('pg-modal-subtitulo').innerText = `x`;
         conteudoEl.innerHTML = data.content;
       } catch (e) {
-        conteudoEl.innerHTML = `<p class="text-red-500">Erro ao carregar o conteúdo do PG. #pgmystyle</p>`;
+        conteudoEl.innerHTML = `x`;
       }
     }
 
@@ -1251,15 +543,7 @@
       let podioHtml = '';
       ordemVisual.forEach((pessoa, idx) => {
         if (!pessoa) { podioHtml += '<div></div>'; return; }
-        podioHtml += `
-          <div class="flex flex-col items-center gap-2">
-            <span class="text-3xl">${medalha[idx]}</span>
-            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-blue-950 text-white flex items-center justify-center font-black text-lg shadow-lg border-4 border-white ring-2 ring-blue-100">${pessoa.iniciais}</div>
-            <p class="text-xs md:text-sm font-extrabold text-blue-950 text-center leading-tight">${pessoa.nome}</p>
-            <p class="text-[10px] text-amber-600 font-bold">${pessoa.pontos} pts</p>
-            <div class="w-full ${corPodio[idx]} ${alturaPodio[idx]} rounded-t-[16px] shadow-inner"></div>
-          </div>
-        `;
+        podioHtml += `x`;
       });
       podioEl.innerHTML = podioHtml;
 
@@ -1269,21 +553,7 @@
         const posicao = index + 1;
         const percentual = Math.round((pessoa.pontos / maiorPontuacao) * 100);
         const souEu = usuarioLogado && pessoa.nome === usuarioLogado.nome;
-        listaHtml += `
-          <div class="p-4 flex items-center gap-4 ${souEu ? 'bg-amber-50' : 'hover:bg-gray-50'} transition">
-            <span class="w-7 text-center text-sm font-black ${posicao <= 3 ? 'text-amber-500' : 'text-gray-400'}">${posicao}º</span>
-            <div class="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow">${pessoa.iniciais}</div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-extrabold text-blue-950 truncate">${pessoa.nome} ${souEu ? '<span class="text-[10px] bg-amber-500 text-blue-950 px-2 py-0.5 rounded-full font-black ml-1">VOCÊ</span>' : ''}</span>
-                <span class="text-xs font-black text-blue-900">${pessoa.pontos} pts</span>
-              </div>
-              <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                <div class="bg-blue-900 h-full rounded-full transition-all duration-500" style="width: ${percentual}%"></div>
-              </div>
-            </div>
-          </div>
-        `;
+        listaHtml += `x`;
       });
       listaEl.innerHTML = listaHtml;
     }
@@ -1299,24 +569,7 @@
         const completo = d.progresso >= d.meta;
         const pct = Math.min(100, Math.round((d.progresso / d.meta) * 100));
         const corCat = obterCorCategoria(d.categoria);
-        html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md flex flex-col justify-between card-hover space-y-4">
-            <div class="space-y-3">
-              <div class="flex justify-between items-start">
-                <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-[16px] border ${corCat}">${d.categoria}</span>
-                <span class="text-[10px] bg-amber-50 text-amber-700 font-extrabold px-2.5 py-1 rounded-[16px] border border-amber-200">+${d.pontos} pts</span>
-              </div>
-              <div><h4 class="text-base font-extrabold text-blue-950">${d.titulo}</h4><p class="text-xs text-gray-500 mt-1">${d.descricao}</p></div>
-            </div>
-            <div class="space-y-3 pt-4 border-t border-gray-100">
-              <div class="space-y-1">
-                <div class="flex justify-between text-xs font-bold"><span class="text-gray-500">Progresso</span><span class="text-blue-950">${d.progresso} / ${d.meta}</span></div>
-                <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden"><div class="${completo ? 'bg-emerald-500' : 'bg-blue-900'} h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div></div>
-              </div>
-              ${completo ? `<div class="py-2.5 bg-emerald-50 text-emerald-700 rounded-[16px] font-extrabold text-xs flex items-center justify-center gap-2 border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-500"></i> Desafio Concluído!</div>` : `<button onclick="avancarDesafio(${d.id})" class="w-full py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-[16px] shadow transition flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i> Registrar Progresso</button>`}
-            </div>
-          </div>
-        `;
+        html += `x`;
       });
       grid.innerHTML = html;
     }
@@ -1337,28 +590,13 @@
       document.getElementById('evangelismo-total-oracao').innerText = evangelismoBancoDeDados.filter(e => e.tipo === 'Pedido de Oração').length;
 
       if (evangelismoBancoDeDados.length === 0) {
-        listaEl.innerHTML = `<div class="col-span-full bg-white border border-gray-100 p-10 rounded-[16px] text-center"><p class="text-xs font-bold text-gray-500">Nenhum contato registrado. #evangelismo</p></div>`;
+        listaEl.innerHTML = `x`;
         return;
       }
 
       let html = '';
       evangelismoBancoDeDados.forEach((c, idx) => {
-        html += `
-          <div class="bg-white border border-gray-100 p-6 rounded-[16px] shadow-md space-y-4 card-hover">
-            <div class="flex justify-between items-start">
-              <span class="text-[10px] font-bold px-2 py-1 bg-rose-50 text-rose-700 rounded-full">${c.tipo}</span>
-              <span class="text-[10px] text-gray-400 font-semibold">${formatarDataCurta(c.data)}</span>
-            </div>
-            <div>
-              <h4 class="text-base font-extrabold text-blue-950">${c.nome}</h4>
-              <p class="text-xs text-gray-600 mt-1">${c.observacao || 'Sem observações.'}</p>
-            </div>
-            <div class="pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
-              <span class="font-bold text-amber-600">${c.status || 'Ativo'}</span>
-              <button onclick="removerContatoEvangelismo(${idx})" class="text-red-500 hover:text-red-700 font-bold"><i class="fa-solid fa-trash"></i> Excluir</button>
-            </div>
-          </div>
-        `;
+        html += `x`;
       });
       listaEl.innerHTML = html;
     }
@@ -1403,21 +641,13 @@
       document.getElementById('notificacoes-subtitulo').innerText = naoLidas > `Você possui ${naoLidas} notificação(ões) não lida(s).` : 'Todas as notificações foram lidas.';
 
       if (notificacoesBancoDeDados.length === 0) {
-        container.innerHTML = `<div class="bg-white border p-6 rounded-[16px] text-center text-xs text-gray-400">Nenhuma notificação no momento.</div>`;
+        container.innerHTML = `x`;
         return;
       }
 
       let html = '';
       notificacoesBancoDeDados.forEach(n => {
-        html += `
-          <div class="bg-white border border-gray-100 p-4 rounded-[16px] shadow-sm flex items-center justify-between gap-4 ${n.lida ? 'opacity-75' : 'border-l-4 border-l-blue-900'}">
-            <div class="space-y-1">
-              <h5 class="text-xs font-bold text-blue-950">${n.titulo}</h5>
-              <p class="text-xs text-gray-600">${n.mensagem}</p>
-            </div>
-            ${!n.lida ? `<button onclick="marcarNotificacaoLida(${n.id})" class="px-3 py-1.5 bg-blue-50 text-blue-900 font-bold text-xs rounded-[16px] hover:bg-blue-100 transition shrink-0">Marcar lida</button>` : `<span class="text-[10px] text-gray-400 font-semibold">Lida</span>`}
-          </div>
-        `;
+        html += `x`;
       });
       container.innerHTML = html;
     }
@@ -1481,6 +711,3 @@
         toast.classList.add('hidden');
       }, 3500);
     }
-  </script>
-</body>
-</html>
