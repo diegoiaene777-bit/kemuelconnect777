@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kemuel Connect - Login</title>
+  <title>Kemuel Connect - Autenticação</title>
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
-    /* RESET & VARIAVEIS */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -41,7 +42,6 @@
       padding: 1.5rem;
     }
 
-    /* CONTAINER PRINCIPAL */
     .login-container {
       width: 100%;
       max-width: 440px;
@@ -51,7 +51,7 @@
       border: 1px solid var(--border-color);
       border-radius: 20px;
       padding: 2.5rem 2rem 2rem 2rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       animation: fadeIn 0.5s ease-out;
     }
 
@@ -60,11 +60,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* CABEÇALHO */
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    .header { text-align: center; margin-bottom: 2rem; }
 
     .logo-box {
       width: 64px;
@@ -78,22 +74,9 @@
       box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
     }
 
-    .header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      margin-bottom: 0.5rem;
-      color: #ffffff;
-    }
+    .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
+    .header p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; font-style: italic; }
 
-    .header p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-      font-style: italic;
-    }
-
-    /* MENSAGENS E ALERTAS */
     .alert {
       padding: 0.875rem 1rem;
       border-radius: 10px;
@@ -103,47 +86,18 @@
       align-items: center;
       gap: 0.75rem;
       line-height: 1.3;
-      animation: slideIn 0.3s ease-out;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .alert-error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
     .alert-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fde68a; }
     .alert-success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #a7f3d0; }
 
-    /* FORMULÁRIO */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
 
-    .form-group label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-wrapper i.input-icon {
-      position: absolute;
-      left: 1rem;
-      color: var(--text-muted);
-      pointer-events: none;
-      width: 18px;
-      height: 18px;
-    }
-
-    .input-wrapper input {
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper i.input-icon { position: absolute; left: 1rem; color: var(--text-muted); pointer-events: none; width: 18px; height: 18px; }
+    .input-wrapper input, .input-wrapper select {
       width: 100%;
       padding: 0.75rem 1rem 0.75rem 2.75rem;
       background: var(--input-bg);
@@ -152,10 +106,10 @@
       color: var(--text-main);
       font-size: 0.95rem;
       outline: none;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
-    .input-wrapper input:focus {
+    .input-wrapper input:focus, .input-wrapper select:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
     }
@@ -167,15 +121,8 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 0.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .toggle-password:hover { color: var(--text-main); }
-
-    /* OPÇÕES (Lembrar-me / Esqueci a senha) */
     .form-options {
       display: flex;
       align-items: center;
@@ -184,34 +131,10 @@
       font-size: 0.85rem;
     }
 
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
+    .checkbox-container { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-muted); }
+    .forgot-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .forgot-link:hover { text-decoration: underline; }
 
-    .checkbox-container input {
-      accent-color: var(--primary);
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .forgot-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .forgot-link:hover {
-      text-decoration: underline;
-      color: #3b82f6;
-    }
-
-    /* BOTOES */
     .btn {
       width: 100%;
       padding: 0.85rem;
@@ -219,40 +142,21 @@
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
       border: none;
+      transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-      margin-bottom: 0.75rem;
-    }
+    .btn-primary { background: var(--primary); color: #fff; margin-bottom: 0.75rem; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.05); }
 
-    .btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* MODAL ESQUECI MINHA SENHA */
     .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(4px);
       display: none;
@@ -269,26 +173,11 @@
       width: 100%;
       max-width: 400px;
       padding: 2rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .close-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; }
 
-    .modal-header h3 { font-size: 1.2rem; }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    /* RODAPÉ */
     .footer {
       margin-top: 2rem;
       text-align: center;
@@ -297,14 +186,11 @@
       border-top: 1px solid var(--border-color);
       padding-top: 1.25rem;
     }
-
-    .footer p { margin-bottom: 0.25rem; }
   </style>
 </head>
 <body>
 
   <div class="login-container">
-    <!-- Cabeçalho -->
     <div class="header">
       <div class="logo-box">
         <i data-lucide="flame" style="width: 36px; height: 36px; color: #fff;"></i>
@@ -313,19 +199,19 @@
       <p>"Os jovens pelos jovens, os jovens pela igreja, os jovens pelos seus semelhantes."</p>
     </div>
 
-    <!-- Caixa de Alerta / Mensagens -->
+    <!-- Alertas -->
     <div id="alertBox" class="alert">
       <i id="alertIcon" data-lucide="alert-circle" style="width: 20px; height: 20px; flex-shrink: 0;"></i>
       <span id="alertText"></span>
     </div>
 
-    <!-- Formulário de Login -->
+    <!-- FORMULÁRIO DE LOGIN -->
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="form-group">
         <label for="email">E-mail</label>
         <div class="input-wrapper">
           <i data-lucide="mail" class="input-icon"></i>
-          <input type="email" id="email" placeholder="seu.email@exemplo.com" required autocomplete="email">
+          <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
         </div>
       </div>
 
@@ -333,8 +219,8 @@
         <label for="password">Senha</label>
         <div class="input-wrapper">
           <i data-lucide="lock" class="input-icon"></i>
-          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-          <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+          <input type="password" id="password" placeholder="••••••••" required>
+          <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon')">
             <i data-lucide="eye" id="eyeIcon" style="width: 18px; height: 18px;"></i>
           </button>
         </div>
@@ -348,24 +234,74 @@
         <a href="#" class="forgot-link" onclick="openForgotModal(event)">Esqueci minha senha</a>
       </div>
 
-      <button type="submit" class="btn btn-primary" id="btnSubmit">
+      <button type="submit" class="btn btn-primary" id="btnLogin">
         <span>Entrar</span>
         <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
       </button>
 
-      <button type="button" class="btn btn-secondary" onclick="goToRegister()">
+      <button type="button" class="btn btn-secondary" onclick="toggleView('register')">
         Criar conta
       </button>
     </form>
 
-    <!-- Rodapé -->
+    <!-- FORMULÁRIO DE CRIAR CONTA (CADASTRO) -->
+    <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label for="regName">Nome Completo</label>
+        <div class="input-wrapper">
+          <i data-lucide="user" class="input-icon"></i>
+          <input type="text" id="regName" placeholder="Seu nome" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">E-mail</label>
+        <div class="input-wrapper">
+          <i data-lucide="mail" class="input-icon"></i>
+          <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regRole">Perfil</label>
+        <div class="input-wrapper">
+          <i data-lucide="shield" class="input-icon"></i>
+          <select id="regRole" required>
+            <option value="jovem">Jovem</option>
+            <option value="secretario">Secretário</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Senha</label>
+        <div class="input-wrapper">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="regPassword" placeholder="••••••••" minlength="6" required>
+          <button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword', 'regEyeIcon')">
+            <i data-lucide="eye" id="regEyeIcon" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btnRegister">
+        <span>Cadastrar</span>
+        <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
+      </button>
+
+      <button type="button" class="btn btn-secondary" onclick="toggleView('login')">
+        Já tenho uma conta
+      </button>
+    </form>
+
     <div class="footer">
       <p>&copy; Kemuel Connect. Todos os direitos reservados.</p>
       <p>Versão 1.0.0</p>
     </div>
   </div>
 
-  <!-- Modal Recuperação de Senha -->
+  <!-- Modal Esqueci Minha Senha -->
   <div id="forgotModal" class="modal-overlay">
     <div class="modal">
       <div class="modal-header">
@@ -375,7 +311,7 @@
         </button>
       </div>
       <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-        Digite seu e-mail cadastrado para receber um link de redefinição de senha.
+        Digite seu e-mail cadastrado para receber o link de redefinição de senha.
       </p>
       <form onsubmit="handleForgotPassword(event)">
         <div class="form-group">
@@ -390,42 +326,45 @@
   </div>
 
   <script>
-    // Inicialização dos Ícones Lucide
     lucide.createIcons();
 
-    // Controle de Tentativas de Login e Inatividade (Segurança)
-    let loginAttempts = 0;
-    const MAX_ATTEMPTS = 5;
-    let inactivityTimer;
+    // CONEXÃO COM O SUPABASE REAL
+    const SUPABASE_URL = 'https://fhuooaoxwjsbgslrxzta.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodW9vYW94d2pzYmdzbHJ4enRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNzIxNTksImV4cCI6MjA1Njk0ODE1OX0.qX3s-b2C2_c7Q4gX4b0s0E3_eZ-X9O8I9G_H7Z6X5Y4';
+    
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-      // Encerramento automático da sessão após 15 minutos de inatividade (exemplo)
-      inactivityTimer = setTimeout(() => {
-        showAlert('Sessão expirada por inatividade. Faça login novamente.', 'warning');
-      }, 15 * 60 * 1000);
+    // Alternar Telas (Login / Cadastro)
+    function toggleView(view) {
+      hideAlert();
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+
+      if (view === 'register') {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+      } else {
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+      }
     }
 
-    window.onload = resetInactivityTimer;
-    document.onmousemove = resetInactivityTimer;
-    document.onkeypress = resetInactivityTimer;
-
     // Toggle Mostrar/Ocultar Senha
-    function togglePasswordVisibility() {
-      const passwordInput = document.getElementById('password');
-      const eyeIcon = document.getElementById('eyeIcon');
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
 
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eyeIcon.setAttribute('data-lucide', 'eye-off');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
       } else {
-        passwordInput.type = 'password';
-        eyeIcon.setAttribute('data-lucide', 'eye');
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
       }
       lucide.createIcons();
     }
 
-    // Exibição de Alertas do Sistema
+    // Mensagens de Alerta
     function showAlert(message, type = 'error') {
       const alertBox = document.getElementById('alertBox');
       const alertText = document.getElementById('alertText');
@@ -447,95 +386,121 @@
       document.getElementById('alertBox').style.display = 'none';
     }
 
-    // Base de Usuários Mockada para teste dos fluxos exigidos
-    const mockUsers = [
-      { email: 'jovem@kemuel.com', pass: '123456', role: 'jovem', status: 'aprovado' },
-      { email: 'admin@kemuel.com', pass: '123456', role: 'admin', status: 'aprovado' },
-      { email: 'secretario@kemuel.com', pass: '123456', role: 'secretario', status: 'aprovado' },
-      { email: 'pendente@kemuel.com', pass: '123456', role: 'jovem', status: 'pendente' },
-      { email: 'recusado@kemuel.com', pass: '123456', role: 'jovem', status: 'recusado' }
-    ];
-
-    // Fluxo Principal de Login
-    function handleLogin(event) {
-      event.preventDefault();
+    // FLUXO 1: CRIAR CONTA (CADASTRO)
+    async function handleRegister(e) {
+      e.preventDefault();
       hideAlert();
 
-      if (loginAttempts >= MAX_ATTEMPTS) {
-        showAlert('Muitas tentativas malsucedidas. Bloqueado temporariamente por segurança.', 'error');
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const role = document.getElementById('regRole').value;
+
+      const btn = document.getElementById('btnRegister');
+      btn.disabled = true;
+      btn.innerText = 'Cadastrando...';
+
+      // 1. Criar usuário no Supabase Auth
+      const { data, error } = await _supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name,
+            role: role,
+            status: 'pendente' // Novo cadastro inicia como Pendente
+          }
+        }
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = '<span>Cadastrar</span><i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>';
+      lucide.createIcons();
+
+      if (error) {
+        showAlert(error.message || 'Erro ao conectar com o servidor.', 'error');
         return;
       }
 
-      const email = document.getElementById('email').value.trim().toLowerCase();
+      showAlert('Cadastro realizado com sucesso! Seu cadastro está aguardando aprovação do administrador.', 'warning');
+      setTimeout(() => toggleView('login'), 3000);
+    }
+
+    // FLUXO 2: LOGIN
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideAlert();
+
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      // Validação básica
-      if (!email || !password) {
+      const btn = document.getElementById('btnLogin');
+      btn.disabled = true;
+      btn.innerText = 'Entrando...';
+
+      // Autenticar com o Supabase
+      const { data, error } = await _supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = '<span>Entrar</span><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>';
+      lucide.createIcons();
+
+      if (error) {
         showAlert('E-mail ou senha inválidos.', 'error');
         return;
       }
 
-      // Buscar Usuário
-      const user = mockUsers.find(u => u.email === email);
+      const user = data.user;
+      const userStatus = user.user_metadata?.status || 'pendente';
+      const userRole = user.user_metadata?.role || 'jovem';
 
-      if (!user || user.pass !== password) {
-        loginAttempts++;
-        showAlert('E-mail ou senha inválidos.', 'error');
-        return;
-      }
-
-      // Reset tentativas em caso de sucesso no e-mail/senha
-      loginAttempts = 0;
-
-      // Verificar Status do Cadastro
-      if (user.status === 'pendente') {
+      // Verificar Regras de Aprovação
+      if (userStatus === 'pendente') {
         showAlert('Seu cadastro ainda está aguardando aprovação do administrador.', 'warning');
+        await _supabase.auth.signOut();
         return;
       }
 
-      if (user.status === 'recusado') {
+      if (userStatus === 'recusado') {
         showAlert('Seu cadastro foi recusado. Entre em contato com a administração da igreja para mais informações.', 'error');
+        await _supabase.auth.signOut();
         return;
       }
 
-      if (user.status === 'aprovado') {
-        showAlert('Login realizado com sucesso! Redirecionando...', 'success');
+      showAlert('Login realizado com sucesso!', 'success');
 
-        // Direcionamento automático conforme o perfil
-        setTimeout(() => {
-          if (user.role === 'jovem') {
-            window.location.href = '#area-do-jovem'; // Substituir pela rota real
-            console.log('Redirecionado para Área do Jovem');
-          } else if (user.role === 'admin' || user.role === 'secretario') {
-            window.location.href = '#painel-administrativo'; // Substituir pela rota real
-            console.log(`Redirecionado para Painel Administrativo (${user.role})`);
-          }
-        }, 1200);
-      }
+      // Redirecionamento por Perfil
+      setTimeout(() => {
+        if (userRole === 'jovem') {
+          alert('Redirecionando para a Área do Jovem...');
+        } else {
+          alert(`Redirecionando para o Painel Administrativo (${userRole})...`);
+        }
+      }, 1000);
     }
 
-    // Modal & Recuperação de Senha
-    function openForgotModal(e) {
+    // FLUXO 3: RECUPERAR SENHA
+    function openForgotModal(e) { e.preventDefault(); document.getElementById('forgotModal').style.display = 'flex'; }
+    function closeForgotModal() { document.getElementById('forgotModal').style.display = 'none'; }
+
+    async function handleForgotPassword(e) {
       e.preventDefault();
-      document.getElementById('forgotModal').style.display = 'flex';
-    }
+      const email = document.getElementById('recoveryEmail').value.trim();
 
-    function closeForgotModal() {
-      document.getElementById('forgotModal').style.display = 'none';
-    }
+      const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://kemuelconnect777.vercel.app'
+      });
 
-    function handleForgotPassword(e) {
-      e.preventDefault();
-      const email = document.getElementById('recoveryEmail').value;
       closeForgotModal();
-      showAlert(`Link de redefinição enviado com sucesso para ${email}!`, 'success');
-    }
 
-    // Criar Conta
-    function goToRegister() {
-      // Redireciona para a tela de cadastro (onde o status inicial será "pendente")
-      window.location.href = '#cadastro';
-      console.log('Redirecionando para a tela de cadastro...');
+      if (error) {
+        showAlert('Erro ao enviar e-mail. Verifique se o endereço está correto.', 'error');
+      } else {
+        showAlert(`E-mail de redefinição enviado para ${email}! Verifique sua caixa de entrada/spam.`, 'success');
+      }
     }
   </script>
 </body>
